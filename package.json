@@ -1,0 +1,14 @@
+{
+  "name": "com3420-node-clone",
+  "version": "1.0.0",
+  "description": "A clone version of com3420 ruby on rails web app using NodeJS",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
