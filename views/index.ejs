@@ -48,6 +48,18 @@
               
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner" role="listbox">
+                  <% if (images.length > 0) { %>
+                  <%  images.forEach(function(image, index){ %>
+                  <%    if(index == 0) { %>
+                          <div class="item active">
+                  <%    } else { %> 
+                          <div class="item">
+                  <%    } %>      
+                        <img src="images/<%= image %>" alt="<%= image %>" class="img-thumbnail">
+                        </div>
+                   <% }); %>
+                  <% } %>
+                  <!-- 
                   <div class="item active">
                     <img src="images/1.jpeg" alt="1" class="img-thumbnail">
                   </div>
@@ -56,7 +68,7 @@
                   </div>
                   <div class="item">
                     <img src="images/3.jpg" alt="3">
-                  </div>
+                  </div> -->
                 </div>
               
                 <!-- Controls -->
@@ -72,9 +84,9 @@
                 
               </div>
             </div> <!-- End Image Slider -->
-            <!-- Search Form -->
             <div class="col-md-4">
               <div class="row">
+                <!-- Search Form -->
                 <div class="col-md-12 search-bar">
                   <div class="page-header">
                     <h2>Search our archive</h2>
@@ -99,7 +111,28 @@
                       <input type="checkbox" name="inlineRadioOptions" value="text"> Text
                     </label>
                   </form>
-                </div>
+                </div> <!-- End Search Form -->
+                
+                <!-- Event List -->
+                <div class="col-md-12">
+                  <div class="page-header">
+                    <h3>Upcoming Events</h3>
+                  </div>
+                  <table class="table">
+                    <tr>
+                      <th width="69%">Name</th>
+                      <th width="31%">Date</th>
+                    </tr>
+                    <tr>
+                      <td>Town Tour</td>
+                      <td>02/10/2016</td>
+                    </tr>
+                    <tr>
+                      <td>Visiting Church</td>
+                      <td>03/07/2017</td>
+                    </tr>
+                  </table>
+                </div> <!-- End Event List -->
               </div>
             </div>
           </div>
