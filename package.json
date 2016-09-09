@@ -1,7 +1,7 @@
 {
-  "name": "com3420-node-clone",
+  "name": "final-year-prototype",
   "version": "1.0.0",
-  "description": "A clone version of com3420 ruby on rails web app using NodeJS",
+  "description": "Prototype for final year project",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,8 +9,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ejs": "^2.5.1",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.15.2",
+    "connect-flash": "^0.1.1",
     "express": "^4.14.0",
-    "node-sass-middleware": "^0.9.8"
+    "express-session": "^1.14.1",
+    "mongoose": "^4.6.0",
+    "morgan": "^1.7.0",
+    "node-sass-middleware": "^0.9.8",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "pug": "^2.0.0-beta6"
   }
 }
