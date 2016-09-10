@@ -29,7 +29,6 @@ app.use(require('./routes/index')(passport));
 
 app.use(sass({
     /* Options */
-    src: './public/sass',
     dest: './public/stylesheets',
     debug: true,
     indentedSyntax: true,
