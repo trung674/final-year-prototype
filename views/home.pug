@@ -1,0 +1,11 @@
+extends template/layout
+
+block content
+  div.container
+    div.row
+      div.col-md-6.col-md-offset-3
+        h1.text-center Check your details below:
+        ul.user-details
+          li ID ---> #{user._id}
+          li Username ---> #{user.local.email}
+        a(href='/signout', class='text-center') Sign Out

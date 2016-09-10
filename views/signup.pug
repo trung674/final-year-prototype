@@ -1,0 +1,18 @@
+extends template/layout
+
+block content
+  div.container
+    div.row
+      div.col-md-4.col-md-offset-4
+        h1.text-center Registration Details
+        form(action='/signup', method='POST')
+          .form-group
+            input(type='email', name='email', class='form-control', placeholder='Email',required)
+          .form-group  
+            input(type='password', name='password', class='form-control nomargin', placeholder='Password', required)
+          button(class='btn btn-lg btn-primary btn-block', type='submit') Register
+          span.clearfix
+          a(href='/signin', class='text-center new-account') Log in
+          #message
+            if message
+              h1.text-center.error-message #{message}
