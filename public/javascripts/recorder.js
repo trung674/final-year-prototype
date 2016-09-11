@@ -6,22 +6,29 @@
 
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 
-
+var constraints = {
+  audio: true,
+  video: false
+};
+/*
 if(getBrowser() == "Chrome"){
 	var constraints = {"audio": true, "video": {  "mandatory": {  "minWidth": 320,  "maxWidth": 320, "minHeight": 240,"maxHeight": 240 }, "optional": [] } };//Chrome
 }else if(getBrowser() == "Firefox"){
 	var constraints = {audio: true,video: {  width: { min: 320, ideal: 320, max: 1280 },  height: { min: 240, ideal: 240, max: 720 }}}; //Firefox
 }
+*/
 
 var recBtn = document.querySelector('button#rec');
 var pauseResBtn = document.querySelector('button#pauseRes');
 var stopBtn = document.querySelector('button#stop');
 
-var videoElement = document.querySelector('video');
+//var videoElement = document.querySelector('video');
 var dataElement = document.querySelector('#data');
-var downloadLink = document.querySelector('a#downloadLink');
-
-videoElement.controls = false;
+var soundClips = document.querySelector('div.sound-clips');
+var canvas = document.querySelector('.visualizer');
+//videoElement.controls = false;
+var audioCtx = new (window.AudioContext || webkitAudioContext)();
+var canvasCtx = canvas.getContext("2d");
 
 function errorCallback(error){
 	console.log('navigator.getUserMedia error: ', error);
@@ -39,29 +46,36 @@ var count = 0;
 
 function startRecording(stream) {
 	log('Start recording...');
-	if (typeof MediaRecorder.isTypeSupported == 'function'){
+	/*
+	if (typeof MediaRecorder.isTypeSupported == 'function')){
 		/*
 			MediaRecorder.isTypeSupported is a function announced in https://developers.google.com/web/updates/2016/01/mediarecorder and later introduced in the MediaRecorder API spec http://www.w3.org/TR/mediastream-recording/
 		*/
+		
+		/*
 		if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) {
 		  var options = {mimeType: 'video/webm;codecs=vp9'};
 		} else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8')) {
 		  var options = {mimeType: 'video/webm;codecs=vp8'};
 		}
+		
+		
+		var options = {mimeType: 'audio/mp3'};
 		log('Using '+options.mimeType);
 		mediaRecorder = new MediaRecorder(stream, options);
-	} else {
-		log('Using default codecs for browser');
-		mediaRecorder = new MediaRecorder(stream);
-	}
-
+		
+	} else { */
+	//log('Using' + options.mimeType + 'codecs for browser');
+	mediaRecorder = new MediaRecorder(stream);
+	//}
+  visualize(stream);
 	pauseResBtn.textContent = "Pause";
 
 	mediaRecorder.start(10);
 
-	var url = window.URL || window.webkitURL;
-	videoElement.src = url ? url.createObjectURL(stream) : stream;
-	videoElement.play();
+	//var url = window.URL || window.webkitURL;
+	//videoElement.src = url ? url.createObjectURL(stream) : stream;
+	//videoElement.play();
 
 	mediaRecorder.ondataavailable = function(e) {
 		//log('Data available...');
@@ -81,23 +95,43 @@ function startRecording(stream) {
 		log('Started & state = ' + mediaRecorder.state);
 	};
 
-	mediaRecorder.onstop = function(){
-		log('Stopped  & state = ' + mediaRecorder.state);
+	mediaRecorder.onstop = function(e){
+	  var clipContainer = document.createElement('article');
+    var audio = document.createElement('audio');
+    var deleteButton = document.createElement('button');
+    
+    clipContainer.classList.add('clip');
+    audio.setAttribute('controls', '');
+    deleteButton.textContent = 'Delete';
+    deleteButton.className = 'delete';
+    
+    clipContainer.appendChild(audio);
+    clipContainer.appendChild(deleteButton);
+    soundClips.appendChild(clipContainer);
+    audio.controls = true;
+	  
 
-		var blob = new Blob(chunks, {type: "video/webm"});
+		//var blob = new Blob(chunks, {type: "video/webm"});
+		var blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
 		chunks = [];
 
-		var videoURL = window.URL.createObjectURL(blob);
+		//var videoURL = window.URL.createObjectURL(blob);
+		var audioURL = window.URL.createObjectURL(blob);
+    audio.src = audioURL;
+    log('Stopped  & state = ' + mediaRecorder.state);
+		//downloadLink.href = videoURL;
+		//videoElement.src = videoURL;
+		//downloadLink.innerHTML = 'Download video file';
 
-		downloadLink.href = videoURL;
-		videoElement.src = videoURL;
-		downloadLink.innerHTML = 'Download video file';
+		//var rand =  Math.floor((Math.random() * 10000000));
+		//var name  = "video_"+rand+".webm" ;
 
-		var rand =  Math.floor((Math.random() * 10000000));
-		var name  = "video_"+rand+".webm" ;
-
-		downloadLink.setAttribute( "download", name);
-		downloadLink.setAttribute( "name", name);
+		//downloadLink.setAttribute( "download", name);
+		//downloadLink.setAttribute( "name", name);
+		deleteButton.onclick = function(e) {
+        evtTgt = e.target;
+        evtTgt.parentNode.parentNode.removeChild(evtTgt.parentNode);
+    }
 	};
 
 	mediaRecorder.onpause = function(){
@@ -121,7 +155,7 @@ function startRecording(stream) {
 
 function onBtnRecordClicked (){
 	 if (typeof MediaRecorder === 'undefined' || !navigator.getUserMedia) {
-		alert('MediaRecorder not supported on your browser, use Firefox 30 or Chrome 49 instead.');
+		alert('MediaRecorder not supported on your browser, use Firefox 36 or Chrome 49 instead.');
 	}else {
 		navigator.getUserMedia(constraints, startRecording, errorCallback);
 		recBtn.disabled = true;
@@ -132,7 +166,7 @@ function onBtnRecordClicked (){
 
 function onBtnStopClick(){
 	mediaRecorder.stop();
-	videoElement.controls = true;
+	//videoElement.controls = true;
 
 	recBtn.disabled = false;
 	pauseResBtn.disabled = true;
@@ -225,3 +259,58 @@ function getBrowser(){
 
 	return browserName;
 }
+
+function visualize(stream) {
+  var source = audioCtx.createMediaStreamSource(stream);
+
+  var analyser = audioCtx.createAnalyser();
+  analyser.fftSize = 2048;
+  var bufferLength = analyser.frequencyBinCount;
+  var dataArray = new Uint8Array(bufferLength);
+
+  source.connect(analyser);
+  //analyser.connect(audioCtx.destination);
+  
+  var WIDTH = canvas.width
+  var HEIGHT = canvas.height;
+
+  draw()
+
+  function draw() {
+
+    requestAnimationFrame(draw);
+
+    analyser.getByteTimeDomainData(dataArray);
+
+    canvasCtx.fillStyle = 'rgb(200, 200, 200)';
+    canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+
+    canvasCtx.lineWidth = 2;
+    canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
+
+    canvasCtx.beginPath();
+
+    var sliceWidth = WIDTH * 1.0 / bufferLength;
+    var x = 0;
+
+
+    for(var i = 0; i < bufferLength; i++) {
+ 
+      var v = dataArray[i] / 128.0;
+      var y = v * HEIGHT/2;
+
+      if(i === 0) {
+        canvasCtx.moveTo(x, y);
+      } else {
+        canvasCtx.lineTo(x, y);
+      }
+
+      x += sliceWidth;
+    }
+
+    canvasCtx.lineTo(canvas.width, canvas.height/2);
+    canvasCtx.stroke();
+
+  }
+}
+

@@ -13,14 +13,19 @@ block content
     .row
       div.col-md-6.col-md-offset-3
         h2.text-center Record video
-        video(controls autoplay)
+        canvas.visualizer
         br
         button.btn.btn-primary#rec(onclick='onBtnRecordClicked()') Record
         button.btn.btn-primary#pauseRes(onclick='onPauseResumeClicked()' disabled) Pause
         button.btn.btn-primary#stop(onclick='onBtnStopClick()' disabled) Stop
-        
-        a#downloadLink(download='mediarecorder.webm' name='mediarecorder.webm' href)
+        //button.btn.btn-primary#play(disabled) Play
+        //a#downloadLink(download='mediarecorder.webm' name='mediarecorder.webm' href)
+        div.sound-clips
+        br
         p#data
-
-  script(src='/javascripts/recorder.js')      
+  
+  script(src='/javascripts/recorder.js')       
+  //script(src='/javascripts/record-audio.js')
+  
+  
     
