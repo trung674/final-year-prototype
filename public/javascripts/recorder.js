@@ -50,7 +50,7 @@ function startRecording(stream) {
 		}
 		log('Using '+options.mimeType);
 		mediaRecorder = new MediaRecorder(stream, options);
-	}else{
+	} else {
 		log('Using default codecs for browser');
 		mediaRecorder = new MediaRecorder(stream);
 	}

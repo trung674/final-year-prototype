@@ -26,9 +26,11 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 app.set('port', process.env.PORT || 3000);
 app.use(require('./routes/index')(passport));
+app.use(require('./routes/user')(passport));
 
 app.use(sass({
     /* Options */
+    src: './public/sass',
     dest: './public/stylesheets',
     debug: true,
     indentedSyntax: true,
