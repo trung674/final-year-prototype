@@ -4,12 +4,6 @@
 
 // Spec is at http://dvcs.w3.org/hg/dap/raw-file/tip/media-stream-capture/RecordingProposal.html
 
-navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-
-var constraints = {
-  audio: true,
-  video: false
-};
 /*
 if(getBrowser() == "Chrome"){
 	var constraints = {"audio": true, "video": {  "mandatory": {  "minWidth": 320,  "maxWidth": 320, "minHeight": 240,"maxHeight": 240 }, "optional": [] } };//Chrome
@@ -22,18 +16,60 @@ var recBtn = document.querySelector('button#rec');
 var pauseResBtn = document.querySelector('button#pauseRes');
 var stopBtn = document.querySelector('button#stop');
 
-//var videoElement = document.querySelector('video');
+var errorElement = document.querySelector('#errorMsg');
 var dataElement = document.querySelector('#data');
 var soundClips = document.querySelector('div.sound-clips');
 var canvas = document.querySelector('.visualizer');
-//videoElement.controls = false;
 var audioCtx = new (window.AudioContext || webkitAudioContext)();
 var canvasCtx = canvas.getContext("2d");
 
-function errorCallback(error){
-	console.log('navigator.getUserMedia error: ', error);
+var isSecureOrigin = location.protocol === 'https:' ||
+location.host === 'localhost';
+if (!isSecureOrigin) {
+  alert('getUserMedia() must be run from a secure origin: HTTPS or localhost.' +
+    '\n\nChanging protocol to HTTPS');
+  location.protocol = 'HTTPS';
 }
 
+// Media constraint
+var constraints = window.constraints = {
+  audio: true,
+  video: false
+};
+
+
+function handleSuccess(stream) {
+  var audioTracks = stream.getAudioTracks();
+  console.log('Got stream with constraints:', constraints);
+  console.log('Using audio device: ' + audioTracks[0].label);
+  window.stream = stream;
+  stream.oninactive = function() {
+    console.log('Stream ended');
+  };
+}
+
+function handleError(error) {
+  if (error.name === 'ConstraintNotSatisfiedError') {
+    errorMsg('The resolution ' + constraints.video.width.exact + 'x' +
+        constraints.video.width.exact + ' px is not supported by your device.');
+  } else if (error.name === 'PermissionDeniedError') {
+    errorMsg('Permissions have not been granted to use your camera and ' +
+      'microphone, you need to allow the page access to your devices in ' +
+      'order for the demo to work.');
+  }
+  errorMsg('getUserMedia error: ' + error.name, error);
+}
+
+function errorMsg(msg, error) {
+  errorElement.innerHTML += '<p>' + msg + '</p>';
+  if (typeof error !== 'undefined') {
+    console.error(error);
+  }
+}
+
+navigator.mediaDevices.getUserMedia(constraints).
+    then(handleSuccess).catch(handleError);
+    
 /*
 var mediaSource = new MediaSource();
 mediaSource.addEventListener('sourceopen', handleSourceOpen, false);
@@ -44,7 +80,7 @@ var mediaRecorder;
 var chunks = [];
 var count = 0;
 
-function startRecording(stream) {
+function startRecording() {
 	log('Start recording...');
 	/*
 	if (typeof MediaRecorder.isTypeSupported == 'function')){
@@ -66,9 +102,9 @@ function startRecording(stream) {
 		
 	} else { */
 	//log('Using' + options.mimeType + 'codecs for browser');
-	mediaRecorder = new MediaRecorder(stream);
+	mediaRecorder = new MediaRecorder(window.stream);
 	//}
-  visualize(stream);
+  visualize(window.stream);
 	pauseResBtn.textContent = "Pause";
 
 	mediaRecorder.start(10);
@@ -95,18 +131,14 @@ function startRecording(stream) {
 		log('Started & state = ' + mediaRecorder.state);
 	};
 
-	mediaRecorder.onstop = function(e){
+	mediaRecorder.onstop = function(){
 	  var clipContainer = document.createElement('article');
     var audio = document.createElement('audio');
-    var deleteButton = document.createElement('button');
     
     clipContainer.classList.add('clip');
     audio.setAttribute('controls', '');
-    deleteButton.textContent = 'Delete';
-    deleteButton.className = 'delete';
     
     clipContainer.appendChild(audio);
-    clipContainer.appendChild(deleteButton);
     soundClips.appendChild(clipContainer);
     audio.controls = true;
 	  
@@ -128,10 +160,7 @@ function startRecording(stream) {
 
 		//downloadLink.setAttribute( "download", name);
 		//downloadLink.setAttribute( "name", name);
-		deleteButton.onclick = function(e) {
-        evtTgt = e.target;
-        evtTgt.parentNode.parentNode.removeChild(evtTgt.parentNode);
-    }
+
 	};
 
 	mediaRecorder.onpause = function(){
@@ -154,14 +183,10 @@ function startRecording(stream) {
 //}
 
 function onBtnRecordClicked (){
-	 if (typeof MediaRecorder === 'undefined' || !navigator.getUserMedia) {
-		alert('MediaRecorder not supported on your browser, use Firefox 36 or Chrome 49 instead.');
-	}else {
-		navigator.getUserMedia(constraints, startRecording, errorCallback);
-		recBtn.disabled = true;
-		pauseResBtn.disabled = false;
-		stopBtn.disabled = false;
-	}
+  startRecording();
+	recBtn.disabled = true;
+	pauseResBtn.disabled = false;
+	stopBtn.disabled = false;
 }
 
 function onBtnStopClick(){

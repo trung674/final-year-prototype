@@ -16,7 +16,6 @@ var recordedVideo = document.querySelector('video');
 
 var recordButton = document.querySelector('button#rec');
 var playButton = document.querySelector('button#play');
-var downloadButton = document.querySelector('button#download');
 recordButton.onclick = toggleRecording;
 playButton.onclick = play;
 downloadButton.onclick = download;
@@ -125,3 +124,5 @@ function download() {
     window.URL.revokeObjectURL(url);
   }, 100);
 }
+
+
