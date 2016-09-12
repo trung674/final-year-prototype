@@ -15,6 +15,7 @@ if(getBrowser() == "Chrome"){
 var recBtn = document.querySelector('button#rec');
 var pauseResBtn = document.querySelector('button#pauseRes');
 var stopBtn = document.querySelector('button#stop');
+var downloadButton = document.querySelector('button#download');
 
 var errorElement = document.querySelector('#errorMsg');
 var dataElement = document.querySelector('#data');
@@ -56,8 +57,11 @@ function handleError(error) {
     errorMsg('Permissions have not been granted to use your camera and ' +
       'microphone, you need to allow the page access to your devices in ' +
       'order for the demo to work.');
+  } else if (error.name === 'DevicesNotFoundError') { 
+    errorMsg('No recording device found');
   }
   errorMsg('getUserMedia error: ' + error.name, error);
+  recBtn.disabled = true;
 }
 
 function errorMsg(msg, error) {
@@ -196,6 +200,7 @@ function onBtnStopClick(){
 	recBtn.disabled = false;
 	pauseResBtn.disabled = true;
 	stopBtn.disabled = true;
+	downloadButton.disabled = false;
 }
 
 function onPauseResumeClicked(){
@@ -219,7 +224,14 @@ function log(message){
 	dataElement.innerHTML = dataElement.innerHTML+'<br>'+message ;
 }
 
-
+function download() {
+  var blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
+  var url = window.URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'test.ogg';
+  a.click();
+}
 
 //browser ID
 function getBrowser(){
