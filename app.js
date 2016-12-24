@@ -1,14 +1,26 @@
-var express  = require('express');
-var app      = express();
-var sass     = require('node-sass-middleware');
-var mongoose = require('mongoose');
-var passport = require('passport');
-var flash    = require('connect-flash');
-var morgan      = require('morgan');
-var bodyParser  = require('body-parser');
-var session     = require('express-session');
+// var express  = require('express');
+// var app      = express();
+// var sass     = require('node-sass-middleware');
+// var mongoose = require('mongoose');
+// var passport = require('passport');
+// var flash    = require('connect-flash');
+// var morgan      = require('morgan');
+// var bodyParser  = require('body-parser');
+// var session     = require('express-session');
 
-var configDB = require('./config/database.js');
+import express from 'express';
+import sass from 'node-sasrass-middleware';
+import mongoose from 'mongoose';
+import passport from 'passport';
+import flash from 'connect-flash';
+import morgan from 'morgan';
+import bodyParser from 'body-parser';
+import session from 'express-session';
+
+const app = express();
+
+import configDB from './config/database';
+// var configDB = require('./config/database.js');
 mongoose.connect(configDB.url); // connect to our database
 
 require('./config/passport')(passport);
@@ -42,6 +54,6 @@ app.use(express.static('./public'));
 app.set('view engine', 'pug');
 app.set('views', './views');
 
-app.listen(app.get('port'), function () {
+app.listen(app.get('port'), () => {
   console.log('Example app listening on port ' + app.get('port'));
 });

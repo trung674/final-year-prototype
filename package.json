@@ -4,7 +4,8 @@
   "description": "Prototype for final year project",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon --exec babel-node app.js --ignore public/",
+    "dev": "webpack -wd"
   },
   "author": "",
   "license": "ISC",
@@ -20,5 +21,14 @@
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "pug": "^2.0.0-beta6"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-2": "^6.18.0",
+    "nodemon": "^1.11.0",
+    "webpack": "^1.14.0"
   }
 }

@@ -12,19 +12,20 @@ block content
 
     .row
       div.col-md-6.col-md-offset-3
-        h2.text-center Record video
-        canvas.visualizer
-        br
-        button.btn.btn-primary#rec(onclick='onBtnRecordClicked()') Record
-        button.btn.btn-primary#pauseRes(onclick='onPauseResumeClicked()' disabled) Pause
-        button.btn.btn-primary#stop(onclick='onBtnStopClick()' disabled) Stop
-        button.btn.btn-primary#download(onclick='download()'disabled) Download
-        //button.btn.btn-primary#play(disabled) Play
-        //a#downloadLink(download='mediarecorder.webm' name='mediarecorder.webm' href)
-        div.sound-clips
-        br
-        p#errorMsg
-        p#data
+        h2.text-center Recording System Demo
+        div.text-center
+          canvas.visualizer
+        div.text-center
+          button.btn.btn-primary#rec(onclick='onBtnRecordClicked()') Record
+          button.btn.btn-primary#pauseRes(onclick='onPauseResumeClicked()' disabled) Pause
+          button.btn.btn-primary#stop(onclick='onBtnStopClick()' disabled) Stop
+          button.btn.btn-primary#download(onclick='download()' disabled) Download
+          //button.btn.btn-primary#play(disabled) Play
+          //a#downloadLink(download='mediarecorder.webm' name='mediarecorder.webm' href)
+          div.sound-clips
+          br
+          p#errorMsg
+          p#data
   
   script(src='/javascripts/recorder.js')       
   //script(src='/javascripts/record-audio.js')

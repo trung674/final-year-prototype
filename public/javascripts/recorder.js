@@ -39,12 +39,12 @@ var constraints = window.constraints = {
 };
 
 
-function handleSuccess(stream) {
-  var audioTracks = stream.getAudioTracks();
+function handleSuccess(mediaStream) {
+  var audioTracks = mediaStream.getAudioTracks();
   console.log('Got stream with constraints:', constraints);
   console.log('Using audio device: ' + audioTracks[0].label);
-  window.stream = stream;
-  stream.oninactive = function() {
+  window.stream = mediaStream;
+  mediaStream.oninactive = function() {
     console.log('Stream ended');
   };
 }
