@@ -25,7 +25,7 @@ var audioCtx = new (window.AudioContext || webkitAudioContext)();
 var canvasCtx = canvas.getContext("2d");
 
 var isSecureOrigin = location.protocol === 'https:' ||
-location.host === 'localhost';
+location.host === 'localhost:3000';
 if (!isSecureOrigin) {
   alert('getUserMedia() must be run from a secure origin: HTTPS or localhost.' +
     '\n\nChanging protocol to HTTPS');
@@ -57,7 +57,7 @@ function handleError(error) {
     errorMsg('Permissions have not been granted to use your camera and ' +
       'microphone, you need to allow the page access to your devices in ' +
       'order for the demo to work.');
-  } else if (error.name === 'DevicesNotFoundError') { 
+  } else if (error.name === 'DevicesNotFoundError') {
     errorMsg('No recording device found');
   }
   errorMsg('getUserMedia error: ' + error.name, error);
@@ -73,7 +73,7 @@ function errorMsg(msg, error) {
 
 navigator.mediaDevices.getUserMedia(constraints).
     then(handleSuccess).catch(handleError);
-    
+
 /*
 var mediaSource = new MediaSource();
 mediaSource.addEventListener('sourceopen', handleSourceOpen, false);
@@ -91,19 +91,19 @@ function startRecording() {
 		/*
 			MediaRecorder.isTypeSupported is a function announced in https://developers.google.com/web/updates/2016/01/mediarecorder and later introduced in the MediaRecorder API spec http://www.w3.org/TR/mediastream-recording/
 		*/
-		
+
 		/*
 		if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) {
 		  var options = {mimeType: 'video/webm;codecs=vp9'};
 		} else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8')) {
 		  var options = {mimeType: 'video/webm;codecs=vp8'};
 		}
-		
-		
+
+
 		var options = {mimeType: 'audio/mp3'};
 		log('Using '+options.mimeType);
 		mediaRecorder = new MediaRecorder(stream, options);
-		
+
 	} else { */
 	//log('Using' + options.mimeType + 'codecs for browser');
 	mediaRecorder = new MediaRecorder(window.stream);
@@ -138,14 +138,14 @@ function startRecording() {
 	mediaRecorder.onstop = function(){
 	  var clipContainer = document.createElement('article');
     var audio = document.createElement('audio');
-    
+
     clipContainer.classList.add('clip');
     audio.setAttribute('controls', '');
-    
+
     clipContainer.appendChild(audio);
     soundClips.appendChild(clipContainer);
     audio.controls = true;
-	  
+
 
 		//var blob = new Blob(chunks, {type: "video/webm"});
 		var blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
@@ -307,7 +307,7 @@ function visualize(stream) {
 
   source.connect(analyser);
   //analyser.connect(audioCtx.destination);
-  
+
   var WIDTH = canvas.width
   var HEIGHT = canvas.height;
 
@@ -332,7 +332,7 @@ function visualize(stream) {
 
 
     for(var i = 0; i < bufferLength; i++) {
- 
+
       var v = dataArray[i] / 128.0;
       var y = v * HEIGHT/2;
 
@@ -350,4 +350,3 @@ function visualize(stream) {
 
   }
 }
-
