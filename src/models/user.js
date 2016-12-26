@@ -1,24 +1,25 @@
-var mongoose = require('mongoose');
-var bcrypt   = require('bcrypt-nodejs');
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt-nodejs';
 
 // define the schema for our user model
-var userSchema = mongoose.Schema({
-    local            : {
-        email        : String,
-        password     : String,
-    }
+const userSchema = mongoose.Schema({
+    email        : String,
+    password     : String,
 });
 
 // methods ======================
 // generating a hash
-userSchema.methods.generateHash = function(password) {
+userSchema.methods.generateHash = (password) => {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
 // checking if password is valid
-userSchema.methods.validPassword = function(password) {
-    return bcrypt.compareSync(password, this.local.password);
+// strange error when using this.password directly, instead passing second parameter userPassword as this.password
+userSchema.methods.validPassword = (password, userPassword) => {
+    return bcrypt.compareSync(password, userPassword);
 };
 
 // create the model for users and expose it to our app
-module.exports = mongoose.model('User', userSchema);
+// module.exports = mongoose.model('User', userSchema);
+
+export default mongoose.model('User', userSchema);

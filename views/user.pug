@@ -7,7 +7,7 @@ block content
         h1.text-center Check your details below:
         ul.user-details
           li ID ---> #{user._id}
-          li Username ---> #{user.local.email}
+          li Username ---> #{user.email}
         a(href='/signout', class='text-center') Sign Out
 
     .row
@@ -26,9 +26,6 @@ block content
           br
           p#errorMsg
           p#data
-  
-  script(src='/javascripts/recorder.js')       
+
+  script(src='/javascripts/recorder.js')
   //script(src='/javascripts/record-audio.js')
-  
-  
-    

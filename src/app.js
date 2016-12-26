@@ -19,10 +19,11 @@ import session from 'express-session';
 import path from 'path';
 
 const app = express();
-
 import configDB from './config/database';
 // var configDB = require('./config/database.js');
+mongoose.Promise = global.Promise; //use ES6 promise
 mongoose.connect(configDB.url); // connect to our database
+
 
 require('./config/passport')(passport);
 app.use(morgan('dev')); // log every request to the console
