@@ -17,12 +17,19 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import path from 'path';
+import dotenv from 'dotenv';
 
+dotenv.config();
 const app = express();
 import configDB from './config/database';
 // var configDB = require('./config/database.js');
 mongoose.Promise = global.Promise; //use ES6 promise
-mongoose.connect(configDB.url); // connect to our database
+mongoose.connect(process.env.DATABASE_URI) // connect to our database
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('Successfully connect to database');
+});
 
 
 require('./config/passport')(passport);

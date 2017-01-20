@@ -3,3 +3,4 @@ npm-debug.log
 mongod
 data/*
 dist/
+.env
