@@ -21,13 +21,22 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 const app = express();
-import configDB from './config/database';
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+app.use(function(req, res, next){
+  res.io = io;
+  next();
+});
+// io.on('connection', function (socket) {
+//   console.log('Establishing socketio connection...');
+// });
+// import configDB from './config/database';
 // var configDB = require('./config/database.js');
 mongoose.Promise = global.Promise; //use ES6 promise
 mongoose.connect(process.env.DATABASE_URI) // connect to our database
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
+db.once('open', () => {
   console.log('Successfully connect to database');
 });
 

@@ -1,3 +1,5 @@
+$(document).ready(function() {
+
 'use strict';
 
 /* globals MediaRecorder */
@@ -38,7 +40,6 @@ var constraints = window.constraints = {
   video: false
 };
 
-
 function handleSuccess(mediaStream) {
   var audioTracks = mediaStream.getAudioTracks();
   console.log('Got stream with constraints:', constraints);
@@ -74,6 +75,10 @@ function errorMsg(msg, error) {
 navigator.mediaDevices.getUserMedia(constraints).
     then(handleSuccess).catch(handleError);
 
+var socketio = io();
+socketio.on('user', () => {
+  console.log(data.status);
+});
 /*
 var mediaSource = new MediaSource();
 mediaSource.addEventListener('sourceopen', handleSourceOpen, false);
@@ -118,16 +123,16 @@ function startRecording() {
 	//videoElement.play();
 
 	mediaRecorder.ondataavailable = function(e) {
-		//log('Data available...');
-		//console.log(e.data);
-		//console.log(e.data.type);
-		//console.log(e);
+		// log('Data available...');
+		// console.log(e.data);
+		// console.log(e.data.type);
+		// console.log(e);
 		chunks.push(e.data);
 	};
 
 	mediaRecorder.onerror = function(e){
 		log('Error: ' + e);
-		console.log('Error: ', e);
+		// console.log('Error: ', e);
 	};
 
 
@@ -196,7 +201,6 @@ function onBtnRecordClicked (){
 function onBtnStopClick(){
 	mediaRecorder.stop();
 	//videoElement.controls = true;
-
 	recBtn.disabled = false;
 	pauseResBtn.disabled = true;
 	stopBtn.disabled = true;
@@ -209,6 +213,7 @@ function onPauseResumeClicked(){
 		pauseResBtn.textContent = "Resume";
 		mediaRecorder.pause();
 		stopBtn.disabled = true;
+
 	}else{
 		console.log("resume");
 		pauseResBtn.textContent = "Pause";
@@ -350,3 +355,4 @@ function visualize(stream) {
 
   }
 }
+});
