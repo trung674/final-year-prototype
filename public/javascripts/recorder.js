@@ -1,5 +1,3 @@
-$(document).ready(function() {
-
 'use strict';
 
 /* globals MediaRecorder */
@@ -75,7 +73,7 @@ function errorMsg(msg, error) {
 navigator.mediaDevices.getUserMedia(constraints).
     then(handleSuccess).catch(handleError);
 
-var socketio = io();
+var socketio = io('http://localhost:3000');
 socketio.on('user', () => {
   console.log(data.status);
 });
@@ -355,4 +353,3 @@ function visualize(stream) {
 
   }
 }
-});
