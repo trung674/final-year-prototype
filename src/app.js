@@ -21,15 +21,13 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 const app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+const server = require('http').createServer(app);
+const io = require('socket.io').listen(server);
 app.use(function(req, res, next){
   res.io = io;
   next();
 });
-// io.on('connection', function (socket) {
-//   console.log('Establishing socketio connection...');
-// });
+
 // import configDB from './config/database';
 // var configDB = require('./config/database.js');
 mongoose.Promise = global.Promise; //use ES6 promise
@@ -72,6 +70,10 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, '../views'));
 
-app.listen(app.get('port'), () => {
+server.listen(app.get('port'), () => {
   console.log('Example app listening on port ' + app.get('port'));
+});
+
+io.on('connection', function (socket) {
+  console.log('Establishing socketio connection...');
 });

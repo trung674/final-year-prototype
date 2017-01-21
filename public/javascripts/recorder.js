@@ -73,8 +73,8 @@ function errorMsg(msg, error) {
 navigator.mediaDevices.getUserMedia(constraints).
     then(handleSuccess).catch(handleError);
 
-var socketio = io('http://localhost:3000');
-socketio.on('user', () => {
+var socketio = io.connect('http://example.com:3000');
+socketio.on('user', (data) => {
   console.log(data.status);
 });
 /*
