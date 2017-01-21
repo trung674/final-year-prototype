@@ -21,12 +21,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 const app = express();
-const server = require('http').createServer(app);
-const io = require('socket.io').listen(server);
-app.use(function(req, res, next){
-  res.io = io;
-  next();
-});
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 
 // import configDB from './config/database';
 // var configDB = require('./config/database.js');
@@ -70,10 +66,11 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, '../views'));
 
-server.listen(app.get('port'), () => {
-  console.log('Example app listening on port ' + app.get('port'));
-});
-
 io.on('connection', function (socket) {
   console.log('Establishing socketio connection...');
+  socket.emit('user', "Did you hear me ?");
+});
+
+server.listen(app.get('port'), () => {
+  console.log('Example app listening on port ' + app.get('port'));
 });

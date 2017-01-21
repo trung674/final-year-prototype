@@ -73,9 +73,10 @@ function errorMsg(msg, error) {
 navigator.mediaDevices.getUserMedia(constraints).
     then(handleSuccess).catch(handleError);
 
-var socketio = io.connect('http://example.com:3000');
-socketio.on('user', (data) => {
-  console.log(data.status);
+var socket = io.connect('http://localhost:3000');
+socket.on('user', function(data){
+  console.log(data);
+  console.log("I heared you!");
 });
 /*
 var mediaSource = new MediaSource();

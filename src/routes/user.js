@@ -7,7 +7,7 @@ module.exports = function(passport){
   	res.render('user', {
   		user : req.user // get the user out of session and pass to template
   	});
-    res.io.emit('user', {status: 'Connect Successfully'});
+    // res.io.emit('user', {status: 'Connect Successfully'});
   });
 
   return router;
