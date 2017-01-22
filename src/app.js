@@ -18,22 +18,27 @@ import bodyParser from 'body-parser';
 import session from 'express-session';
 import path from 'path';
 import dotenv from 'dotenv';
+import configDB from './config/database';
 
 dotenv.config();
 const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
+const MongoStore = require('connect-mongo')(session);
 
 // import configDB from './config/database';
 // var configDB = require('./config/database.js');
 mongoose.Promise = global.Promise; //use ES6 promise
-mongoose.connect(process.env.DATABASE_URI) // connect to our database
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', () => {
-  console.log('Successfully connect to database');
-});
-
+// if (process.env.NODE_ENV === 'production') {
+  mongoose.connect(process.env.DATABASE_URI) // connect to remote database
+  var db = mongoose.connection;
+  db.on('error', console.error.bind(console, 'connection error:'));
+  db.once('open', () => {
+    console.log('Successfully connect to database');
+  });
+// } else {
+//   mongoose.connect(configDB.url) // connect to local databas
+// }
 
 require('./config/passport')(passport);
 app.use(morgan('dev')); // log every request to the console
@@ -42,7 +47,11 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({
   secret: 'secretkey',
   resave: true,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store: new MongoStore({mongooseConnection: mongoose.connection},
+    (err) => {
+      console.log(err || 'connect-mongodb setup ok');
+    })
 })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
@@ -69,6 +78,9 @@ app.set('views', path.join(__dirname, '../views'));
 io.on('connection', function (socket) {
   console.log('Establishing socketio connection...');
   socket.emit('user', "Did you hear me ?");
+  socket.on('incomingdata', (data) => {
+    console.log(data);
+  });
 });
 
 server.listen(app.get('port'), () => {

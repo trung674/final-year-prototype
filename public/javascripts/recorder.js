@@ -152,11 +152,12 @@ function startRecording() {
 
 
 		//var blob = new Blob(chunks, {type: "video/webm"});
-		var blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
+		var blob = new Blob(chunks, { 'type' : 'audio/wav; codecs=opus' });
 		chunks = [];
 
 		//var videoURL = window.URL.createObjectURL(blob);
 		var audioURL = window.URL.createObjectURL(blob);
+    socket.emit('incomingdata', blob);
     audio.src = audioURL;
     log('Stopped  & state = ' + mediaRecorder.state);
 		//downloadLink.href = videoURL;
