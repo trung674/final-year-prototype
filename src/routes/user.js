@@ -1,13 +1,12 @@
-var express = require('express');
+// var express = require('express');
+import express from 'express';
 var router = express.Router();
 
-
-module.exports = function(passport){
-  router.get('/user', isLoggedIn, function(req, res) {
+module.exports = (passport) => {
+  router.get('/user', isLoggedIn, (req, res) => {
   	res.render('user', {
   		user : req.user // get the user out of session and pass to template
   	});
-    // res.io.emit('user', {status: 'Connect Successfully'});
   });
 
   return router;

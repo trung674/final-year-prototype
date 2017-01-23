@@ -152,7 +152,7 @@ function startRecording() {
 
 
 		//var blob = new Blob(chunks, {type: "video/webm"});
-		var blob = new Blob(chunks, { 'type' : 'audio/wav; codecs=opus' });
+		var blob = new Blob(chunks, { 'type' : 'audio/wav' });
 		chunks = [];
 
 		//var videoURL = window.URL.createObjectURL(blob);

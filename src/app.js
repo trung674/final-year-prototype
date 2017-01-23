@@ -22,6 +22,7 @@ import configDB from './config/database';
 
 dotenv.config();
 const app = express();
+// Setup SocketIO
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const MongoStore = require('connect-mongo')(session);
@@ -55,7 +56,7 @@ app.use(session({
 })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
-app.use(flash()); // use connect-flash for flash messages stored in session
+app.use(flash()); // use connect-flash for flash messages stored in sesresion
 
 app.set('port', process.env.PORT || 3000);
 app.use(require('./routes/index')(passport));
@@ -75,12 +76,11 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, '../views'));
 
+require('./record.js')(io);
+
 io.on('connection', function (socket) {
   console.log('Establishing socketio connection...');
   socket.emit('user', "Did you hear me ?");
-  socket.on('incomingdata', (data) => {
-    console.log(data);
-  });
 });
 
 server.listen(app.get('port'), () => {
