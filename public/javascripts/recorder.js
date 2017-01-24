@@ -40,12 +40,10 @@ var constraints = window.constraints = {
 
 function handleSuccess(mediaStream) {
   var audioTracks = mediaStream.getAudioTracks();
+  console.log(mediaStream);
   console.log('Got stream with constraints:', constraints);
   console.log('Using audio device: ' + audioTracks[0].label);
   window.stream = mediaStream;
-  mediaStream.oninactive = function() {
-    console.log('Stream ended');
-  };
 }
 
 function handleError(error) {
@@ -87,6 +85,7 @@ var sourceBuffer;
 var mediaRecorder;
 var chunks = [];
 var count = 0;
+var recordAudio;
 
 function startRecording() {
 	log('Start recording...');
@@ -110,12 +109,13 @@ function startRecording() {
 
 	} else { */
 	//log('Using' + options.mimeType + 'codecs for browser');
-	mediaRecorder = new MediaRecorder(window.stream);
-	//}
-  visualize(window.stream);
-	pauseResBtn.textContent = "Pause";
+	// mediaRecorder = new MediaRecorder(window.stream);
 
-	mediaRecorder.start(10);
+	//}
+  // visualize(window.stream);
+	// pauseResBtn.textContent = "Pause";
+  //
+	// mediaRecorder.start(10);
 
 	//var url = window.URL || window.webkitURL;
 	//videoElement.src = url ? url.createObjectURL(stream) : stream;
@@ -152,12 +152,12 @@ function startRecording() {
 
 
 		//var blob = new Blob(chunks, {type: "video/webm"});
-		var blob = new Blob(chunks, { 'type' : 'audio/wav' });
+		var blob = new Blob(chunks, { 'type' : 'video/webm' });
 		chunks = [];
 
 		//var videoURL = window.URL.createObjectURL(blob);
 		var audioURL = window.URL.createObjectURL(blob);
-    socket.emit('incomingdata', blob);
+    socket.emit('incomingdata', audioURL);
     audio.src = audioURL;
     log('Stopped  & state = ' + mediaRecorder.state);
 		//downloadLink.href = videoURL;
@@ -192,14 +192,37 @@ function startRecording() {
 //}
 
 function onBtnRecordClicked (){
-  startRecording();
+  // startRecording
+  recordAudio = new RecordRTC(window.stream, {type: 'audio'});
+  recordAudio.startRecording();
+	// recordAudio.setRecordingDuration(10);
+  visualize(window.stream);
+	pauseResBtn.textContent = "Pause";
+
 	recBtn.disabled = true;
 	pauseResBtn.disabled = false;
 	stopBtn.disabled = false;
 }
 
 function onBtnStopClick(){
-	mediaRecorder.stop();
+  recordAudio.stopRecording(function() {
+      // get audio data-URL
+      recordAudio.getDataURL(function(audioDataURL) {
+          var files = {
+              audio: {
+                  type: recordAudio.getBlob().type || 'audio/wav',
+                  dataURL: audioDataURL
+              }
+          };
+
+      		//var videoURL = window.URL.createObjectURL(blob);
+      		var audioURL = window.URL.createObjectURL(audioDataURL);
+          audio.src = audioURL;
+          socket.emit('incomingdata', files);
+          // if (window.stream) window.stream.stop();
+      });
+  });
+	// mediaRecorder.stop();
 	//videoElement.controls = true;
 	recBtn.disabled = false;
 	pauseResBtn.disabled = true;
@@ -209,15 +232,17 @@ function onBtnStopClick(){
 
 function onPauseResumeClicked(){
 	if(pauseResBtn.textContent === "Pause"){
+    recordAudio.pauseRecording();
 		console.log("pause");
 		pauseResBtn.textContent = "Resume";
-		mediaRecorder.pause();
+		// mediaRecorder.pause();
 		stopBtn.disabled = true;
 
 	}else{
 		console.log("resume");
+    recordAudio.resumeRecording();
 		pauseResBtn.textContent = "Pause";
-		mediaRecorder.resume();
+		// mediaRecorder.resume();
 		stopBtn.disabled = false;
 	}
 	recBtn.disabled = true;

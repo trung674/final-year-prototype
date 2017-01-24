@@ -4,7 +4,9 @@ import fs from 'fs';
 module.exports = (io) => {
     io.on('connection', function(socket) {
       socket.on('incomingdata', (data) => {
-        writeToDisk(data, 'testing.wav');
+        // console.log(data.audio.dataURL);
+        writeToDisk(data.audio.dataURL, 'testing.wav');
+        // console.log(data);
       });
     });
 };
@@ -22,8 +24,8 @@ function writeToDisk(dataURL, fileName) {
     }
 
     // dataURL = dataURL.split(',').pop();
-    fileBuffer = new Buffer(dataURL, 'base64');
-    fs.writeFileSync(filePath, fileBuffer);
+    // fileBuffer = Buffer.from(dataURL);
+    fs.writeFileSync(filePath, Buffer.from(new Uint8Array(dataURL)));
 
     console.log('filePath', filePath);
 }
