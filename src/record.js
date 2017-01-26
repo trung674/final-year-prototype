@@ -23,9 +23,9 @@ function writeToDisk(dataURL, fileName) {
         fileID += 1;
     }
 
-    // dataURL = dataURL.split(',').pop();
-    // fileBuffer = Buffer.from(dataURL);
-    fs.writeFileSync(filePath, Buffer.from(new Uint8Array(dataURL)));
+    dataURL = dataURL.split(',').pop();
+    fileBuffer = Buffer.from(dataURL, 'base64');
+    fs.writeFileSync(filePath, fileBuffer);
 
     console.log('filePath', filePath);
 }

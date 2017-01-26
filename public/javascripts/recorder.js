@@ -216,7 +216,16 @@ function onBtnStopClick(){
           };
 
       		//var videoURL = window.URL.createObjectURL(blob);
-      		var audioURL = window.URL.createObjectURL(audioDataURL);
+          var clipContainer = document.createElement('article');
+          var audio = document.createElement('audio');
+
+          clipContainer.classList.add('clip');
+          audio.setAttribute('controls', '');
+
+          clipContainer.appendChild(audio);
+          soundClips.appendChild(clipContainer);
+          audio.controls = true;
+      		var audioURL = window.URL.createObjectURL(recordAudio.getBlob());
           audio.src = audioURL;
           socket.emit('incomingdata', files);
           // if (window.stream) window.stream.stop();
