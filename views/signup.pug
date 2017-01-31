@@ -5,37 +5,35 @@ block content
     div.row
       div.col-md-6.col-md-offset-3
         h1.text-center Registration Details
+        if message
+          h4.error-message.text-danger #{message}
         form(action='/signup', method='POST')
           .form-group
             input(type='email', name='email', class='form-control', placeholder='Email',required)
-          .form-group  
-            input(type='text', name='username', class='form-control nomargin', placeholder='Username', required)  
+          .form-group
+            input(type='text', name='username', class='form-control nomargin', placeholder='Username', required)
           .form-group#form-password
             input(type='password', name='password',id='password', class='form-control nomargin', placeholder='Password', required)
-          .form-group#form-re-password
-            input(type='password', name='re_password',id='re-password', class='form-control nomargin', placeholder='Type password again', required)
+          //- .form-group#form-re-password
+          //-   input(type='password', name='re_password',id='re-password', class='form-control nomargin', placeholder='Type password again', required)
           .h2 Personal Information (Optional)
-          .form-group  
+          .form-group
             input(type='text', name='fullname', class='form-control nomargin', placeholder='What is your name ?')
-          .form-group  
-            select.form-control(name='gender', required)
-              option Male
-              option Female
-              option Prefer not to say  
-          .form-group  
+          .form-group
+            select.form-control(name='gender')
+              option(value='', disabled, selected, hidden) What is your gender ?
+              option(value='Male') Male
+              option(value='Female') Female
+              option(value='Prefer not to say') Prefer not to say
+          .form-group
             input(type='date', name='date_of_birth', class='form-control nomargin', placeholder='What is your date of birth ?')
-          .form-group  
-            input(type='text', name='place_of_birth', class='form-control nomargin', placeholder='Where were you born ?')   
-          .form-group  
-            input(type='text', name='first_language', class='form-control nomargin', placeholder='What is your first language ?')  
-          .form-group  
+          .form-group
+            input(type='text', name='place_of_birth', class='form-control nomargin', placeholder='Where were you born ?')
+          .form-group
+            input(type='text', name='first_language', class='form-control nomargin', placeholder='What is your first language ?')
+          .form-group
             textarea.form-control(rows='4', name='medical_condition', placeholder='What is your current medical condition ?')
-            //- input(type='text', name='medical_condition', class='form-control nomargin', placeholder='What is your current medical condition ?')      
+            //- input(type='text', name='medical_condition', class='form-control nomargin', placeholder='What is your current medical condition ?')
           button(class='btn btn-lg btn-primary btn-block', type='submit') Register
           span.clearfix
           a(href='/signin', class='text-center new-account') Log in
-          #message
-      if message
-        h1.text-center.error-message #{message}
-
-

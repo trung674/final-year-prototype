@@ -8,9 +8,9 @@ module.exports = function(passport){
 	});
 
   router.get('/signin', function (req, res) {
-    res.render('index', { message: req.flash('loginMessage')});
+    res.render('index', { message: req.flash('signinMessage')});
   });
-  
+
  router.post('/signin', passport.authenticate('login', {
     successRedirect : '/user',
     failureRedirect: '/signin',
@@ -20,7 +20,7 @@ module.exports = function(passport){
   router.get('/signup', function(req, res){
     res.render('signup', { message: req.flash('signupMessage')});
   });
-  
+
   router.post('/signup', passport.authenticate('signup', {
     successRedirect : '/signin',
     failureRedirect: '/signup',
@@ -34,7 +34,7 @@ module.exports = function(passport){
 		req.logout();
 		res.redirect('/');
 	});
-	
+
 	return router;
 }
 
