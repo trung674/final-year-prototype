@@ -10,7 +10,7 @@ module.exports = (io) => {
       });
     });
 };
-
+    
 function writeToDisk(dataURL, fileName) {
     var fileExtension = fileName.split('.').pop(),
         fileRootNameWithBase = './uploads/' + fileName,

@@ -36,7 +36,6 @@ module.exports = (passport) => {
         passReqToCallback : true // allows us to pass back the entire request to the callback
     },
     (req, email, password, done) => {
-
         // asynchronous
         // User.findOne wont fire unless data is sent back
         process.nextTick(() => {
@@ -47,7 +46,6 @@ module.exports = (passport) => {
             // if there are any errors, return the error
             if (err)
                 return done(err);
-
             // check to see if theres already a user with that email
             if (user) {
                 return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
@@ -59,7 +57,20 @@ module.exports = (passport) => {
 
                 // set the user's local credentials
                 newUser.email    = email;
+                newUser.username = req.body.username;
                 newUser.password = newUser.generateHash(password);
+                if(req.body.fullname) 
+                    newUser.information.fullname = req.body.fullname;
+                if(req.body.gender) 
+                    newUser.information.gender = req.body.gender;
+                if(req.body.date_of_birth) 
+                    newUser.information.date_of_birth = req.body.date_of_birth;
+                if(req.body.place_of_birth) 
+                    newUser.information.place_of_birth = req.body.place_of_birth;
+                if(req.body.first_language) 
+                    newUser.information.first_language = req.body.first_language;
+                if(req.body.medical_condition) 
+                    newUser.information.medical_condition = req.body.medical_condition;
 
                 // save the user
                 newUser.save((err) => {

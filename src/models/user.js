@@ -4,8 +4,24 @@ import bcrypt from 'bcrypt-nodejs';
 // define the schema for our user model
 const userSchema = mongoose.Schema({
     email        : String,
+    username     : String,
     password     : String,
-});
+    information  : {
+        fullname          : String,
+        gender            : String,
+        date_of_birth     : Date,
+        place_of_birth    : String,
+        first_language    : String,
+        medical_condition : String,
+    },
+    records      : [{
+        // session_id        : {type: mongoose.Types.ObjectId, ref: 'Re'
+        path              : String,
+        status            : String,
+    }]
+},
+{ timestamps: true }
+);
 
 // methods ======================
 // generating a hash

@@ -4,3 +4,4 @@ mongod
 uploads/*
 dist/
 .env
+.vscode/
