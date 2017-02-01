@@ -1,6 +1,7 @@
 // var express = require('express');
 import express from 'express';
-var router = express.Router();
+import Session from '../models/session';
+const router = express.Router();
 
 module.exports = (passport) => {
   router.get('/user', isLoggedIn, (req, res) => {
@@ -8,6 +9,15 @@ module.exports = (passport) => {
   		user : req.user // get the user out of session and pass to template
   	});
   });
+
+  router.get('/session', isLoggedIn, (req, res) => {
+  	res.render('session');
+  });
+
+  // router.post('/session', isLoggedIn, (req, res) => {
+  //
+  // });
+
 
   return router;
 }

@@ -1,13 +1,15 @@
-var express = require('express');
-var router = express.Router();
+// var express = require('express');
+// var router = express.Router();
 
+import express from 'express';
+const router = express.Router();
 
 module.exports = function(passport){
-  router.get('/', isLoggedIn, function(req, res) {
+  router.get('/', isLoggedIn, (req, res) => {
 		res.redirect('/user');
 	});
 
-  router.get('/signin', function (req, res) {
+  router.get('/signin', (req, res) => {
     res.render('index', { message: req.flash('signinMessage')});
   });
 
@@ -16,8 +18,8 @@ module.exports = function(passport){
     failureRedirect: '/signin',
     failureFlash : true
   }));
-  
-  router.get('/signup', function(req, res){
+
+  router.get('/signup', (req, res) => {
     res.render('signup', { message: req.flash('signupMessage')});
   });
 
@@ -30,7 +32,7 @@ module.exports = function(passport){
 	// =====================================
 	// LOGOUT ==============================
 	// =====================================
-	router.get('/signout', function(req, res) {
+	router.get('/signout', (req, res) => {
 		req.logout();
 		res.redirect('/');
 	});
@@ -39,11 +41,9 @@ module.exports = function(passport){
 }
 
 function isLoggedIn(req, res, next) {
-
 	// if user is authenticated in the session, carry on
 	if (req.isAuthenticated())
 		return next();
-
 	// if they aren't redirect them to the home page
 	res.redirect('/signin');
 }

@@ -15,7 +15,7 @@ const userSchema = mongoose.Schema({
         medical_condition : String,
     },
     records      : [{
-        // session_id        : {type: mongoose.Types.ObjectId, ref: 'Re'
+        session_id        : {type: mongoose.Schema.Types.ObjectId, ref: 'Session'},
         path              : String,
         status            : String,
     }]
