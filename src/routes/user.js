@@ -14,9 +14,9 @@ module.exports = (passport) => {
   	res.render('session');
   });
 
-  // router.post('/session', isLoggedIn, (req, res) => {
-  //
-  // });
+  router.post('/session', isLoggedIn, (req, res) => {
+    console.log(req.body);
+  });
 
 
   return router;

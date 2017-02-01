@@ -9,15 +9,15 @@ block content
           .form-group
             input(type='text', name='title', class='form-control', placeholder='Title',required)
           .form-group
-            textarea.form-control(rows='4', name='description', placeholder='Session Description....')
+            textarea.form-control(rows='4', name='description', placeholder='Session Description....', required)
           .form-group
-            select.form-control(name='type')
+            select.form-control(name='type', id='session-type', onchange='changeSessionContent()', required)
               option(value='', disabled, selected, hidden) Sesstion type ?
               option(value='words') Words
               option(value='sentences') Sentences
-              option(value='mix') Mix Words/Sentences
               option(value='paragraphs') Short paragraph(s)
               option(value='speech') Free speech
+
           .form-group
-            textarea.form-control(rows='4', name='content', placeholder='Session content....')    
+            textarea.form-control(rows='4', name='content', placeholder='Session Content....', id='session-content', required)
           button(class='btn btn-lg btn-primary btn-block', type='submit') Submit
