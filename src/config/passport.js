@@ -44,7 +44,7 @@ module.exports = (passport) => {
               return done(err);
           // check to see if theres already a user with that username
           if (user) {
-              return done(null, false, req.flash('signupMessage', 'This user name is already taken.'));
+              return done(null, false, req.flash('signupMessage', 'This name is already taken.'));
           } else {
             // then check email
             User.findOne({ 'email' :  email }, (err, user) => {
@@ -75,7 +75,7 @@ module.exports = (passport) => {
                         newUser.information.first_language = req.body.first_language;
                     if(req.body.medical_condition)
                         newUser.information.medical_condition = req.body.medical_condition;
-
+                    newUser.admin = false;
                     // save the user
                     newUser.save((err) => {
                         if (err)
@@ -101,7 +101,6 @@ module.exports = (passport) => {
         // find a user whose email is the same as the forms email
         // we are checking to see if the user trying to login already exists
         User.findOne({ 'email' :  email }, (err, user) => {
-            console.log(user.password);
             // if there are any errors, return the error before anything else
             if (err)
                 return done(err);
@@ -118,5 +117,53 @@ module.exports = (passport) => {
             return done(null, user);
         });
 
+    }));
+
+    passport.use('admin_signup', new Strategy({
+        // by default, local strategy uses username and password, we will override with email
+        usernameField : 'email',
+        passwordField : 'password',
+        passReqToCallback : true // allows us to pass back the entire request to the callback
+    },
+    (req, email, password, done) => {
+        // asynchronous
+        // User.findOne wont fire unless data is sent back
+        process.nextTick(() => {
+        User.findOne({'username': req.body.username}, (err, user) => {
+          if (err)
+              return done(err);
+          // check to see if theres already a user with that username
+          if (user) {
+              return done(null, false, req.flash('signupMessage', 'This name is already taken.'));
+          } else {
+            // then check email
+            User.findOne({ 'email' :  email }, (err, user) => {
+                // if there are any errors, return the error
+                if (err)
+                    return done(err);
+                // check to see if theres already a user with that email
+                if (user) {
+                    return done(null, false, req.flash('signupMessage', 'This email is already taken.'));
+                } else {
+                    // if there is no user with that email
+                    // create the user
+                    let newUser = new User();
+
+                    // set the user's local credentials
+                    newUser.email    = email;
+                    newUser.username = req.body.username;
+                    newUser.password = newUser.generateHash(password);
+                    newUser.admin = true;
+                    // save the user
+                    newUser.save((err) => {
+                        if (err)
+                            throw err;
+                        return done(null, newUser, req.flash('signinMessage', 'You have successfully registered for an administrator account.'));
+                    });
+                }
+            });
+          }
+        });
+        });
     }));
 };

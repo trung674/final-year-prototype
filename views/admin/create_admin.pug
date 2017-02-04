@@ -1,0 +1,17 @@
+extends ../template/layout
+
+block content
+  div.container
+    div.row
+      div.col-md-6.col-md-offset-3
+        h1.text-center Register new administrator account
+        if message
+          h4.error-message.text-danger #{message}
+        form(action='/create_admin', method='POST')
+          .form-group
+            input(type='email', name='email', class='form-control', placeholder='Email',required)
+          .form-group
+            input(type='text', name='username', class='form-control nomargin', placeholder='Username', required)
+          .form-group#form-password
+            input(type='password', name='password', class='form-control nomargin', placeholder='Password', required)
+          button(class='btn btn-lg btn-primary btn-block', type='submit') Register

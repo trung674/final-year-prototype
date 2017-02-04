@@ -61,6 +61,7 @@ app.use(flash()); // use connect-flash for flash messages stored in sesresion
 app.set('port', process.env.PORT || 3000);
 app.use(require('./routes/index')(passport));
 app.use(require('./routes/user')(passport));
+app.use(require('./routes/admin')(passport));
 
 app.use(sass({
     /* Options */

@@ -6,21 +6,26 @@ const router = express.Router();
 
 module.exports = function(passport){
   router.get('/', isLoggedIn, (req, res) => {
-		res.redirect('/user');
+		res.redirect('user/user');
 	});
 
   router.get('/signin', (req, res) => {
-    res.render('index', { message: req.flash('signinMessage')});
+    res.render('user/signin', { message: req.flash('signinMessage')});
   });
 
- router.post('/signin', passport.authenticate('login', {
-    successRedirect : '/user',
-    failureRedirect: '/signin',
-    failureFlash : true
-  }));
-
+ router.post('/signin',
+    passport.authenticate('login', {
+      failureRedirect: '/signin',
+      failureFlash : true
+    }), function(req, res) {
+      if (!req.user.admin)
+        return res.redirect('/user');
+      else
+        return res.redirect('/admin');
+  });
+  
   router.get('/signup', (req, res) => {
-    res.render('signup', { message: req.flash('signupMessage')});
+    res.render('user/signup', { message: req.flash('signupMessage')});
   });
 
   router.post('/signup', passport.authenticate('signup', {

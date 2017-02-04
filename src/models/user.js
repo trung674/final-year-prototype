@@ -18,7 +18,8 @@ const userSchema = mongoose.Schema({
         session_id        : {type: mongoose.Schema.Types.ObjectId, ref: 'Session'},
         path              : String,
         status            : String,
-    }]
+    }],
+    admin: Boolean
 },
 { timestamps: true }
 );
@@ -33,6 +34,11 @@ userSchema.methods.generateHash = (password) => {
 // strange error when using this.password directly, instead passing second parameter userPassword as this.password
 userSchema.methods.validPassword = (password, userPassword) => {
     return bcrypt.compareSync(password, userPassword);
+};
+
+// checking if user is admin
+userSchema.methods.isAdmin = (admin) => {
+  return admin ? true : false;
 };
 
 // create the model for users and expose it to our app

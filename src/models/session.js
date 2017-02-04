@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-// define the schema for our user model
+// define the schema for our session model
 const sessionSchema = mongoose.Schema({
     title        : String,
     description  : String,
@@ -10,7 +10,5 @@ const sessionSchema = mongoose.Schema({
 { timestamps: true }
 );
 
-// create the model for users and expose it to our app
-// module.exports = mongoose.model('User', userSchema);
-
+// create the model for users and expose it to our ap
 export default mongoose.model('Session', sessionSchema);

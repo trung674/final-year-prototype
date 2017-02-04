@@ -1,4 +1,4 @@
-extends template/layout
+extends ../template/layout
 
 block content
   div.container
@@ -9,7 +9,6 @@ block content
           li ID ---> #{user._id}
           li Username ---> #{user.email}
         a(href='/signout', class='text-center') Sign Out
-        a(href='/session', class='text-center') Create new session
 
     .row
       div.col-md-6.col-md-offset-3
