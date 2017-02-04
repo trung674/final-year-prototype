@@ -1,6 +1,5 @@
 // var express = require('express');
 import express from 'express';
-import Session from '../models/session';
 const router = express.Router();
 
 module.exports = (passport) => {

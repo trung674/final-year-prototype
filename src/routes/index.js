@@ -18,12 +18,13 @@ module.exports = function(passport){
       failureRedirect: '/signin',
       failureFlash : true
     }), function(req, res) {
+      // If log in as admin then redirect to /admin, else to /user
       if (!req.user.admin)
         return res.redirect('/user');
       else
         return res.redirect('/admin');
   });
-  
+
   router.get('/signup', (req, res) => {
     res.render('user/signup', { message: req.flash('signupMessage')});
   });

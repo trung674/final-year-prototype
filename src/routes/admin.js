@@ -1,5 +1,4 @@
 import express from 'express';
-import User from '../models/user';
 const router = express.Router();
 
 module.exports = (passport) => {
@@ -40,5 +39,5 @@ function isLoggedInAsAdmin(req, res, next) {
 		return next();
 
 	// if they aren't redirect them to the home page
-	res.send('404', 'Unauthorized');
+	res.status(404).send("<h1> 404 </h1> <h3>Unauthorized access</h3>");
 }
