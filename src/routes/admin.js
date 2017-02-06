@@ -37,19 +37,18 @@ module.exports = (passport) => {
         req.flash('message', 'This session title is already existed !');
         res.redirect('/create_session');
       } else {
-        // let newSession = new Session();
-        // newSession.title = req.body.title;
-        // newSession.description = req.body.username;
-        // newSession.type = newSession.generateHash(password);
-        // newSession.content = true;
-        // // save the user
-        // newSession.save((err) => {
-        //     if (err)
-        //         throw err;
-        //     return done(null, newSession, req.flash('signinMessage', 'You have successfully registered for an administrator account.'));
-        // });
-        console.log(req.body.content);
-        console.log(formatContent(req.body.content));
+        let newSession = new Session();
+        newSession.title = req.body.title;
+        newSession.description = req.body.username;
+        newSession.type = req.body.type;
+        newSession.content = formatContent(req.body.content);
+        // save the user
+        newSession.save((err) => {
+            if (err)
+                throw err;
+            res.redirect('/session');
+        });
+
       }
     });
   });
