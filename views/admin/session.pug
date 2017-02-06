@@ -1,0 +1,11 @@
+extends ../template/layout
+
+block content
+  div.container
+    div.row
+      div.col-md-6.col-md-offset-3
+        h1.text-center Session list
+          if session
+            h2 #{session}
+          else
+            h2 There is no session   

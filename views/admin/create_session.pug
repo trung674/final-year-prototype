@@ -5,13 +5,15 @@ block content
     div.row
       div.col-md-6.col-md-offset-3
         h1.text-center Create Session
-        form(action='/session', method='POST')
+        if message
+          h4.bg-danger #{message}
+        form(action='/create_session', method='POST')
           .form-group
             input(type='text', name='title', class='form-control', placeholder='Title',required)
           .form-group
             textarea.form-control(rows='4', name='description', placeholder='Session Description....', required)
           .form-group
-            select.form-control(name='type', id='session-type', onchange='changeSessionContent()', required)
+            select.form-control(name='type', id='sessiontype', onchange='changeSessionContent()', required)
               option(value='', disabled, selected, hidden) Sesstion type ?
               option(value='words') Words
               option(value='sentences') Sentences

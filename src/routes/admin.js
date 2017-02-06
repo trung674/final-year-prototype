@@ -1,4 +1,5 @@
 import express from 'express';
+import Session from '../models/session'
 const router = express.Router();
 
 module.exports = (passport) => {
@@ -20,13 +21,41 @@ module.exports = (passport) => {
     failureFlash : true
   }));
 
-  // router.get('/session', isLoggedInAsAdmin, (req, res) => {
-  // 	res.render('admin/session');
-  // });
-  //
-  // router.post('/session', isLoggedInAsAdmin, (req, res) => {
-  //   console.log(req.body);
-  // });
+  router.get('/session', isLoggedInAsAdmin, (req, res) => {
+    let session = Session.find();
+  	res.render('admin/session', session);
+  });
+
+  router.get('/create_session', isLoggedInAsAdmin, (req, res) => {
+  	res.render('admin/create_session', {message: req.flash('message')});
+  });
+
+  router.post('/create_session', isLoggedInAsAdmin, (req, res) => {
+    Session.findOne({'title': req.body.title}, (err, session) => {
+      if (err) {
+        console.log(err);
+        req.flash('message', 'This session title is already existed !');
+        res.redirect('/create_session');
+      } else {
+        // let newSession = new Session();
+        // newSession.title = req.body.title;
+        // newSession.description = req.body.username;
+        // newSession.type = newSession.generateHash(password);
+        // newSession.content = true;
+        // // save the user
+        // newSession.save((err) => {
+        //     if (err)
+        //         throw err;
+        //     return done(null, newSession, req.flash('signinMessage', 'You have successfully registered for an administrator account.'));
+        // });
+        let contents = req.body.content.split(',');
+        for (let content in contents) {
+          content.trim();
+        }
+        console.log(contents);
+      }
+    });
+  });
 
 
   return router;
