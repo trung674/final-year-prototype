@@ -48,11 +48,8 @@ module.exports = (passport) => {
         //         throw err;
         //     return done(null, newSession, req.flash('signinMessage', 'You have successfully registered for an administrator account.'));
         // });
-        let contents = req.body.content.split(',');
-        for (let content in contents) {
-          content.trim();
-        }
-        console.log(contents);
+        console.log(req.body.content);
+        console.log(formatContent(req.body.content));
       }
     });
   });
@@ -69,4 +66,13 @@ function isLoggedInAsAdmin(req, res, next) {
 
 	// if they aren't redirect them to the home page
 	res.status(404).send("<h1> 404 </h1> <h3>Unauthorized access</h3>");
+}
+
+function formatContent(content) {
+  let contentArray = content.split(',');
+  for (let i = 0; i < contentArray.length; i++) {
+    let newValue = contentArray[i].trim();
+    contentArray[i] = newValue;
+  }
+  return contentArray;
 }
