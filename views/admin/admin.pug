@@ -6,6 +6,6 @@ block content
       div.col-md-6.col-md-offset-3
         h1.text-center Administrator Dashboard
         ul.user-details
-          li ID ---> #{admin._id}
-          li Username ---> #{admin.email}
+          li= "ID ---> " + admin._id
+          li= "Username ---> " + admin.email
         a(href='/signout', class='text-center') Sign Out  
