@@ -2,30 +2,32 @@ extends ../template/user_layout
 
 block main_content
   div.container
-    h1= "Welcome Back, " + user.information.fullname
+    h1= "Welcome, " + user.information.fullname
     hr
+    div.well Please find below the list of newest sessions provided by the administrators and the list of ongoing sessions which you have not finished yet.
     div.row
-      div.col-md-6.col-md-offset-3
-        h1.text-center Check your details below:
-        ul.user-details
-          li= "ID ---> " + user._id
-          li= "Username ---> " + user.email
-        a(href='/signout', class='text-center') Sign Out
+      div.col-md-4.user-db-col
+        h3.text-center New Sessions
+      div.col-md-4.user-db-col
+        h3.text-center Ongoing Sessions
+      div.col-md-4.user-db-col
+        h3.text-center Finished Sessions
 
-    .row
-      div.col-md-6.col-md-offset-3
-        h2.text-center Recording System Demo
-        div.text-center
-          canvas.visualizer
-        div.text-center
-          button.btn.btn-primary#rec(onclick='onBtnRecordClicked()') Record
-          button.btn.btn-primary#pauseRes(onclick='onPauseResumeClicked()' disabled) Pause
-          button.btn.btn-primary#stop(onclick='onBtnStopClick()' disabled) Stop
-          button.btn.btn-primary#download(onclick='download()' disabled) Download
-          div.sound-clips
-          br
-          p#errorMsg
-          p#data
+
+    //- .row
+    //-   div.col-md-6.col-md-offset-3
+    //-     h2.text-center Recording System Demo
+    //-     div.text-center
+    //-       canvas.visualizer
+    //-     div.text-center
+    //-       button.btn.btn-primary#rec(onclick='onBtnRecordClicked()') Record
+    //-       button.btn.btn-primary#pauseRes(onclick='onPauseResumeClicked()' disabled) Pause
+    //-       button.btn.btn-primary#stop(onclick='onBtnStopClick()' disabled) Stop
+    //-       button.btn.btn-primary#download(onclick='download()' disabled) Download
+    //-       div.sound-clips
+    //-       br
+    //-       p#errorMsg
+    //-       p#data
 
   script(src='https://cdn.webrtc-experiment.com/RecordRTC.js')
   script(src='/javascripts/recorder.js')
