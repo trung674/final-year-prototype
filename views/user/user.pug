@@ -1,7 +1,6 @@
-extends ../template/layout
+extends ../template/user_layout
 
-block content
-  include ../template/user_navbar
+block main_content
   div.container
     h1= "Welcome Back, " + user.information.fullname
     hr
