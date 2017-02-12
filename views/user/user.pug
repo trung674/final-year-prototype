@@ -8,6 +8,16 @@ block main_content
     div.row
       div.col-md-4.user-db-col
         h3.text-center New Sessions
+        table.table.table-bordered
+          tr
+            th Title
+            th Date added
+          if recordings
+            each recording in recordings
+              tr
+                td= recording.title
+                td= moment(recording.createdAt).format("YYYY-MM-DD")
+
       div.col-md-4.user-db-col
         h3.text-center Ongoing Sessions
       div.col-md-4.user-db-col

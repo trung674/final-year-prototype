@@ -1,12 +1,21 @@
 // var express = require('express');
 import express from 'express';
+import Recording from '../models/recording';
+import User from '../models/user';
+import moment from 'moment';
 const router = express.Router();
 
 module.exports = (passport) => {
   router.get('/user', isLoggedIn, (req, res) => {
-  	res.render('user/user', {
-  		user : req.user // get the user out of session and pass to template
-  	});
+    Recording.find({}, (err, recordings) => {
+      if (err)
+        console.log(err);
+      res.render('user/user', {
+        recordings : recordings,
+        user : req.user, // get the user out of session and pass to template
+        moment : moment
+      });
+    });
   });
 
   return router;
