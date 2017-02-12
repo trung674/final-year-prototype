@@ -76,6 +76,7 @@ module.exports = (passport) => {
                     if(req.body.medical_condition)
                         newUser.information.medical_condition = req.body.medical_condition;
                     newUser.admin = false;
+                    newUser.lastLogIn = Date.now();
                     // save the user
                     newUser.save((err) => {
                         if (err)
@@ -114,7 +115,13 @@ module.exports = (passport) => {
                 return done(null, false, req.flash('signinMessage', 'Wrong password. Please try again')); // create the loginMessage and save it to session as flashdata
 
             // all is well, return successful user
-            return done(null, user);
+            // update lastLogIn value (for both user and admin)
+            user.lastLogIn = Date.now();
+            user.save((err) => {
+                if (err)
+                    throw err;
+                return done(null, user);
+            });
         });
 
     }));
@@ -154,6 +161,7 @@ module.exports = (passport) => {
                     newUser.username = req.body.username;
                     newUser.password = newUser.generateHash(password);
                     newUser.admin = true;
+                    newUser.lastLogIn = Date.now();
                     // save the user
                     newUser.save((err) => {
                         if (err)

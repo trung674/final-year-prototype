@@ -19,7 +19,8 @@ const userSchema = mongoose.Schema({
         path              : String,
         status            : String,
     }],
-    admin: Boolean
+    admin: Boolean,
+    lastLogIn: Date
 },
 { timestamps: true }
 );
