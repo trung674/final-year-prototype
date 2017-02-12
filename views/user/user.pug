@@ -1,7 +1,10 @@
 extends ../template/layout
 
 block content
+  include ../template/user_navbar
   div.container
+    h1= "Welcome Back, " + user.information.fullname
+    hr
     div.row
       div.col-md-6.col-md-offset-3
         h1.text-center Check your details below:
@@ -25,4 +28,5 @@ block content
           p#errorMsg
           p#data
 
+  script(src='https://cdn.webrtc-experiment.com/RecordRTC.js')
   script(src='/javascripts/recorder.js')
