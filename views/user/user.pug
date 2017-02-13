@@ -12,10 +12,11 @@ block main_content
           tr
             th Title
             th Date added
-          if recordings
-            each recording in recordings
+          if newRecordings
+            each recording in newRecordings
               tr
-                td= recording.title
+                td
+                  a(href=`/user/session/${recording._id}`)= recording.title
                 td= moment(recording.createdAt).format("YYYY-MM-DD")
 
       div.col-md-4.user-db-col
@@ -39,5 +40,5 @@ block main_content
     //-       p#errorMsg
     //-       p#data
 
-  script(src='https://cdn.webrtc-experiment.com/RecordRTC.js')
-  script(src='/javascripts/recorder.js')
+  //- script(src='https://cdn.webrtc-experiment.com/RecordRTC.js')
+  //- script(src='/javascripts/recorder.js')
