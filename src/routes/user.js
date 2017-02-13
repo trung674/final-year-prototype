@@ -49,6 +49,10 @@ module.exports = (passport) => {
   router.get('/user/session/:session_id', isLoggedIn, (req, res) => {
     Recording.findOne({_id: req.params.session_id})
       .then((recording) => {
+        let filter = req.user.records.filter((record) => {
+          return record._id == req.params.sessions_id;
+        });
+        console.log(filter);
         res.render('session/session', {
             recording : recording,
             user : req.user,
@@ -63,12 +67,15 @@ module.exports = (passport) => {
   return router;
 }
 
-function isLoggedIn(req, res, next) {
 
+function filterSession(session, id) {
+  return session._id == id;
+}
+
+function isLoggedIn(req, res, next) {
 	// if user is authenticated in the session, carry on
 	if (req.isAuthenticated())
 		return next();
-
 	// if they aren't redirect them to the home page
 	res.redirect('/signin');
 }

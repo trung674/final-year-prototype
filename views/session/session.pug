@@ -5,14 +5,39 @@ block main_content
     if (recording)
       div.page-header
         h1= recording.title
-      div.panel.panel-default
-        div.panel-body
-          p
-            strong Description:
-            = recording.description
-          p
-            strong Type:
-            = recording.type
+      div.well
+        ul
+          li
+            h3 Description
+            p= recording.description
+          li
+            h3 Type
+            p= recording.type.toUpperCase()
+          li
+            h3 Content
+            ul
+              each item in recording.content
+                li= item
+          li
+            h3 Added Date
+            p= moment(recording.createdAt).format("YYYY-MM-DD")
+          li
+            h3 Last Modified Date
+            p= moment(recording.updatedAt).format("YYYY-MM-DD")  
+
+        //- table.table
+        //-   tr
+        //-     th.col-md-4 Description
+        //-     th.col-md-1 Type
+        //-     th.col-md-1 Added Date
+        //-     th.col-md-2 Last Modified Date
+        //-     th Content
+        //-   tr
+        //-     th= recording.description
+        //-     th= recording.type.toUpperCase()
+        //-     th= moment(recording.createdAt).format("YYYY-MM-DD")
+        //-     th= moment(recording.updatedAt).format("YYYY-MM-DD")
+            th= recording.content
     else
       p No recording found
 
