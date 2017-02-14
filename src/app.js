@@ -62,6 +62,22 @@ app.set('port', process.env.PORT || 3000);
 app.use(require('./routes/index')(passport));
 app.use(require('./routes/user')(passport));
 app.use(require('./routes/admin')(passport));
+// app.use(require('./routes/error'));
+app.use(function(req, res, next){
+  res.status(404);
+
+  res.format({
+    html: function () {
+      res.send('404');
+    },
+    json: function () {
+      res.json({ error: 'Not found' });
+    },
+    default: function () {
+      res.type('txt').send('Not found');
+    }
+  })
+});
 
 app.use(sass({
     /* Options */

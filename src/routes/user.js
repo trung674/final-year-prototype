@@ -46,13 +46,13 @@ module.exports = (passport) => {
       })
   });
 
-  router.get('/user/session/:session_id', isLoggedIn, (req, res) => {
+  router.get('/user/session/:session_id', isLoggedIn, (req, res, next) => {
     Recording.findOne({_id: req.params.session_id})
       .then((recording) => {
-        let filter = req.user.records.filter((record) => {
-          return record._id == req.params.sessions_id;
-        });
-        console.log(filter);
+        // let filter = req.user.records.filter((record) => {
+        //   return record._id == req.params.sessions_id;
+        // });
+        // console.log(filter);
         res.render('session/session', {
             recording : recording,
             user : req.user,
@@ -61,6 +61,7 @@ module.exports = (passport) => {
       })
       .catch(err => {
         console.log(err);
+        next();
       })
   });
 
