@@ -1,13 +1,3 @@
-// var express  = require('express');
-// var app      = express();
-// var sass     = require('node-sass-middleware');
-// var mongoose = require('mongoose');
-// var passport = require('passport');
-// var flash    = require('connect-flash');
-// var morgan      = require('morgan');
-// var bodyParser  = require('body-parser');
-// var session     = require('express-session');
-
 import express from 'express';
 import sass from 'node-sass-middleware';
 import mongoose from 'mongoose';
@@ -27,20 +17,15 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const MongoStore = require('connect-mongo')(session);
 
-// import configDB from './config/database';
-// var configDB = require('./config/database.js');
+// Setup database connection
 mongoose.Promise = global.Promise; //use ES6 promise
-// if (process.env.NODE_ENV === 'production') {
-  mongoose.connect(process.env.DATABASE_URI) // connect to remote database
-  var db = mongoose.connection;
-  db.on('error', console.error.bind(console, 'connection error:'));
-  db.once('open', () => {
-    console.log('Successfully connect to database');
-  });
-// } else {
-//   mongoose.connect(configDB.url) // connect to local databas
-// }
+mongoose.connect(process.env.DATABASE_URI) // connect to remote database
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+// import configDB from './config/database'; // local database configuration
+// mongoose.connect(configDB.url) // connect to local databas
 
+// Setup session + passportjs
 require('./config/passport')(passport);
 app.use(morgan('dev')); // log every request to the console
 app.use(bodyParser.json());
@@ -58,6 +43,22 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in sesresion
 
+// Setup assets
+app.use(sass({
+    /* Options */
+    src: path.join(__dirname, '../public/sass'),
+    dest: path.join(__dirname, '../public/stylesheets'),
+    debug: true,
+    indentedSyntax: true,
+    outputStyle: 'compressed',
+    prefix:  '/stylesheets'
+}));
+
+app.use(express.static(path.join(__dirname, '../public')));
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, '../views'));
+
+// Setup route handler
 app.set('port', process.env.PORT || 3000);
 app.use(require('./routes/index')(passport));
 app.use(require('./routes/user')(passport));
@@ -79,20 +80,7 @@ app.use(function(req, res, next){
   })
 });
 
-app.use(sass({
-    /* Options */
-    src: path.join(__dirname, '../public/sass'),
-    dest: path.join(__dirname, '../public/stylesheets'),
-    debug: true,
-    indentedSyntax: true,
-    outputStyle: 'compressed',
-    prefix:  '/stylesheets'
-}));
-
-app.use(express.static(path.join(__dirname, '../public')));
-app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, '../views'));
-
+// Misc
 require('./record.js')(io);
 
 io.on('connection', function (socket) {

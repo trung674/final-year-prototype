@@ -6,7 +6,7 @@ const router = express.Router();
 
 module.exports = function(passport){
   router.get('/', isLoggedIn, (req, res) => {
-		res.redirect('user/user');
+		res.redirect('user/');
 	});
 
   router.get('/signin', (req, res) => {

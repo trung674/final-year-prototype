@@ -23,8 +23,13 @@ block main_content
             p= moment(recording.createdAt).format("YYYY-MM-DD")
           li
             h3 Last Modified Date
-            p= moment(recording.updatedAt).format("YYYY-MM-DD")  
-
+            p= moment(recording.updatedAt).format("YYYY-MM-DD")
+      if recordingStatus == 'start'
+        a.btn.btn-lg.btn-default Start
+      else if recordingStatus == 'ongoing'
+        a.btn.btn-lg.btn-default Continue
+      else if recordingStatus == 'finished'
+        a.btn.btn-lg.btn-default Finished
         //- table.table
         //-   tr
         //-     th.col-md-4 Description

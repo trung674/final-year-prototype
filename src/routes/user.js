@@ -49,12 +49,23 @@ module.exports = (passport) => {
   router.get('/user/session/:session_id', isLoggedIn, (req, res, next) => {
     Recording.findOne({_id: req.params.session_id})
       .then((recording) => {
-        // let filter = req.user.records.filter((record) => {
-        //   return record._id == req.params.sessions_id;
-        // });
-        // console.log(filter);
+        let filter = req.user.records.filter((record) => {
+          return record._id == req.params.sessions_id;
+        });
+
+        let recordingStatus
+        if (filter.length == 0) {
+          recordingStatus = 'start';
+        } else if (filter[0].status == 'ongoing') {
+          recordingStatus = 'ongoing';
+        } else if (filter[0].status = 'finished') {
+          recordingStatus = 'finished';
+        }
+
+        console.log(recordingStatus);
         res.render('session/session', {
             recording : recording,
+            recordingStatus : recordingStatus,
             user : req.user,
             moment : moment
         });
