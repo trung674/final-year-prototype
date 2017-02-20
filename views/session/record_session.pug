@@ -1,0 +1,34 @@
+extends ../template/user_layout
+
+block main_content
+  div.container
+    if (recording)
+      div.page-header
+        h1= recording.title
+      div.row
+        div.col-md-3
+          div.list-group(id='items')
+            each item in recording.content
+              a.list-group-item(href=`#${item}`)= item
+      //- div.well
+      //-   ul
+      //-     li
+      //-       h3 Description
+      //-       p= recording.description
+      //-     li
+      //-       h3 Type
+      //-       p= recording.type.toUpperCase()
+      //-     li
+      //-       h3 Content
+      //-       ul
+      //-         each item in recording.content
+      //-           li= item
+      //-     li
+      //-       h3 Added Date
+      //-       p= moment(recording.createdAt).format("YYYY-MM-DD")
+      //-     li
+      //-       h3 Last Modified Date
+      //-       p= moment(recording.updatedAt).format("YYYY-MM-DD")
+
+    else
+      p No recording found

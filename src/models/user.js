@@ -15,9 +15,11 @@ const userSchema = mongoose.Schema({
         medical_condition : String,
     },
     records      : [{
+        _id               : false,
         session_id        : {type: mongoose.Schema.Types.ObjectId, ref: 'Session'},
         path              : String,
         status            : String,
+        lastVisited       : Date
     }],
     admin: Boolean,
     lastLogIn: Date

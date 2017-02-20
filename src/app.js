@@ -22,6 +22,9 @@ mongoose.Promise = global.Promise; //use ES6 promise
 mongoose.connect(process.env.DATABASE_URI) // connect to remote database
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+  console.log('Successfully connect to database');
+});
 // import configDB from './config/database'; // local database configuration
 // mongoose.connect(configDB.url) // connect to local databas
 

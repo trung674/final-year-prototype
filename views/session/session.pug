@@ -25,7 +25,7 @@ block main_content
             h3 Last Modified Date
             p= moment(recording.updatedAt).format("YYYY-MM-DD")
       if recordingStatus == 'start'
-        a.btn.btn-lg.btn-default Start
+        a.btn.btn-lg.btn-default(id='start-recoring', href=`/user/session/${recording._id}/recording`) Start
       else if recordingStatus == 'ongoing'
         a.btn.btn-lg.btn-default Continue
       else if recordingStatus == 'finished'
