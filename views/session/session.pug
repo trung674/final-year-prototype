@@ -27,7 +27,7 @@ block main_content
       if recordingStatus == 'start'
         a.btn.btn-lg.btn-default(id='start-recoring', href=`/user/session/${recording._id}/recording`) Start
       else if recordingStatus == 'ongoing'
-        a.btn.btn-lg.btn-default Continue
+        a.btn.btn-lg.btn-default(id='start-recoring', href=`/user/session/${recording._id}/recording`) Continue
       else if recordingStatus == 'finished'
         a.btn.btn-lg.btn-default Finished
         //- table.table

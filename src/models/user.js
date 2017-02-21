@@ -18,7 +18,7 @@ const userSchema = mongoose.Schema({
         _id               : false,
         session_id        : {type: mongoose.Schema.Types.ObjectId, ref: 'Session'},
         path              : String,
-        status            : String,
+        isFinished        : Boolean,
         lastVisited       : Date
     }],
     admin: Boolean,
