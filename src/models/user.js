@@ -16,7 +16,7 @@ const userSchema = mongoose.Schema({
     },
     records      : [{
         _id               : false,
-        session_id        : {type: mongoose.Schema.Types.ObjectId, ref: 'Session'},
+        _recording        : {type: mongoose.Schema.Types.ObjectId, ref: 'Recording'},
         path              : String,
         isFinished        : Boolean,
         lastVisited       : Date

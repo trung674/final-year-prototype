@@ -32,9 +32,30 @@ module.exports = (passport) => {
     //           })
     //       })
     //   })
-
-    Recording.find()
+    let newRecordings, ongoingRecordings, finishedRecordings
+    Recording.find().limit(5) //should limit to newest 5 sessions
       .then((recordings) => {
+        User.findOne({_id: req.user._id}).populate('records._recording')
+          .then((user) => {
+            let userRecordIds = user.records.map((record) => record._recording._id);
+            console.log(userRecordIds);
+            newRecordings = recordings.filter((recording) => {
+              return (userRecordIds.some(id => id.equals(recording._id)) == false);
+            });
+            console.log(newRecordings);
+            finishedRecordings = user.records.filter((record) => {
+              return record.isFinished == true;
+            });
+            console.log(finishedRecordings);
+            ongoingRecordings = user.records.filter((record) => {
+              return record.isFinished == false;
+            });
+            console.log(ongoingRecordings);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+
         res.render('user/user', {
             newRecordings : recordings,
             user : req.user,
@@ -46,10 +67,10 @@ module.exports = (passport) => {
       })
   });
 
-  router.get('/user/session/:session_id', isLoggedIn, (req, res, next) => {
-    Recording.findOne({_id: req.params.session_id})
+  router.get('/user/session/:_recording', isLoggedIn, (req, res, next) => {
+    Recording.findOne({_id: req.params._recording})
       .then((recording) => {
-        let userRecords = findExistingSession(req.user.records, req.params.session_id);
+        let userRecords = findExistingSession(req.user.records, req.params._recording);
         let recordingStatus
 
         if (userRecords.length == 0) {
@@ -72,16 +93,16 @@ module.exports = (passport) => {
       })
   });
 
-  router.get('/user/session/:session_id/recording', isLoggedIn, (req, res, next) => {
-    Recording.findOne({_id: req.params.session_id})
+  router.get('/user/session/:_recording/recording', isLoggedIn, (req, res, next) => {
+    Recording.findOne({_id: req.params._recording})
       .then((recording) => {
         User.findOne({_id : req.user._id})
           .then((user) => {
-            let userRecords = findExistingSession(req.user.records, req.params.session_id);
+            let userRecords = findExistingSession(req.user.records, req.params._recording);
             if (userRecords.length == 0) {
               User.update(
                 user,
-                {$push: {"records": {session_id : recording._id, path: 'uploads/' + req.user.username + '/' + recording._id, isFinished: false, lastVisited: Date.now() }}},
+                {$push: {"records": {_recording : recording._id, path: 'uploads/' + req.user.username + '/' + recording._id, isFinished: false, lastVisited: Date.now() }}},
                 {safe :true, new: true},
                 (err, user) => {
                   console.log(err);
@@ -90,11 +111,15 @@ module.exports = (passport) => {
               )
             }
           })
+          .catch(err => {
+            console.log(err);
+            next();
+          })
 
         //
         // User.findByIdAndUpdate(
         //   req.user._id,
-        //   {$push: {"records": {session_id : recording._id, path: 'uploads/' + req.user.username + '/' + recording._id, status: 'ongoing', lastVisited: Date.now() }}},
+        //   {$push: {"records": {_recording : recording._id, path: 'uploads/' + req.user.username + '/' + recording._id, status: 'ongoing', lastVisited: Date.now() }}},
         //   {safe :true, new: true},
         //   (err, user) => {
         //     console.log(err);
@@ -111,7 +136,7 @@ module.exports = (passport) => {
         console.log(err);
         next();
       })
-    // Recording.findOne({_id: req.params.session_id})
+    // Recording.findOne({_id: req.params._recording})
     //   .then((recording) => {
     //     let filter = req.user.records.filter((record) => {
     //       return record._id == req.params.sessions_id;
@@ -145,7 +170,7 @@ module.exports = (passport) => {
 
 
 function findExistingSession(records, id) {
-  let filter = records.filter((record) => record.session_id == id);
+  let filter = records.filter((record) => record._recording == id);
   return filter;
 }
 
