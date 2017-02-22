@@ -35,10 +35,9 @@ module.exports = (passport) => {
     let newRecordings, ongoingRecordings, finishedRecordings
     Recording.find().limit(5) //should limit to newest 5 sessions
       .then((recordings) => {
-        User.findOne({_id: req.user._id}).populate('records._recording')
+        User.findOne({_id: req.user._id}).populate({path: 'records._recording'})
           .then((user) => {
             let userRecordIds = user.records.map((record) => record._recording._id);
-            console.log(userRecordIds);
             newRecordings = recordings.filter((recording) => {
               return (userRecordIds.some(id => id.equals(recording._id)) == false);
             });
@@ -50,17 +49,18 @@ module.exports = (passport) => {
             ongoingRecordings = user.records.filter((record) => {
               return record.isFinished == false;
             });
-            console.log(ongoingRecordings);
+
+            res.render('user/user', {
+                newRecordings : newRecordings,
+                ongoingRecordings : ongoingRecordings,
+                finishedRecordings : finishedRecordings,
+                user : req.user,
+                moment : moment
+            });
           })
           .catch(err => {
             console.log(err);
           })
-
-        res.render('user/user', {
-            newRecordings : recordings,
-            user : req.user,
-            moment : moment
-        });
       })
       .catch(err => {
         console.log(err);

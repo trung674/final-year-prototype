@@ -8,21 +8,33 @@ block main_content
     div.row
       div.col-md-4.user-db-col
         h3.text-center New Sessions
-        table.table.table-bordered
-          tr
-            th Title
-            th Date added
-          if newRecordings
-            each recording in newRecordings
-              tr
-                td
-                  a(href=`/user/session/${recording._id}`)= recording.title
-                td= moment(recording.createdAt).format("YYYY-MM-DD")
+        if newRecordings
+          table.table.table-bordered
+            tr
+              th Title
+              th Date added
+              each recording in newRecordings
+                tr
+                  td
+                    a(href=`/user/session/${recording._id}`)= recording.title
+                  td= moment(recording.createdAt).format("DD-MM-YYYY")
 
       div.col-md-4.user-db-col
         h3.text-center Ongoing Sessions
+        if ongoingRecordings
+          table.table.table-bordered
+            tr
+              th Title
+              th Last Visited
+              each recording in ongoingRecordings
+                tr
+                  td
+                    a(href=`/user/session/${recording._recording._id}`)= recording._recording.title
+                  td= moment(recording.lastVisited).format("DD-MM-YYYY")
       div.col-md-4.user-db-col
         h3.text-center Finished Sessions
+
+
 
 
     //- .row
