@@ -10,13 +10,17 @@ $(document).ready(function() {
     //     };
     // });
 
-
+    // $('#word-title').text('Testing');
     $('#items a:first-child').addClass('active');
-
+    var currentWord = $('#items a:first-child').text();
+    $('#word-title').text(currentWord);
     $('#items a').click(function() {
       $('#items a.active').removeClass('active');
       $(this).addClass('active');
+      currentWord = $(this).text();
+      $('#word-title').text(currentWord);
     });
+
 
     function changeSessionContent() {
       var sessionContent = $('#session-content');

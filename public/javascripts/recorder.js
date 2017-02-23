@@ -63,11 +63,6 @@ socket.on('user', function(data){
   console.log(data);
   console.log("I heared you!");
 });
-/*
-var mediaSource = new MediaSource();
-mediaSource.addEventListener('sourceopen', handleSourceOpen, false);
-var sourceBuffer;
-*/
 
 var mediaRecorder;
 var chunks = [];
@@ -75,9 +70,9 @@ var recordAudio;
 
 function onBtnRecordClicked (){
   // startRecording
-  recordAudio = new RecordRTC(window.stream, {type: 'audio'});
+  recordAudio = new RecordRTC(window.stream, {type: 'audio', sampleRate: 44100, bufferSize: 4096});
   recordAudio.startRecording();
-	// recordAudio.setRecordingDuration(10);
+	// recordAudio.setRecordingDuration(5000);
   visualize(window.stream);
 	pauseResBtn.textContent = "Pause";
 

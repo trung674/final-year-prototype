@@ -14,12 +14,22 @@ block main_content
           div.panel.panel-default
             div.panel-body
               div.text-center
+                h2#word-title
                 canvas.visualizer
+              div.row.text-center
+                div.col-md-3.col-md-offset-1
+                  a.btn-control#btn-back
+                    i.fa.fa-backward.fa-4x
+                div.col-md-4
+                  a.btn-control#btn-play
+                    i.fa.fa-play.fa-4x
+                div.col-md-3
+                  a.btn-control#btn-next
+                    i.fa.fa-forward.fa-4x
               div.text-center
                 button.btn.btn-primary#rec(onclick='onBtnRecordClicked()') Record
                 button.btn.btn-primary#pauseRes(onclick='onPauseResumeClicked()' disabled) Pause
                 button.btn.btn-primary#stop(onclick='onBtnStopClick()' disabled) Stop
-                button.btn.btn-primary#download(onclick='download()' disabled) Download
                 div.sound-clips
                 br
                 p#errorMsg
