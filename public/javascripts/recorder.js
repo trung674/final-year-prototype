@@ -3,7 +3,6 @@
 var recBtn = document.querySelector('button#rec');
 var pauseResBtn = document.querySelector('button#pauseRes');
 var stopBtn = document.querySelector('button#stop');
-var downloadButton = document.querySelector('button#download');
 
 var errorElement = document.querySelector('#errorMsg');
 var dataElement = document.querySelector('#data');
@@ -72,112 +71,7 @@ var sourceBuffer;
 
 var mediaRecorder;
 var chunks = [];
-var count = 0;
 var recordAudio;
-
-function startRecording() {
-	log('Start recording...');
-	/*
-	if (typeof MediaRecorder.isTypeSupported == 'function')){
-		/*
-			MediaRecorder.isTypeSupported is a function announced in https://developers.google.com/web/updates/2016/01/mediarecorder and later introduced in the MediaRecorder API spec http://www.w3.org/TR/mediastream-recording/
-		*/
-
-		/*
-		if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) {
-		  var options = {mimeType: 'video/webm;codecs=vp9'};
-		} else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8')) {
-		  var options = {mimeType: 'video/webm;codecs=vp8'};
-		}
-
-
-		var options = {mimeType: 'audio/mp3'};
-		log('Using '+options.mimeType);
-		mediaRecorder = new MediaRecorder(stream, options);
-
-	} else { */
-	//log('Using' + options.mimeType + 'codecs for browser');
-	// mediaRecorder = new MediaRecorder(window.stream);
-
-	//}
-  // visualize(window.stream);
-	// pauseResBtn.textContent = "Pause";
-  //
-	// mediaRecorder.start(10);
-
-	//var url = window.URL || window.webkitURL;
-	//videoElement.src = url ? url.createObjectURL(stream) : stream;
-	//videoElement.play();
-
-	mediaRecorder.ondataavailable = function(e) {
-		// log('Data available...');
-		// console.log(e.data);
-		// console.log(e.data.type);
-		// console.log(e);
-		chunks.push(e.data);
-	};
-
-	mediaRecorder.onerror = function(e){
-		log('Error: ' + e);
-		// console.log('Error: ', e);
-	};
-
-
-	mediaRecorder.onstart = function(){
-		log('Started & state = ' + mediaRecorder.state);
-	};
-
-	mediaRecorder.onstop = function(){
-	  var clipContainer = document.createElement('article');
-    var audio = document.createElement('audio');
-
-    clipContainer.classList.add('clip');
-    audio.setAttribute('controls', '');
-
-    clipContainer.appendChild(audio);
-    soundClips.appendChild(clipContainer);
-    audio.controls = true;
-
-
-		//var blob = new Blob(chunks, {type: "video/webm"});
-		var blob = new Blob(chunks, { 'type' : 'video/webm' });
-		chunks = [];
-
-		//var videoURL = window.URL.createObjectURL(blob);
-		var audioURL = window.URL.createObjectURL(blob);
-    socket.emit('incomingdata', audioURL);
-    audio.src = audioURL;
-    log('Stopped  & state = ' + mediaRecorder.state);
-		//downloadLink.href = videoURL;
-		//videoElement.src = videoURL;
-		//downloadLink.innerHTML = 'Download video file';
-
-		//var rand =  Math.floor((Math.random() * 10000000));
-		//var name  = "video_"+rand+".webm" ;
-
-		//downloadLink.setAttribute( "download", name);
-		//downloadLink.setAttribute( "name", name);
-
-	};
-
-	mediaRecorder.onpause = function(){
-		log('Paused & state = ' + mediaRecorder.state);
-	}
-
-	mediaRecorder.onresume = function(){
-		log('Resumed  & state = ' + mediaRecorder.state);
-	}
-
-	mediaRecorder.onwarning = function(e){
-		log('Warning: ' + e);
-	};
-}
-
-//function handleSourceOpen(event) {
-//  console.log('MediaSource opened');
-//  sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vp9"');
-//  console.log('Source buffer: ', sourceBuffer);
-//}
 
 function onBtnRecordClicked (){
   // startRecording

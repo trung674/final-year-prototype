@@ -37,19 +37,22 @@ module.exports = (passport) => {
       .then((recordings) => {
         User.findOne({_id: req.user._id}).populate({path: 'records._recording'})
           .then((user) => {
+            // Find new recordings that have not started by user yet
             let userRecordIds = user.records.map((record) => record._recording._id);
             newRecordings = recordings.filter((recording) => {
               return (userRecordIds.some(id => id.equals(recording._id)) == false);
             });
-            console.log(newRecordings);
+            // Find recordings that have been started but not finished by user
             finishedRecordings = user.records.filter((record) => {
               return record.isFinished == true;
             });
-            console.log(finishedRecordings);
+
+            // Find recordings that have been finished by user
             ongoingRecordings = user.records.filter((record) => {
               return record.isFinished == false;
             });
 
+            // Render page with necessary information
             res.render('user/user', {
                 newRecordings : newRecordings,
                 ongoingRecordings : ongoingRecordings,
@@ -60,17 +63,19 @@ module.exports = (passport) => {
           })
           .catch(err => {
             console.log(err);
+            next();
           })
       })
       .catch(err => {
         console.log(err);
+        next();
       })
   });
 
-  router.get('/user/session/:_recording', isLoggedIn, (req, res, next) => {
-    Recording.findOne({_id: req.params._recording})
+  router.get('/user/session/:recording', isLoggedIn, (req, res, next) => {
+    Recording.findOne({_id: req.params.recording})
       .then((recording) => {
-        let userRecords = findExistingSession(req.user.records, req.params._recording);
+        let userRecords = findExistingSession(req.user.records, req.params.recording);
         let recordingStatus
 
         if (userRecords.length == 0) {
@@ -93,12 +98,12 @@ module.exports = (passport) => {
       })
   });
 
-  router.get('/user/session/:_recording/recording', isLoggedIn, (req, res, next) => {
-    Recording.findOne({_id: req.params._recording})
+  router.get('/user/session/:recording/recording', isLoggedIn, (req, res, next) => {
+    Recording.findOne({_id: req.params.recording})
       .then((recording) => {
         User.findOne({_id : req.user._id})
           .then((user) => {
-            let userRecords = findExistingSession(req.user.records, req.params._recording);
+            let userRecords = findExistingSession(req.user.records, req.params.recording);
             if (userRecords.length == 0) {
               User.update(
                 user,
