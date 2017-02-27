@@ -8,8 +8,11 @@ block main_content
       div.row
         div.col-md-3
           div.list-group(id='items')
-            each item in recording.content
-              a.list-group-item(href=`#${item}`)= item
+            each item, index in recording.content
+              if index == reqIndex
+                a.list-group-item.active(href=`${index}`)= item
+              else
+                a.list-group-item(href=`${index}`)= item
         div.col-md-9
           div.panel.panel-default
             div.panel-body
@@ -17,19 +20,19 @@ block main_content
                 h2#word-title
                 canvas.visualizer
               div.row.text-center
-                div.col-md-3.col-md-offset-1
-                  a.btn-control#btn-back
+                div.col-md-2.col-md-offset-2
+                  a.btn-control#btn-back(onclick='onBtnBackClicked()')
                     i.fa.fa-backward.fa-4x
-                div.col-md-4
-                  a.btn-control#btn-play
+                div.col-md-2.col-md-offset-1
+                  a.btn-control#btn-record(onclick='onBtnRecordClicked()')
                     i.fa.fa-play.fa-4x
-                div.col-md-3
-                  a.btn-control#btn-next
+                div.col-md-2.col-md-offset-1
+                  a.btn-control#btn-next(onclick='onBtnNextClick()')
                     i.fa.fa-forward.fa-4x
               div.text-center
-                button.btn.btn-primary#rec(onclick='onBtnRecordClicked()') Record
-                button.btn.btn-primary#pauseRes(onclick='onPauseResumeClicked()' disabled) Pause
-                button.btn.btn-primary#stop(onclick='onBtnStopClick()' disabled) Stop
+                //- button.btn.btn-primary#rec(onclick='onBtnRecordClicked()') Record
+                //- button.btn.btn-primary#pauseRes(onclick='onPauseResumeClicked()' disabled) Pause
+                //- button.btn.btn-primary#stop(onclick='onBtnStopClick()' disabled) Stop
                 div.sound-clips
                 br
                 p#errorMsg

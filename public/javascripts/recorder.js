@@ -1,13 +1,13 @@
 'use strict';
 
-var recBtn = document.querySelector('button#rec');
-var pauseResBtn = document.querySelector('button#pauseRes');
-var stopBtn = document.querySelector('button#stop');
+var btnRecord = $('#btn-record');
+var btnBack = $('#btn-back');
+var btnNext = $('#btn-next');
 
-var errorElement = document.querySelector('#errorMsg');
-var dataElement = document.querySelector('#data');
-var soundClips = document.querySelector('div.sound-clips');
-var canvas = document.querySelector('.visualizer');
+var errorElement = $('#errorMsg');
+var dataElement = $('#data');
+var soundClips = $('div.sound-clips');
+var canvas = document.querySelector('.visualizer'); // use Jquery selector here will cause mediaStream not running, weird bug
 var audioCtx = new (window.AudioContext || webkitAudioContext)();
 var canvasCtx = canvas.getContext("2d");
 
@@ -45,7 +45,6 @@ function handleError(error) {
     errorMsg('No recording device found');
   }
   errorMsg('getUserMedia error: ' + error.name, error);
-  recBtn.disabled = true;
 }
 
 function errorMsg(msg, error) {
@@ -71,17 +70,14 @@ var recordAudio;
 function onBtnRecordClicked (){
   // startRecording
   recordAudio = new RecordRTC(window.stream, {type: 'audio', sampleRate: 44100, bufferSize: 4096});
-  recordAudio.startRecording();
 	// recordAudio.setRecordingDuration(5000);
+  recordAudio.startRecording();
   visualize(window.stream);
-	pauseResBtn.textContent = "Pause";
 
-	recBtn.disabled = true;
-	pauseResBtn.disabled = false;
-	stopBtn.disabled = false;
+  btnRecord.replaceWith("<a class='btn-control' id='btn-pause' onClick='onBtnPauseClicked()'><i class='fa fa-pause fa-4x'></i></a>");
 }
 
-function onBtnStopClick(){
+function onBtnNextClick(){
   recordAudio.stopRecording(function() {
       // get audio data-URL
       recordAudio.getDataURL(function(audioDataURL) {
@@ -116,25 +112,17 @@ function onBtnStopClick(){
 	downloadButton.disabled = false;
 }
 
-function onPauseResumeClicked(){
-	if(pauseResBtn.textContent === "Pause"){
-    recordAudio.pauseRecording();
-		console.log("pause");
-		pauseResBtn.textContent = "Resume";
-		// mediaRecorder.pause();
-		stopBtn.disabled = true;
-
-	}else{
-		console.log("resume");
-    recordAudio.resumeRecording();
-		pauseResBtn.textContent = "Pause";
-		// mediaRecorder.resume();
-		stopBtn.disabled = false;
-	}
-	recBtn.disabled = true;
-	pauseResBtn.disabled = false;
+function onBtnPauseClicked(){
+  $('#btn-pause').replaceWith("<a class='btn-control' id='btn-resume' onClick='onBtnResumeClicked()'><i class='fa fa-play fa-4x'></i></a>");
+  recordAudio.pauseRecording();
+	console.log("pause");
 }
 
+function onBtnResumeClicked(){
+  $('#btn-resume').replaceWith("<a class='btn-control' id='btn-pause' onClick='onBtnPauseClicked()'><i class='fa fa-pause fa-4x'></i></a>");
+  recordAudio.resumeRecording();
+  console.log("resume");
+}
 
 function log(message){
 	dataElement.innerHTML = dataElement.innerHTML+'<br>'+message ;

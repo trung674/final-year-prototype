@@ -98,7 +98,7 @@ module.exports = (passport) => {
       })
   });
 
-  router.get('/user/session/:recording/recording', isLoggedIn, (req, res, next) => {
+  router.get('/user/session/:recording/:index', isLoggedIn, (req, res, next) => {
     Recording.findOne({_id: req.params.recording})
       .then((recording) => {
         User.findOne({_id : req.user._id})
@@ -108,7 +108,7 @@ module.exports = (passport) => {
               User.update(
                 user,
                 {$push: {"records": {_recording : recording._id, path: 'uploads/' + req.user.username + '/' + recording._id, isFinished: false, lastVisited: Date.now() }}},
-                {safe :true, new: true},
+                {safe: true, new: true},
                 (err, user) => {
                   console.log(err);
                   next();
@@ -134,6 +134,7 @@ module.exports = (passport) => {
 
         res.render('session/record_session', {
             recording : recording,
+            reqIndex : req.params.index,
             moment : moment,
         });
       })
