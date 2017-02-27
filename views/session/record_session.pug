@@ -17,7 +17,7 @@ block main_content
           div.panel.panel-default
             div.panel-body
               div.text-center
-                h2#word-title
+                h1#word= recording.content[reqIndex]
                 canvas.visualizer
               div.row.text-center
                 div.col-md-2.col-md-offset-2
@@ -61,7 +61,6 @@ block main_content
 
     else
       p No recording found
-
 
   script(src='https://cdn.webrtc-experiment.com/RecordRTC.js')
   script(src='/javascripts/recorder.js')

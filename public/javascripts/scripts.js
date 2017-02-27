@@ -21,7 +21,6 @@ $(document).ready(function() {
     //   $('#word-title').text(currentWord);
     // });
 
-
     function changeSessionContent() {
       var sessionContent = $('#session-content');
       var sessionTypeValue = $('#session-type').val();
