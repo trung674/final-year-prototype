@@ -1,20 +1,16 @@
-import fs from 'fs';
+import fs from 'fs-extra';
+import moment from 'moment';
 
-function writeToDisk(dataURL, fileName) {
-    const fileExtension = fileName.split('.').pop();
-    const fileRootNameWithBase = `./uploads/${fileName}`;
-    let filePath = fileRootNameWithBase;
-    let fileID = 2;
+function writeToDisk(audio) {
+    let dateTime = moment().format('YYYYMMDDHHmm');
+    const fileExtension = 'wav';
+    const fileName = `${audio.word}_${audio.username}_${audio.recordingID}_${dateTime}.${fileExtension}`;
+    const filePath = `./uploads/${audio.username}/${audio.recordingID}/${fileName}`;
     let fileBuffer;
-    // @todo return the new filename to client
-    while (fs.existsSync(filePath)) {
-        filePath = `${fileRootNameWithBase}(${fileID}).${fileExtension}`;
-        fileID += 1;
-    }
+    let dataURL = audio.dataURL.split(',').pop();
 
-    const data = dataURL.split(',').pop();
-    fileBuffer = Buffer.from(data, 'base64');
-    fs.writeFileSync(filePath, fileBuffer);
+    fileBuffer = Buffer.from(dataURL, 'base64');
+    fs.outputFileSync(filePath, fileBuffer);
 
     console.log('filePath', filePath);
 }
@@ -24,7 +20,7 @@ module.exports = (io) => {
     io.on('connection', (socket) => {
         socket.on('incomingdata', (data) => {
             // console.log(data.audio.dataURL);
-            writeToDisk(data.audio.dataURL, 'testing.wav');
+            writeToDisk(data.audio);
             // console.log(data);
         });
     });

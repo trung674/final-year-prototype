@@ -133,6 +133,7 @@ module.exports = (passport) => {
         // );
 
         res.render('session/record_session', {
+            username: req.user.username,
             recording : recording,
             reqIndex : req.params.index,
             moment : moment,

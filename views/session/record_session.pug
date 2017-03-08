@@ -27,7 +27,7 @@ block main_content
                   a.btn-control#btn-record(onclick='onBtnRecordClicked()')
                     i.fa.fa-play.fa-4x
                 div.col-md-2.col-md-offset-1
-                  a.btn-control#btn-next(onclick='onBtnNextClick()')
+                  a.btn-control#btn-next(onclick='onBtnNextClicked()')
                     i.fa.fa-forward.fa-4x
               div.text-center
                 //- button.btn.btn-primary#rec(onclick='onBtnRecordClicked()') Record
@@ -62,5 +62,9 @@ block main_content
     else
       p No recording found
 
+  //- The dot is important, do not remove it
+  script(type='text/javascript').
+    var username = !{JSON.stringify(username)};
+    var recordingID = !{JSON.stringify(recording._id)};
   script(src='https://cdn.webrtc-experiment.com/RecordRTC.js')
   script(src='/javascripts/recorder.js')

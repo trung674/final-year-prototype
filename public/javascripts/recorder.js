@@ -69,7 +69,7 @@ var recordAudio;
 
 function onBtnRecordClicked (){
   // startRecording
-  recordAudio = new RecordRTC(window.stream, {type: 'audio', sampleRate: 44100, bufferSize: 4096});
+  recordAudio = new RecordRTC(window.stream, {recorderType: StereoAudioRecorder, sampleRate: 44100, bufferSize: 4096});
 	// recordAudio.setRecordingDuration(5000);
   recordAudio.startRecording();
   visualize(window.stream);
@@ -77,39 +77,23 @@ function onBtnRecordClicked (){
   btnRecord.replaceWith("<a class='btn-control' id='btn-pause' onClick='onBtnPauseClicked()'><i class='fa fa-pause fa-4x'></i></a>");
 }
 
-function onBtnNextClick(){
+function onBtnNextClicked(){
+  var currentWord = $('#word').text();
   recordAudio.stopRecording(function() {
       // get audio data-URL
       recordAudio.getDataURL(function(audioDataURL) {
           var files = {
               audio: {
                   type: recordAudio.getBlob().type || 'audio/wav',
-                  dataURL: audioDataURL
+                  dataURL: audioDataURL,
+                  word: currentWord,
+                  username: username,
+                  recordingID: recordingID
               }
           };
-
-      		//var videoURL = window.URL.createObjectURL(blob);
-          var clipContainer = document.createElement('article');
-          var audio = document.createElement('audio');
-
-          clipContainer.classList.add('clip');
-          audio.setAttribute('controls', '');
-
-          clipContainer.appendChild(audio);
-          soundClips.appendChild(clipContainer);
-          audio.controls = true;
-      		var audioURL = window.URL.createObjectURL(recordAudio.getBlob());
-          audio.src = audioURL;
           socket.emit('incomingdata', files);
-          // if (window.stream) window.stream.stop();
       });
   });
-	// mediaRecorder.stop();
-	//videoElement.controls = true;
-	recBtn.disabled = false;
-	pauseResBtn.disabled = true;
-	stopBtn.disabled = true;
-	downloadButton.disabled = false;
 }
 
 function onBtnPauseClicked(){
