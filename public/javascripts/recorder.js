@@ -94,6 +94,7 @@ function onBtnNextClicked(){
           socket.emit('incomingdata', files);
       });
   });
+  return true;
 }
 
 function onBtnPauseClicked(){
