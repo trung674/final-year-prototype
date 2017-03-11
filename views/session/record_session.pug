@@ -29,7 +29,7 @@ block main_content
                     i.fa.fa-play.fa-4x
                 div.col-md-2.col-md-offset-1
                   if (reqIndex != recording.content.length - 1)
-                    a.btn-control#btn-next(href=`#`,onclick='onBtnNextClicked()')
+                    a.btn-control#btn-next(onclick='onBtnNextClicked()')
                       i.fa.fa-forward.fa-4x
 
           if (reqIndex == recording.content.length - 1)

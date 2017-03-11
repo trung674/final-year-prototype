@@ -91,10 +91,16 @@ function onBtnNextClicked(){
                   recordingID: recordingID
               }
           };
-          socket.emit('incomingdata', files);
+          socket.emit('incomingdata', files, (status) => {
+            if (status) {
+              // ugly way to redirect to change URL it seems :/
+              var currentURL = window.loca tion.pathname.split('/')
+              var currentIndex = currentURL.pop();
+              window.location.href = parseInt(currentIndex) + 1;
+            }
+          });
       });
   });
-  return true;
 }
 
 function onBtnPauseClicked(){
