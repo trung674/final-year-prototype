@@ -7,7 +7,7 @@ block content
         h1.text-center Register new administrator account
         if message
           h4.error-message.text-danger #{message}
-        form(action='/create_admin', method='POST')
+        form(action='/admin/create_admin', method='POST')
           .form-group
             input(type='email', name='email', class='form-control', placeholder='Email',required)
           .form-group

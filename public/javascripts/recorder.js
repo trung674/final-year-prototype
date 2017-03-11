@@ -67,7 +67,7 @@ var mediaRecorder;
 var chunks = [];
 var recordAudio;
 
-function onBtnRecordClicked (){
+function onBtnRecordClicked(){
   // startRecording
   recordAudio = new RecordRTC(window.stream, {recorderType: StereoAudioRecorder, sampleRate: 44100, bufferSize: 4096});
 	// recordAudio.setRecordingDuration(5000);
@@ -94,7 +94,7 @@ function onBtnNextClicked(){
           socket.emit('incomingdata', files, (status) => {
             if (status) {
               // ugly way to redirect to change URL it seems :/
-              var currentURL = window.loca tion.pathname.split('/')
+              var currentURL = window.location.pathname.split('/')
               var currentIndex = currentURL.pop();
               window.location.href = parseInt(currentIndex) + 1;
             }

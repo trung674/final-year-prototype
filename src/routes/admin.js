@@ -10,33 +10,31 @@ module.exports = (passport) => {
   	});
   });
 
-  router.get('/create_admin',isLoggedInAsAdmin, (req, res) => {
+  router.get('/admin/create_admin',isLoggedInAsAdmin, (req, res) => {
   	res.render('admin/admin', {
   		admin : req.user // get the user out of session and pass to template
   	});
   });
 
-  router.post('/create_admin',isLoggedInAsAdmin, passport.authenticate('admin_signup', {
+  router.post('/admin/create_admin',isLoggedInAsAdmin, passport.authenticate('admin_signup', {
     successRedirect : '/admin',
     failureRedirect: '/create_admin',
     failureFlash : true
   }));
 
-  router.get('/session', isLoggedInAsAdmin, (req, res) => {
+  router.get('/admin/session', isLoggedInAsAdmin, (req, res) => {
     Recording.find({}, (err, recordings) => {
         if (err)
           console.log(err);
         res.render('admin/session', {recordings: recordings, moment: moment, message: req.flash('message')});
     });
-
-
   });
 
-  router.get('/create_session', isLoggedInAsAdmin, (req, res) => {
+  router.get('/admin/create_session', isLoggedInAsAdmin, (req, res) => {
   	res.render('admin/create_session', {message: req.flash('message')});
   });
 
-  router.post('/create_session', isLoggedInAsAdmin, (req, res) => {
+  router.post('/admin/create_session', isLoggedInAsAdmin, (req, res) => {
     Recording.findOne({'title': req.body.title}, (err, recording) => {
       if (err)
         console.log(err);
