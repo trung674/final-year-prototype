@@ -3,6 +3,7 @@ import express from 'express';
 import Recording from '../models/recording';
 import User from '../models/user';
 import moment from 'moment';
+import mongoose from 'mongoose';
 const router = express.Router();
 
 module.exports = (passport) => {
@@ -50,7 +51,7 @@ module.exports = (passport) => {
   router.get('/user/session/:recording', isLoggedIn, (req, res, next) => {
     Recording.findOne({_id: req.params.recording})
       .then((recording) => {
-        let userRecords = findExistingSession(req.user.records, req.params.recording);
+        const userRecords = findExistingSession(req.user.records, req.params.recording);
         let recordingStatus
 
         if (userRecords.length == 0) {
@@ -76,48 +77,60 @@ module.exports = (passport) => {
   router.get('/user/session/:recording/:index', isLoggedIn, (req, res, next) => {
     Recording.findOne({_id: req.params.recording})
       .then((recording) => {
-        User.findOne({_id : req.user._id})
-          .then((user) => {
-            let userRecords = findExistingSession(user.records, recording._id);
-            if (userRecords.length == 0) {
-              let record = {_recording: recording._id, path: 'uploads/' + req.user.username + '/' + recording._id, isFinished: false, lastVisited: Date.now()};
-              console.log(record);
-              user.records.push(record);
-              user.save((err) => {
-                if (err) {
-                  console.error(err);
-                  next();
+          User.findOne({_id : req.user._id})
+            .then((user) => {
+              let record;
+              if (req.query.a == 'start') {
+                let isExisted = false;
+                for (let i in user.records) {
+                  if (user.records[i]._recording == req.params.recording) {
+                    isExisted = true;
+                    break;
+                  }
                 }
+
+                if (!isExisted) {
+                  record = {_recording: recording._id, path: 'uploads/' + req.user.username + '/' + recording._id, isFinished: false, lastVisited: Date.now()};
+                  user.records.push(record);
+                  user.save((err) => {
+                    if (err) {
+                      console.error(err);
+                      next();
+                    }
+                  });
+                }
+              } else if (req.query.a == 'continue') {
+                console.log('a: continue');
+                User.update({'records._recording': recording._id},
+                  {'$set': {'records.$.lastVisited': Date.now()}},
+                  (err, result) => {
+                    if (err) {
+                      console.error(err);
+                      next();
+                    }
+                    console.log(result);
+                  });
+              }
+              //TODO implement else statement
+            })
+            .then(() => {
+              let viewTemplate;
+              if (recording.type == 'paragraph' || recording.type == 'speech') {
+                viewTemplate = 'session/record_session_2';
+              } else {
+                viewTemplate = 'session/record_session';
+              }
+              res.render(viewTemplate, {
+                  username: req.user.username,
+                  recording : recording,
+                  reqIndex : req.params.index,
+                  moment : moment,
               });
-              // User.update(
-              //   user,
-              //   {$push: {"records": {_recording: recording._id, path: 'uploads/' + req.user.username + '/' + recording._id, isFinished: false, lastVisited: Date.now() }}},
-              //   (err) => {
-              //     if (err) {
-              //       console.log(err);
-              //       next();
-              //     }
-              //   });
-            }
-          })
-          .then(() => {
-            let viewTemplate;
-            if (recording.type == 'paragraph' || recording.type == 'speech') {
-              viewTemplate = 'session/record_session_2';
-            } else {
-              viewTemplate = 'session/record_session';
-            }
-            res.render(viewTemplate, {
-                username: req.user.username,
-                recording : recording,
-                reqIndex : req.params.index,
-                moment : moment,
+            })
+            .catch(err => {
+              console.log(err);
+              next();
             });
-          })
-          .catch(err => {
-            console.log(err);
-            next();
-          });
       })
       .catch(err => {
         console.log(err);
