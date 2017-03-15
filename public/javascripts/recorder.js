@@ -72,35 +72,47 @@ function onBtnRecordClicked(){
   recordAudio = new RecordRTC(window.stream, {recorderType: StereoAudioRecorder, sampleRate: 44100, bufferSize: 4096});
 	// recordAudio.setRecordingDuration(5000);
   recordAudio.startRecording();
-  visualize(window.stream);
+  // visualize(window.stream);
 
   btnRecord.replaceWith("<a class='btn-control' id='btn-pause' onClick='onBtnPauseClicked()'><i class='fa fa-pause fa-4x'></i></a>");
 }
 
 function onBtnNextClicked(){
   var currentWord = $('#word').text();
-  recordAudio.stopRecording(function() {
-      // get audio data-URL
-      recordAudio.getDataURL(function(audioDataURL) {
-          var files = {
-              audio: {
-                  type: recordAudio.getBlob().type || 'audio/wav',
-                  dataURL: audioDataURL,
-                  word: currentWord,
-                  username: username,
-                  recordingID: recordingID
+  if (recordAudio) {
+    recordAudio.stopRecording(function() {
+        // get audio data-URL
+        recordAudio.getDataURL(function(audioDataURL) {
+            var files = {
+                audio: {
+                    type: recordAudio.getBlob().type || 'audio/wav',
+                    dataURL: audioDataURL,
+                    word: currentWord,
+                    username: username,
+                    recordingID: recordingID
+                }
+            };
+            socket.emit('incomingdata', files, (status) => {
+              if (status) {
+                // ugly way to redirect to change URL :/
+                var currentURL = window.location.pathname.split('/');
+                var currentIndex = currentURL.pop();
+                window.location.href = parseInt(currentIndex) + 1;
               }
-          };
-          socket.emit('incomingdata', files, (status) => {
-            if (status) {
-              // ugly way to redirect to change URL it seems :/
-              var currentURL = window.location.pathname.split('/')
-              var currentIndex = currentURL.pop();
-              window.location.href = parseInt(currentIndex) + 1;
-            }
-          });
-      });
-  });
+            });
+        });
+    });
+  } else {
+    var currentURL = window.location.pathname.split('/');
+    var currentIndex = currentURL.pop();
+    window.location.href = parseInt(currentIndex) + 1;
+  }
+}
+
+function onBtnClicked(){
+  $('#btn-pause').replaceWith("<a class='btn-control' id='btn-resume' onClick='onBtnResumeClicked()'><i class='fa fa-play fa-4x'></i></a>");
+  recordAudio.pauseRecording();
+	console.log("pause");
 }
 
 function onBtnPauseClicked(){
@@ -115,18 +127,7 @@ function onBtnResumeClicked(){
   console.log("resume");
 }
 
-function log(message){
-	dataElement.innerHTML = dataElement.innerHTML+'<br>'+message ;
-}
 
-function download() {
-  var blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
-  var url = window.URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = 'test.ogg';
-  a.click();
-}
 
 function visualize(stream) {
   var source = audioCtx.createMediaStreamSource(stream);

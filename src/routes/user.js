@@ -100,7 +100,6 @@ module.exports = (passport) => {
                   });
                 }
               } else if (req.query.a == 'continue') {
-                console.log('a: continue');
                 User.update({'records._recording': recording._id},
                   {'$set': {'records.$.lastVisited': Date.now()}},
                   (err, result) => {
@@ -108,10 +107,8 @@ module.exports = (passport) => {
                       console.error(err);
                       next();
                     }
-                    console.log(result);
                   });
               }
-              //TODO implement else statement
             })
             .then(() => {
               let viewTemplate;
