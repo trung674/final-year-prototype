@@ -34,12 +34,12 @@ module.exports = (passport) => {
   	res.render('admin/create_session', {message: req.flash('message')});
   });
 
-  router.post('/admin/create_session', isLoggedInAsAdmin, (req, res) => {
+  router.post('/admin/create_session', isLoggedInAsAdmin, (req, res, next) => {
     Recording.findOne({'title': req.body.title}, (err, recording) => {
       if (err) {
         console.log(err);
         next();
-      }  
+      }
       if (recording) {
         req.flash('message', 'This session title is already existed !');
         res.redirect('/create_session');

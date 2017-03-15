@@ -41,18 +41,16 @@ block main_content
                     span(aria-hiddenn='true') &times;
                   h2.modal-title(id='remindModalLabel') Set up reminder date
                 div.modal-body
-                  form(action='/user/create_reminder', method='POST')
+                  form(id='reminderForm', action=`/user/create_reminder?r=${recording._id}`)
                     .form-group
                       label Message (Optional)
                       input(type='text', name='message', class='form-control nomargin', placeholder='Leave a message to yourself')
                     .form-group
                       label Date
                       input(type='date', name='date', class='form-control ', placeholder='Please choose a date')
-                div.modal-footer
-                  button.btn.btn-lg.btn-default(type='button', data-dismiss='modal') Cancel
-                  button.btn.btn-lg.btn-primary(type='submit') Create
-
-
+                    button.btn.btn-lg.btn-default(type='button' data-dismiss='modal') Cancel
+                    button.btn.btn-lg.btn-primary(type='submit' id='reminderBtn') Create
+                    p.hidden#status
 
           if (reqIndex == recording.content.length - 1)
             a.btn.btn-lg.btn-success.pull-right(href='#') Finish

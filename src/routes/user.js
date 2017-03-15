@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 const router = express.Router();
 
 module.exports = (passport) => {
-  router.get('/user', isLoggedIn, (req, res) => {
+  router.get('/user', isLoggedIn, (req, res, next) => {
     let newRecordings, ongoingRecordings, finishedRecordings
     Recording.find().limit(10) //should limit to newest 5 sessions
       .then((recordings) => {

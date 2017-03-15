@@ -67,6 +67,7 @@ app.set('port', process.env.PORT || 3000);
 app.use(require('./routes/index')(passport));
 app.use(require('./routes/user')(passport));
 app.use(require('./routes/admin')(passport));
+app.use(require('./routes/reminder')(passport));
 // app.use(require('./routes/error'));
 app.use((req, res, next) => {
     res.status(404);
@@ -86,6 +87,7 @@ app.use((req, res, next) => {
 
 // Misc
 require('./record.js')(io);
+require('./cron.js');
 
 io.on('connection', (socket) => {
     console.log('Establishing socketio connection...');
