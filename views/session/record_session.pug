@@ -6,54 +6,55 @@ block main_content
       div.page-header
         h1= recording.title
       div.row
-        div.col-md-4
-          div.list-group(id='items')
-            each item, index in recording.content
-              if index == reqIndex
-                a.list-group-item.active(href=`${index}`)= item
-              else
-                a.list-group-item(href=`${index}`)= item
-        div.col-md-8
-          div.panel.panel-default
+        div.col-md-12
+          div.panel.panel-primary
+            div.panel-heading Session Information
             div.panel-body
-              div.text-center
-                h1.well#word= recording.content[reqIndex]
-                //- canvas.visualizer
-              div.row.text-center
-                div.col-md-2.col-md-offset-2
-                  if reqIndex != 0
-                    a.btn-control#btn-back(href=`${parseInt(reqIndex) - 1}`)
-                      i.fa.fa-backward.fa-4x
-                div.col-md-2.col-md-offset-1
-                  a.btn-control#btn-record(onclick='onBtnRecordClicked()')
-                    i.fa.fa-play.fa-4x
-                div.col-md-2.col-md-offset-1
-                  if (reqIndex != recording.content.length - 1)
-                    a.btn-control#btn-next(onclick='onBtnNextClicked()')
-                      i.fa.fa-forward.fa-4x
+              div.row
+                div.col-md-6
+                  ul
+                    li
+                      strong Description
+                      p= recording.description
+                    li
+                      strong Type
+                      p= recording.type
+                div.col-md-6
+                  ul
+                    li
+                      strong Added Date
+                      p= moment(recording.createdAt).format("YYYY-MM-DD")
+                    li
+                      strong Last Modified Date
+                      p= moment(recording.updatedAt).format("YYYY-MM-DD")
+        if(recording.type == "words" || recording.type == "sentences")
+          include session_word
+        else
+          include session_paragraph
+      if (reqIndex == recording.content.length - 1)
+        a.btn.btn-lg.btn-success.pull-right(href='#') Finish   
+      button.btn.btn-lg.btn-info.pull-right(type='button', data-toggle='modal', data-target='#remindModal' ) Remind Me Later
+      div.modal.fade(id='remindModal', tabindex='-1', role='dialog', aria-labelledby='remindModalLabel')
+        div.modal-dialog(role='document')
+          div.modal-content
+            div.modal-header
+              button.close(type='button', data-dismiss='modal', aria-label='Close')
+                span(aria-hiddenn='true') &times;
+              h2.modal-title(id='remindModalLabel') Set up reminder date
+            div.modal-body
+              form(id='reminderForm', action=`/user/create_reminder?r=${recording._id}`)
+                .form-group
+                  label Message (Optional)
+                  input(type='text', name='message', class='form-control nomargin', placeholder='Leave a message to yourself')
+                .form-group
+                  label Date
+                  input(type='date', name='date', class='form-control ', placeholder='Please choose a date')
+                div.clearfix
+                  button.btn.btn-lg.btn-primary.pull-right(type='submit' id='reminderBtn') Create
+                  button.btn.btn-lg.btn-default.pull-right(type='button' data-dismiss='modal') Cancel
+                p.hidden#status
+       
 
-          button.btn.btn-lg.btn-success(type='button', data-toggle='modal', data-target='#remindModal' ) Remind Me Later
-          div.modal.fade(id='remindModal', tabindex='-1', role='dialog', aria-labelledby='remindModalLabel')
-            div.modal-dialog(role='document')
-              div.modal-content
-                div.modal-header
-                  button.close(type='button', data-dismiss='modal', aria-label='Close')
-                    span(aria-hiddenn='true') &times;
-                  h2.modal-title(id='remindModalLabel') Set up reminder date
-                div.modal-body
-                  form(id='reminderForm', action=`/user/create_reminder?r=${recording._id}`)
-                    .form-group
-                      label Message (Optional)
-                      input(type='text', name='message', class='form-control nomargin', placeholder='Leave a message to yourself')
-                    .form-group
-                      label Date
-                      input(type='date', name='date', class='form-control ', placeholder='Please choose a date')
-                    button.btn.btn-lg.btn-default(type='button' data-dismiss='modal') Cancel
-                    button.btn.btn-lg.btn-primary(type='submit' id='reminderBtn') Create
-                    p.hidden#status
-
-          if (reqIndex == recording.content.length - 1)
-            a.btn.btn-lg.btn-success.pull-right(href='#') Finish
     else
       p No recording found
 

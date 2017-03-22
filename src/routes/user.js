@@ -111,13 +111,7 @@ module.exports = (passport) => {
               }
             })
             .then(() => {
-              let viewTemplate;
-              if (recording.type == 'paragraph' || recording.type == 'speech') {
-                viewTemplate = 'session/record_session_2';
-              } else {
-                viewTemplate = 'session/record_session';
-              }
-              res.render(viewTemplate, {
+              res.render('session/record_session', {
                   username: req.user.username,
                   recording : recording,
                   reqIndex : req.params.index,

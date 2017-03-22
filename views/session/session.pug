@@ -5,25 +5,30 @@ block main_content
     if (recording)
       div.page-header
         h1= recording.title
-      div.well
-        ul
-          li
-            h3 Description
-            p= recording.description
-          li
-            h3 Type
-            p= recording.type.toUpperCase()
-          li
-            h3 Content
+      div.panel.pabel-default
+        div.panel-heading Session Information
+        table.table
+          th
             ul
-              each item in recording.content
-                li= item
-          li
-            h3 Added Date
-            p= moment(recording.createdAt).format("YYYY-MM-DD")
-          li
-            h3 Last Modified Date
-            p= moment(recording.updatedAt).format("YYYY-MM-DD")
+              li
+                  h3 Added Date
+                  p= moment(recording.createdAt).format("YYYY-MM-DD")
+              li
+                h3 Last Modified Date
+                p= moment(recording.updatedAt).format("YYYY-MM-DD")
+          th
+            ul
+              li
+                h3 Description
+                p= recording.description
+              li
+                h3 Type
+                p= recording.type.toUpperCase()
+              li
+                h3 Content
+                ul
+                  each item in recording.content
+                    li= item         
       if recordingStatus == 'start'
         a.btn.btn-lg.btn-default(id='start-recoring', href=`${recording._id}/0?a=start`) Start
       else if recordingStatus == 'ongoing'
