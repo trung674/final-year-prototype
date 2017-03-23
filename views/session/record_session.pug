@@ -7,7 +7,7 @@ block main_content
         h1= recording.title
       div.row
         div.col-md-12
-          div.panel.panel-primary
+          div.panel.panel-info
             div.panel-heading Session Information
             div.panel-body
               div.row
@@ -47,8 +47,8 @@ block main_content
                   label Message (Optional)
                   input(type='text', name='message', class='form-control nomargin', placeholder='Leave a message to yourself')
                 .form-group
-                  label Date
-                  input(type='date', name='date', class='form-control ', placeholder='Please choose a date')
+                  label Date I want the reminder sent
+                  input(required, type='date', name='date', class='form-control ', placeholder='Please choose a date')
                 div.clearfix
                   button.btn.btn-lg.btn-primary.pull-right(type='submit' id='reminderBtn') Create
                   button.btn.btn-lg.btn-default.pull-right(type='button' data-dismiss='modal') Cancel

@@ -3,13 +3,14 @@
 var btnRecord = $('#btn-record');
 var btnBack = $('#btn-back');
 var btnNext = $('#btn-next');
-
-var errorElement = $('#errorMsg');
-var dataElement = $('#data');
-var soundClips = $('div.sound-clips');
-var canvas = document.querySelector('.visualizer'); // use Jquery selector here will cause mediaStream not running, weird bug
-var audioCtx = new (window.AudioContext || webkitAudioContext)();
-var canvasCtx = canvas.getContext("2d");
+var currentWord = $('#word').text();
+var recordingStatus = $('#recording-status');
+// var errorElement = $('#errorMsg');
+// var dataElement = $('#data');
+// var soundClips = $('div.sound-clips');
+// var canvas = document.querySelector('.visualizer'); // use Jquery selector here will cause mediaStream not running, weird bug
+// var audioCtx = new (window.AudioContext || webkitAudioContext)();
+// var canvasCtx = canvas.getContext("2d");
 
 var isSecureOrigin = location.protocol === 'https:' ||
 location.host === 'localhost:3000';
@@ -48,7 +49,6 @@ function handleError(error) {
 }
 
 function errorMsg(msg, error) {
-  errorElement.innerHTML += '<p>' + msg + '</p>';
   if (typeof error !== 'undefined') {
     console.error(error);
   }
@@ -72,13 +72,40 @@ function onBtnRecordClicked(){
   recordAudio = new RecordRTC(window.stream, {recorderType: StereoAudioRecorder, sampleRate: 44100, bufferSize: 4096});
 	// recordAudio.setRecordingDuration(5000);
   recordAudio.startRecording();
-  // visualize(window.stream);
 
-  btnRecord.replaceWith("<a class='btn-control' id='btn-pause' onClick='onBtnPauseClicked()'><i class='fa fa-pause fa-4x'></i></a>");
+  // visualize(window.stream);
+  // setTimeout(function () {
+  //   recordAudio.stopRecording(function() {
+  //       // get audio data-URL
+  //       recordAudio.getDataURL(function(audioDataURL) {
+  //           var files = {
+  //               audio: {
+  //                   type: recordAudio.getBlob().type || 'audio/wav',
+  //                   dataURL: audioDataURL,
+  //                   word: currentWord,
+  //                   username: username,
+  //                   recordingID: recordingID
+  //               }
+  //           };
+  //           socket.emit('incomingdata', files, (status) => {
+  //             if (status) {
+  //               // ugly way to redirect to change URL :/
+  //               var currentURL = window.location.pathname.split('/');
+  //               var currentIndex = currentURL.pop();
+  //               window.location.href = parseInt(currentIndex) + 1;
+  //             }
+  //           });
+  //       });
+  //   });
+  // }, 5000);
+
+  recordingStatus.text('Recording');
+  recordingStatus.css('color', 'green');
+  btnRecord.replaceWith("<a class='btn-control' id='btn-pause' onClick='onBtnPauseClicked()'><i class='fa fa-microphone fa-5x'></i></a>");
+  $('.fa-microphone').css('color', 'green');
 }
 
 function onBtnNextClicked(){
-  var currentWord = $('#word').text();
   if (recordAudio) {
     recordAudio.stopRecording(function() {
         // get audio data-URL
@@ -109,76 +136,76 @@ function onBtnNextClicked(){
   }
 }
 
-function onBtnClicked(){
-  $('#btn-pause').replaceWith("<a class='btn-control' id='btn-resume' onClick='onBtnResumeClicked()'><i class='fa fa-play fa-4x'></i></a>");
-  recordAudio.pauseRecording();
-	console.log("pause");
-}
-
 function onBtnPauseClicked(){
-  $('#btn-pause').replaceWith("<a class='btn-control' id='btn-resume' onClick='onBtnResumeClicked()'><i class='fa fa-play fa-4x'></i></a>");
+  $('#btn-pause').replaceWith("<a class='btn-control' id='btn-resume' onClick='onBtnResumeClicked()'><i class='fa fa-microphone fa-5x'></i></a>");
+  $('.fa-microphone').css('color', 'red');
+  recordingStatus.text('Pause');
+  recordingStatus.css('color', 'red');
   recordAudio.pauseRecording();
 	console.log("pause");
 }
 
 function onBtnResumeClicked(){
-  $('#btn-resume').replaceWith("<a class='btn-control' id='btn-pause' onClick='onBtnPauseClicked()'><i class='fa fa-pause fa-4x'></i></a>");
+  $('#btn-resume').replaceWith("<a class='btn-control' id='btn-pause' onClick='onBtnPauseClicked()'><i class='fa fa-microphone fa-5x'></i></a>");
+  $('.fa-microphone').css('color', 'green');
+  recordingStatus.text('Recording');
+  recordingStatus.css('color', 'green');
   recordAudio.resumeRecording();
   console.log("resume");
 }
 
 
 
-function visualize(stream) {
-  var source = audioCtx.createMediaStreamSource(stream);
+// function visualize(stream) {
+//   var source = audioCtx.createMediaStreamSource(stream);
 
-  var analyser = audioCtx.createAnalyser();
-  analyser.fftSize = 2048;
-  var bufferLength = analyser.frequencyBinCount;
-  var dataArray = new Uint8Array(bufferLength);
+//   var analyser = audioCtx.createAnalyser();
+//   analyser.fftSize = 2048;
+//   var bufferLength = analyser.frequencyBinCount;
+//   var dataArray = new Uint8Array(bufferLength);
 
-  source.connect(analyser);
-  //analyser.connect(audioCtx.destination);
+//   source.connect(analyser);
+//   //analyser.connect(audioCtx.destination);
 
-  var WIDTH = canvas.width
-  var HEIGHT = canvas.height;
+//   var WIDTH = canvas.width
+//   var HEIGHT = canvas.height;
 
-  draw()
+//   draw()
 
-  function draw() {
+//   function draw() {
 
-    requestAnimationFrame(draw);
+//     requestAnimationFrame(draw);
 
-    analyser.getByteTimeDomainData(dataArray);
+//     analyser.getByteTimeDomainData(dataArray);
 
-    canvasCtx.fillStyle = 'rgb(200, 200, 200)';
-    canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+//     canvasCtx.fillStyle = 'rgb(200, 200, 200)';
+//     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
-    canvasCtx.lineWidth = 2;
-    canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
+//     canvasCtx.lineWidth = 2;
+//     canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
 
-    canvasCtx.beginPath();
+//     canvasCtx.beginPath();
 
-    var sliceWidth = WIDTH * 1.0 / bufferLength;
-    var x = 0;
+//     var sliceWidth = WIDTH * 1.0 / bufferLength;
+//     var x = 0;
 
 
-    for(var i = 0; i < bufferLength; i++) {
+//     for(var i = 0; i < bufferLength; i++) {
 
-      var v = dataArray[i] / 128.0;
-      var y = v * HEIGHT/2;
+//       var v = dataArray[i] / 128.0;
+//       var y = v * HEIGHT/2;
 
-      if(i === 0) {
-        canvasCtx.moveTo(x, y);
-      } else {
-        canvasCtx.lineTo(x, y);
-      }
+//       if(i === 0) {
+//         canvasCtx.moveTo(x, y);
+//       } else {
+//         canvasCtx.lineTo(x, y);
+//       }
 
-      x += sliceWidth;
-    }
+//       x += sliceWidth;
+//     }
 
-    canvasCtx.lineTo(canvas.width, canvas.height/2);
-    canvasCtx.stroke();
+//     canvasCtx.lineTo(canvas.width, canvas.height/2);
+//     canvasCtx.stroke();
 
-  }
-}
+//   }
+// }
