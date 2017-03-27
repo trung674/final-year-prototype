@@ -6,33 +6,30 @@ block main_content
       div.page-header
         h1= recording.title
       div.row
-        div.col-md-12
+        div.col-md-3
           div.panel.panel-info
             div.panel-heading Session Information
             div.panel-body
-              div.row
-                div.col-md-6
-                  ul
-                    li
-                      strong Description
-                      p= recording.description
-                    li
-                      strong Type
-                      p= recording.type
-                div.col-md-6
-                  ul
-                    li
-                      strong Added Date
-                      p= moment(recording.createdAt).format("YYYY-MM-DD")
-                    li
-                      strong Last Modified Date
-                      p= moment(recording.updatedAt).format("YYYY-MM-DD")
-        if(recording.type == "words" || recording.type == "sentences")
-          include session_word
-        else
-          include session_paragraph
+              ul
+                li
+                  strong Description
+                  p= recording.description
+                li
+                  strong Type
+                  p= recording.type
+                li
+                  strong Added Date
+                  p= moment(recording.createdAt).format("YYYY-MM-DD")
+                li
+                  strong Last Modified Date
+                  p= moment(recording.updatedAt).format("YYYY-MM-DD")
+        div.col-md-9
+          if(recording.type == "words" || recording.type == "sentences")
+            include session_word
+          else
+            include session_paragraph
       if (reqIndex == recording.content.length - 1)
-        a.btn.btn-lg.btn-success.pull-right(href='#') Finish   
+        a.btn.btn-lg.btn-success.pull-right(id='btn-finish', onclick='onBtnFinishClicked()') Finish   
       button.btn.btn-lg.btn-info.pull-right(type='button', data-toggle='modal', data-target='#remindModal' ) Remind Me Later
       div.modal.fade(id='remindModal', tabindex='-1', role='dialog', aria-labelledby='remindModalLabel')
         div.modal-dialog(role='document')
@@ -45,10 +42,10 @@ block main_content
               form(id='reminderForm', action=`/user/create_reminder?r=${recording._id}`)
                 .form-group
                   label Message (Optional)
-                  input(type='text', name='message', class='form-control nomargin', placeholder='Leave a message to yourself')
+                  textarea.form-control(rows='3', name='message', placeholder='Maybe leave a message to yourself?')
                 .form-group
                   label Date I want the reminder sent
-                  input(required, type='date', name='date', class='form-control ', placeholder='Please choose a date')
+                  input(required, type='date', name='date', class='form-control ')
                 div.clearfix
                   button.btn.btn-lg.btn-primary.pull-right(type='submit' id='reminderBtn') Create
                   button.btn.btn-lg.btn-default.pull-right(type='button' data-dismiss='modal') Cancel

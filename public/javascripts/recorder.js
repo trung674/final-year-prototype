@@ -3,6 +3,7 @@
 var btnRecord = $('#btn-record');
 var btnBack = $('#btn-back');
 var btnNext = $('#btn-next');
+var btnFinish = $('#btn-finish');
 var currentWord = $('#word').text();
 var recordingStatus = $('#recording-status');
 // var errorElement = $('#errorMsg');
@@ -107,32 +108,9 @@ function onBtnRecordClicked(){
 
 function onBtnNextClicked(){
   if (recordAudio) {
-    recordAudio.stopRecording(function() {
-        // get audio data-URL
-        recordAudio.getDataURL(function(audioDataURL) {
-            var files = {
-                audio: {
-                    type: recordAudio.getBlob().type || 'audio/wav',
-                    dataURL: audioDataURL,
-                    word: currentWord,
-                    username: username,
-                    recordingID: recordingID
-                }
-            };
-            socket.emit('incomingdata', files, (status) => {
-              if (status) {
-                // ugly way to redirect to change URL :/
-                var currentURL = window.location.pathname.split('/');
-                var currentIndex = currentURL.pop();
-                window.location.href = parseInt(currentIndex) + 1;
-              }
-            });
-        });
-    });
+    saveAudioThenNext();
   } else {
-    var currentURL = window.location.pathname.split('/');
-    var currentIndex = currentURL.pop();
-    window.location.href = parseInt(currentIndex) + 1;
+    nextPage();
   }
 }
 
@@ -154,6 +132,61 @@ function onBtnResumeClicked(){
   console.log("resume");
 }
 
+function onBtnFinishClicked(){
+  saveAudio();
+}
+
+function saveAudioThenNext(){
+  recordAudio.stopRecording(function() {
+      // get audio data-URL
+      recordAudio.getDataURL(function(audioDataURL) {
+          var files = {
+              audio: {
+                  type: recordAudio.getBlob().type || 'audio/wav',
+                  dataURL: audioDataURL,
+                  word: currentWord,
+                  username: username,
+                  recordingID: recordingID
+              }
+          };
+          socket.emit('incomingdata', files, (status) => {
+            if (status) {
+              // ugly way to redirect to change URL :/
+              nextPage();
+            }
+          });
+      });
+  });
+}
+
+function saveAudioThenFinish(){
+  recordAudio.stopRecording(function() {
+      // get audio data-URL
+      recordAudio.getDataURL(function(audioDataURL) {
+          var files = {
+              audio: {
+                  type: recordAudio.getBlob().type || 'audio/wav',
+                  dataURL: audioDataURL,
+                  word: currentWord,
+                  username: username,
+                  recordingID: recordingID
+              }
+          };
+          socket.emit('incomingdata', files, (status) => {
+            if (status) {
+              // ugly way to redirect to change URL :/
+              // ajax here
+            }
+          });
+      });
+  });
+}
+
+function nextPage(){
+  var currentURL = window.location.pathname.split('/');
+  var currentIndex = currentURL.pop();
+  window.location.href = parseInt(currentIndex) + 1;
+}
 
 
 // function visualize(stream) {

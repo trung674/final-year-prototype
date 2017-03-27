@@ -16,7 +16,7 @@ block main_content
               each recording in newRecordings
                 tr
                   td
-                    a(href=`/user/session/${recording._id}`)= recording.title
+                    a(href=`/user/session/${recording._id}/0?a=start`)= recording.title
                   td= moment(recording.createdAt).format("DD-MM-YYYY")
 
       div.col-md-4.user-db-col
@@ -29,7 +29,7 @@ block main_content
               each recording in ongoingRecordings
                 tr
                   td
-                    a(href=`/user/session/${recording._recording._id}`)= recording._recording.title
+                    a(href=`/user/session/${recording._recording._id}/0?a=continue`)= recording._recording.title
                   td= moment(recording.lastVisited).format("DD-MM-YYYY")
       div.col-md-4.user-db-col
         h3.text-center Finished Sessions

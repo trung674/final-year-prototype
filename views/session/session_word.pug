@@ -1,32 +1,31 @@
-div.col-md-12
-  div.panel.panel-info
-    div.panel-heading Contents
-    div.panel-body
-      div.row
-        div.col-md-4 
-          div.list-group(id='items')
-            each item, index in recording.content
-              if index == reqIndex
-                a.list-group-item.active(href=`${index}`)= item
-              else
-                a.list-group-item(href=`${index}`)= item
-        div.col-md-8
-          div.text-center
-            h1.well#word= recording.content[reqIndex]
-            div.col-md-12
-              div.panel.panel-default
-                div.panel-body
-                  h4#recording-status Press Microphone icon to start recoring
-            div.col-md-12#btn-control-1
-              div.col-md-2.col-md-offset-2
-                if reqIndex != 0
-                  a#btn-back(href=`${parseInt(reqIndex) - 1}`)
-                    i.fa.fa-backward.fa-4x
-              div.col-md-2.col-md-offset-1
-                a#btn-record(onclick='onBtnRecordClicked()')
-                  i.fa.fa-microphone.fa-5x
-              div.col-md-2.col-md-offset-1
-                if (reqIndex != recording.content.length - 1)
-                  a#btn-next(onclick='onBtnNextClicked()') 
-                    i.fa.fa-forward.fa-4x                
+div.panel.panel-info
+  div.panel-heading Contents
+  div.panel-body
+    div.row
+      div.col-md-5 
+        div.list-group(id='items')
+          each item, index in recording.content
+            if index == reqIndex
+              a.list-group-item.active(href=`${index}`)= item
+            else
+              a.list-group-item(href=`${index}`)= item
+      div.col-md-7
+        div.text-center
+          h1.well#word= recording.content[reqIndex]
+          div.col-md-12
+            div.panel.panel-default
+              div.panel-body
+                h4#recording-status Click on the Microphone icon to start recoring                 
+          div.col-md-12#btn-control-1
+            div.col-md-2.col-md-offset-2
+              if reqIndex != 0
+                a#btn-back(href=`${parseInt(reqIndex) - 1}`)
+                  i.fa.fa-backward.fa-4x
+            div.col-md-2.col-md-offset-1
+              a#btn-record(onclick='onBtnRecordClicked()')
+                i.fa.fa-microphone.fa-5x
+            div.col-md-2.col-md-offset-1
+              if (reqIndex != recording.content.length - 1)
+                a#btn-next(onclick='onBtnNextClicked()') 
+                  i.fa.fa-forward.fa-4x                
         

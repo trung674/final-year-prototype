@@ -30,9 +30,9 @@ const job = new CronJob('00 47 23 * * *', () => {
       .then((reminders) => {
         reminders.forEach((reminder) => {
             let mailOptions = {
-              from: '"Allen Walker" <allenwalker2160@gmail.com>', // sender address
-              to: 'thanhtrung674@gmail.com', // list of receivers
-              subject: 'Recording Reminder', // Subject line
+              from: '"Web Recorder Team - University of Sheffield" <allenwalker2160@gmail.com>', // sender address
+              to: reminder._user.email, // list of receivers
+              subject: '(noreply) Recording Reminder', // Subject line
               text: `Hello ${reminder._user.information.fullname},
                      This is a friendly reminder that you have set up before.
                      Recording session: ${reminder._recording.title}
@@ -59,4 +59,4 @@ false, /* Start the job right now */
 );
 
 job.start();
-console.log('job status', job.running); // job1 status
+console.log('job status', job.running); // job status

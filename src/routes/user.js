@@ -30,11 +30,11 @@ module.exports = (passport) => {
 
             // Render page with necessary information
             res.render('user/user', {
-                newRecordings : newRecordings,
-                ongoingRecordings : ongoingRecordings,
-                finishedRecordings : finishedRecordings,
-                user : req.user,
-                moment : moment
+                newRecordings: newRecordings,
+                ongoingRecordings: ongoingRecordings,
+                finishedRecordings: finishedRecordings,
+                user: req.user,
+                moment: moment
             });
           })
           .catch(err => {
@@ -48,31 +48,31 @@ module.exports = (passport) => {
       });
   });
 
-  router.get('/user/session/:recording', isLoggedIn, (req, res, next) => {
-    Recording.findOne({_id: req.params.recording})
-      .then((recording) => {
-        const userRecords = findExistingSession(req.user.records, req.params.recording);
-        let recordingStatus
+  // router.get('/user/session/:recording', isLoggedIn, (req, res, next) => {
+  //   Recording.findOne({_id: req.params.recording})
+  //     .then((recording) => {
+  //       const userRecords = findExistingSession(req.user.records, req.params.recording);
+  //       let recordingStatus
 
-        if (userRecords.length == 0) {
-          recordingStatus = 'start';
-        } else if (userRecords[0].isFinished == false) {
-          recordingStatus = 'ongoing';
-        } else if (userRecords[0].isFinished == true) {
-          recordingStatus = 'finished';
-        }
+  //       if (userRecords.length == 0) {
+  //         recordingStatus = 'start';
+  //       } else if (userRecords[0].isFinished == false) {
+  //         recordingStatus = 'ongoing';
+  //       } else if (userRecords[0].isFinished == true) {
+  //         recordingStatus = 'finished';
+  //       }
 
-        res.render('session/session', {
-          recording : recording,
-          recordingStatus : recordingStatus,
-          moment : moment,
-        });
-      })
-      .catch(err => {
-        console.log(err);
-        next();
-      });
-  });
+  //       res.render('session/session', {
+  //         recording : recording,
+  //         recordingStatus : recordingStatus,
+  //         moment : moment,
+  //       });
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //       next();
+  //     });
+  // });
 
   router.get('/user/session/:recording/:index', isLoggedIn, (req, res, next) => {
     Recording.findOne({_id: req.params.recording})
@@ -113,9 +113,9 @@ module.exports = (passport) => {
             .then(() => {
               res.render('session/record_session', {
                   username: req.user.username,
-                  recording : recording,
-                  reqIndex : req.params.index,
-                  moment : moment,
+                  recording: recording,
+                  reqIndex: req.params.index,
+                  moment: moment,
               });
             })
             .catch(err => {
