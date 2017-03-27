@@ -29,7 +29,7 @@ block main_content
           else
             include session_paragraph
       if (reqIndex == recording.content.length - 1)
-        a.btn.btn-lg.btn-success.pull-right(id='btn-finish', onclick='onBtnFinishClicked()') Finish   
+        a.btn.btn-lg.btn-success.pull-right(id='btn-finish', data-recording-id=`${recording._id}`, onclick='onBtnFinishClicked()') Finish   
       button.btn.btn-lg.btn-info.pull-right(type='button', data-toggle='modal', data-target='#remindModal' ) Remind Me Later
       div.modal.fade(id='remindModal', tabindex='-1', role='dialog', aria-labelledby='remindModalLabel')
         div.modal-dialog(role='document')
@@ -56,8 +56,8 @@ block main_content
       p No recording found
 
   //- The dot is important, do not remove it
-  script(type='text/javascript').
-    var username = !{JSON.stringify(username)};
-    var recordingID = !{JSON.stringify(recording._id)};
+  //- script(type='text/javascript').
+  //-   var username = !{JSON.stringify(username)};
+  //-   var recordingID = !{JSON.stringify(recording._id)};
   script(src='https://cdn.webrtc-experiment.com/RecordRTC.js')
   script(src='/javascripts/recorder.js')

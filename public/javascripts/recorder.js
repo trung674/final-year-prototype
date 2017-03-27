@@ -108,9 +108,9 @@ function onBtnRecordClicked(){
 
 function onBtnNextClicked(){
   if (recordAudio) {
-    saveAudioThenNext();
+    saveAudio(false);
   } else {
-    nextPage();
+    nextRecording();
   }
 }
 
@@ -133,10 +133,12 @@ function onBtnResumeClicked(){
 }
 
 function onBtnFinishClicked(){
-  saveAudio();
+  saveAudio(true);
 }
-
-function saveAudioThenNext(){
+function saveAudio(isFinish){
+  var btnNext = $('#btn-next');
+  var recordingID = btnNext.attr('data-recording-id');
+  var username = btnNext.attr('data-username');
   recordAudio.stopRecording(function() {
       // get audio data-URL
       recordAudio.getDataURL(function(audioDataURL) {
@@ -151,38 +153,24 @@ function saveAudioThenNext(){
           };
           socket.emit('incomingdata', files, (status) => {
             if (status) {
-              // ugly way to redirect to change URL :/
-              nextPage();
-            }
-          });
-      });
-  });
-}
-
-function saveAudioThenFinish(){
-  recordAudio.stopRecording(function() {
-      // get audio data-URL
-      recordAudio.getDataURL(function(audioDataURL) {
-          var files = {
-              audio: {
-                  type: recordAudio.getBlob().type || 'audio/wav',
-                  dataURL: audioDataURL,
-                  word: currentWord,
-                  username: username,
-                  recordingID: recordingID
+              if (isFinish) {
+                finishRecording();
+              } else {
+                nextRecording();
               }
-          };
-          socket.emit('incomingdata', files, (status) => {
-            if (status) {
-              // ugly way to redirect to change URL :/
-              // ajax here
             }
           });
       });
   });
 }
 
-function nextPage(){
+function finishRecording(){
+  var recordingID = btnFinish.attr('data-recording-id');
+  window.location.href = "/user/session/" + recordingID + "/finish"
+}
+
+
+function nextRecording(){
   var currentURL = window.location.pathname.split('/');
   var currentIndex = currentURL.pop();
   window.location.href = parseInt(currentIndex) + 1;

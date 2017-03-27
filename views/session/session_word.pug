@@ -26,6 +26,6 @@ div.panel.panel-info
                 i.fa.fa-microphone.fa-5x
             div.col-md-2.col-md-offset-1
               if (reqIndex != recording.content.length - 1)
-                a#btn-next(onclick='onBtnNextClicked()') 
+                a#btn-next(data-recording-id=`${recording._id}`, data-username=`${username}`, onclick='onBtnNextClicked()') 
                   i.fa.fa-forward.fa-4x                
         

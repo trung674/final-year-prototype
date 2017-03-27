@@ -9,7 +9,7 @@ const router = express.Router();
 module.exports = (passport) => {
   router.get('/user', isLoggedIn, (req, res, next) => {
     let newRecordings, ongoingRecordings, finishedRecordings
-    Recording.find().limit(10) //should limit to newest 5 sessions
+    Recording.find().limit(10) //should limit to newest 10 sessions
       .then((recordings) => {
         User.findOne({_id: req.user._id}).populate({path: 'records._recording'})
           .then((user) => {
@@ -22,7 +22,6 @@ module.exports = (passport) => {
             finishedRecordings = user.records.filter((record) => {
               return record.isFinished == true;
             });
-
             // Find recordings that have been finished by user
             ongoingRecordings = user.records.filter((record) => {
               return record.isFinished == false;
@@ -34,7 +33,9 @@ module.exports = (passport) => {
                 ongoingRecordings: ongoingRecordings,
                 finishedRecordings: finishedRecordings,
                 user: req.user,
-                moment: moment
+                moment: moment,
+                messageError: req.flash('messageError'),
+                messageSuccess: req.flash('messageSuccess')
             });
           })
           .catch(err => {
@@ -74,6 +75,40 @@ module.exports = (passport) => {
   //     });
   // });
 
+  router.get('/user/session/:recording/finish', isLoggedIn, (req, res, next) => {
+    User.findOne({_id : req.user._id})
+      .then((user) => {
+        let isExisted = false;
+        for (let i in user.records) {
+          if (user.records[i]._recording == req.params.recording) {
+            isExisted = true;
+            break;
+          }
+        }
+
+        if (isExisted) {
+          User.update({'records._recording': req.params.recording},
+            {'$set': {'records.$.isFinished': true}},
+            (err, result) => {
+              if (err) {
+                console.error(err);              
+                res.redirect('/user');
+              } else {
+                req.flash('messageSuccess', 'Good job! You have successfully finished a recording session. Let\'s take a break and start another session when you are ready again.');
+                res.redirect('/user');
+              }
+          });
+        } else {
+          req.flash('messageError', 'You have not started this session yet!');
+          res.redirect('/user');
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        next();
+      });
+  });
+
   router.get('/user/session/:recording/:index', isLoggedIn, (req, res, next) => {
     Recording.findOne({_id: req.params.recording})
       .then((recording) => {
@@ -107,7 +142,7 @@ module.exports = (passport) => {
                       console.error(err);
                       next();
                     }
-                  });
+                });
               }
             })
             .then(() => {

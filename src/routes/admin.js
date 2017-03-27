@@ -45,8 +45,8 @@ module.exports = (passport) => {
         res.redirect('/create_session');
       } else {
         let newRecording = new Recording();
-        newRecording.title = req.body.title;
-        newRecording.description = req.body.description;
+        newRecording.title = req.body.title;      
+        newRecording.description = req.body.description.replace(/\n?\r?\r\n/g, '<br />' );
         newRecording.type = req.body.type;
         if (req.body.type == "words" || req.body.type == "sentences") {
           newRecording.content = formatContent(req.body.content);

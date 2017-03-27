@@ -4,53 +4,60 @@ block main_content
   div.container
     h1= "Welcome, " + user.information.fullname
     hr
+    if (messageError.length != 0) 
+      p.bg.bg-danger
+        strong= messageError
+    if (messageSuccess.length != 0) 
+      p.bg.bg-success
+        strong= messageSuccess
     div.well Please find below the list of newest sessions provided by the administrators and the list of ongoing sessions which you have not finished yet.
     div.row
       div.col-md-4.user-db-col
         h3.text-center New Sessions
-        if newRecordings
+        if (newRecordings.length != 0)
           table.table.table-bordered
             tr
               th Title
-              th Date added
+              th Type
+              th Date Added
               each recording in newRecordings
                 tr
                   td
                     a(href=`/user/session/${recording._id}/0?a=start`)= recording.title
+                  td= recording.type
                   td= moment(recording.createdAt).format("DD-MM-YYYY")
-
+        else 
+          p.text-center There is no new recording session          
       div.col-md-4.user-db-col
         h3.text-center Ongoing Sessions
-        if ongoingRecordings
+        if (ongoingRecordings.length != 0)
           table.table.table-bordered
             tr
               th Title
+              th Type
               th Last Visited
               each recording in ongoingRecordings
                 tr
                   td
                     a(href=`/user/session/${recording._recording._id}/0?a=continue`)= recording._recording.title
+                  td= recording._recording.type                    
                   td= moment(recording.lastVisited).format("DD-MM-YYYY")
+        else 
+          p.text-center You have not started any recording session yet          
       div.col-md-4.user-db-col
         h3.text-center Finished Sessions
+        if (finishedRecordings.length != 0)
+          table.table.table-bordered
+            tr
+              th Title
+              th Type
+              th Last Visited
+              each recording in finishedRecordings
+                tr
+                  td
+                    a(href=`/user/session/${recording._recording._id}/0`)= recording._recording.title
+                  td= recording._recording.type                             
+                  td= moment(recording.lastVisited).format("DD-MM-YYYY")
+        else
+          p.text-center You have not finished any recording session yet
 
-
-
-
-    //- .row
-    //-   div.col-md-6.col-md-offset-3
-    //-     h2.text-center Recording System Demo
-    //-     div.text-center
-    //-       canvas.visualizer
-    //-     div.text-center
-    //-       button.btn.btn-primary#rec(onclick='onBtnRecordClicked()') Record
-    //-       button.btn.btn-primary#pauseRes(onclick='onPauseResumeClicked()' disabled) Pause
-    //-       button.btn.btn-primary#stop(onclick='onBtnStopClick()' disabled) Stop
-    //-       button.btn.btn-primary#download(onclick='download()' disabled) Download
-    //-       div.sound-clips
-    //-       br
-    //-       p#errorMsg
-    //-       p#data
-
-  //- script(src='https://cdn.webrtc-experiment.com/RecordRTC.js')
-  //- script(src='/javascripts/recorder.js')
