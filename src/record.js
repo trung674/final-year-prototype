@@ -1,9 +1,14 @@
 import fs from 'fs-extra';
 import moment from 'moment';
-// import AWS from 'aws-sdk';
+import AWS from 'aws-sdk';
 // AWS.config.loadFromPath('./aws-config.json');
-// const s3 = new AWS.S3();
-// const bucketName = 'recording.uploads';
+AWS.config = new AWS.Config({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: "eu-west-2"
+});
+const s3 = new AWS.S3();
+const bucketName = 'recording.uploads';
 
 function writeToDisk(audio) {
     let dateTime = moment().format('YYYYMMDDHHmm');
@@ -16,13 +21,13 @@ function writeToDisk(audio) {
 
     fileBuffer = Buffer.from(dataURL, 'base64');
     // fs.outputFileSync(filePath, fileBuffer);
-    // s3.putObject({Bucket: bucketName, Key: filePathAWS , Body: fileBuffer, ContentEncoding: 'base64', ContentType: 'audio/wav'}, function(err, data) {
-    //   if (err) {
-    //     console.error(err);
-    //   } else {
-    //     console.log('uploading to S3 successfully !');
-    //   }
-    // });
+    s3.putObject({Bucket: bucketName, Key: filePathAWS , Body: fileBuffer, ContentEncoding: 'base64', ContentType: 'audio/wav'}, function(err, data) {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log('uploading to S3 successfully !');
+      }
+    });
     console.log('filePath', filePath);
 }
 
