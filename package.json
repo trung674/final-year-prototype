@@ -4,7 +4,8 @@
   "description": "Prototype for final year project",
   "main": "app.js",
   "scripts": {
-    "start": "set NODE_ENV=production && nodemon --exec babel-node src/app.js --ignore public/",
+    "start": "node dist/app.js",
+    "dev": "set NODE_ENV=production && nodemon --exec babel-node src/app.js --ignore public/",
     "build": "babel src -d dist",
     "serve": "set NODE_ENV=production && node dist/app.js"
   },
