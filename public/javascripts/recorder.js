@@ -52,8 +52,8 @@ function errorMsg(msg, error) {
 navigator.mediaDevices.getUserMedia(constraints).
     then(handleSuccess).catch(handleError);
 
-// var socket = io.connect('https://web-recorder-uos.herokuapp.com');
-var socket = io.connect('http://localhost:3000');
+var socket = io.connect('https://web-recorder-uos.herokuapp.com');
+// var socket = io.connect('http://localhost:3000');
 socket.on('user', function(data){
   console.log(data);
   console.log("I heared you!");
