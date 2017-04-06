@@ -34,7 +34,7 @@ transporter.verify(function (error, success) {
     }
 });
 
-var job = new CronJob('00 47 23 * * *', function () {
+var job = new CronJob('00 10 10 * * *', function () {
     console.log('Start job');
 
     var start = (0, _moment2.default)().startOf('day');
@@ -42,11 +42,11 @@ var job = new CronJob('00 47 23 * * *', function () {
     _reminder2.default.find({ date: { $gte: start, $lt: end } }).populate('_user _recording').then(function (reminders) {
         reminders.forEach(function (reminder) {
             var mailOptions = {
-                from: '"Web Recorder Team - University of Sheffield" <allenwalker2160@gmail.com>', // sender address
+                from: '"Web Recorder Team - University of Sheffield" <' + process.env.GMAIL_USERNAME + '>', // sender address
                 to: reminder._user.email, // list of receivers
                 subject: '(noreply) Recording Reminder', // Subject line
-                text: 'Hello ' + reminder._user.information.fullname + ',\n                     This is a friendly reminder that you have set up before.\n                     Recording session: ' + reminder._recording.title + '\n                     Message: ' + reminder.message, // plain text body
-                html: 'Hello ' + reminder._user.information.fullname + ', <br />\n                     This is a friendly reminder that you have set up on ' + reminder.createdAt + '. <br />\n                     Recording session: ' + reminder._recording.title + ' <br />\n                     Message: ' + reminder.message // html body
+                text: 'Hello ' + reminder._user.information.fullname + ',\n                     This is a friendly reminder that you have set up on ' + reminder.createdAt + '. <br />\n                     Recording session: ' + reminder._recording.title + '\n                     Message: ' + reminder.message, // plain text body
+                html: 'Hello ' + reminder._user.information.fullname + ', <br />\n                     This is a friendly reminder that you have set up on ' + (0, _moment2.default)(reminder.createdAt).format('MMMM Do YYYY') + '. <br />\n                     <strong>Your last recording session</strong>: <a href=\'https://web-recorder-uos.herokuapp.com/user/session/' + reminder._recording._id + '/0?a=continue\'>' + reminder._recording.title + '</a> <br />\n                     </strong>Message</strong>: ' + reminder.message // html body
             };
 
             // send mail with defined transport object

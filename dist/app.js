@@ -103,19 +103,7 @@ app.use(require('./routes/admin')(_passport2.default));
 app.use(require('./routes/reminder')(_passport2.default));
 // app.use(require('./routes/error'));
 app.use(function (req, res, next) {
-    res.status(404);
-
-    res.format({
-        html: function html() {
-            res.send('404');
-        },
-        json: function json() {
-            res.json({ error: 'Not found' });
-        },
-        default: function _default() {
-            res.type('txt').send('Not found');
-        }
-    });
+    res.status(404).render('404');
 });
 
 // Misc

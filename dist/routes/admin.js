@@ -84,8 +84,7 @@ function isLoggedInAsAdmin(req, res, next) {
   // if user is authenticated in the session, carry on
   if (req.isAuthenticated() && req.user.admin) return next();
 
-  // if they aren't redirect them to the home page
-  res.status(404).send("<h1> 404 </h1> <h3>Unauthorized access</h3>");
+  res.status(403).render('403');
 }
 
 function formatContent(content) {
