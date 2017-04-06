@@ -29,7 +29,7 @@ block main_content
           else
             include session_paragraph
       if (reqIndex == recording.content.length - 1)
-        a.btn.btn-lg.btn-success.pull-right(id='btn-finish', data-recording-id=`${recording._id}`, onclick='onBtnFinishClicked()') Finish   
+        a.btn.btn-lg.btn-lg-reminder.btn-success.pull-right(id='btn-finish', data-recording-id=`${recording._id}`, onclick='onBtnFinishClicked()') Finish   
       button.btn.btn-lg.btn-info.pull-right(type='button', data-toggle='modal', data-target='#remindModal' ) Remind Me Later
       div.modal.fade(id='remindModal', tabindex='-1', role='dialog', aria-labelledby='remindModalLabel')
         div.modal-dialog(role='document')
@@ -47,7 +47,7 @@ block main_content
                   label Date I want the reminder sent
                   input(required, type='date', name='date', class='form-control ')
                 div.clearfix
-                  button.btn.btn-lg.btn-primary.pull-right(type='submit' id='reminderBtn') Create
+                  button.btn.btn-lg.btn-lg-reminder.btn-primary.pull-right(type='submit' id='reminderBtn') Create
                   button.btn.btn-lg.btn-default.pull-right(type='button' data-dismiss='modal') Cancel
                 p.hidden#status
        

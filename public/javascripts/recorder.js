@@ -6,12 +6,6 @@ var btnNext = $('#btn-next');
 var btnFinish = $('#btn-finish');
 var currentWord = $('#word').text();
 var recordingStatus = $('#recording-status');
-// var errorElement = $('#errorMsg');
-// var dataElement = $('#data');
-// var soundClips = $('div.sound-clips');
-// var canvas = document.querySelector('.visualizer'); // use Jquery selector here will cause mediaStream not running, weird bug
-// var audioCtx = new (window.AudioContext || webkitAudioContext)();
-// var canvasCtx = canvas.getContext("2d");
 
 var isSecureOrigin = location.protocol === 'https:' ||
 location.host === 'localhost:3000';
@@ -58,9 +52,8 @@ function errorMsg(msg, error) {
 navigator.mediaDevices.getUserMedia(constraints).
     then(handleSuccess).catch(handleError);
 
-// https://web-recorder-uos.herokuapp.com
-// http://localhost:3000
-var socket = io.connect('https://web-recorder-uos.herokuapp.com');
+// var socket = io.connect('https://web-recorder-uos.herokuapp.com');
+var socket = io.connect('http://localhost:3000');
 socket.on('user', function(data){
   console.log(data);
   console.log("I heared you!");
@@ -73,7 +66,6 @@ var recordAudio;
 function onBtnRecordClicked(){
   // startRecording
   recordAudio = new RecordRTC(window.stream, {recorderType: StereoAudioRecorder, sampleRate: 44100, bufferSize: 4096});
-	// recordAudio.setRecordingDuration(5000);
   recordAudio.startRecording();
 
   // visualize(window.stream);
@@ -90,7 +82,7 @@ function onBtnRecordClicked(){
   //                   recordingID: recordingID
   //               }
   //           };
-  //           socket.emit('incomingdata', files, (status) => {
+  //           socket.emit('incomingdata', files, function(status) {
   //             if (status) {
   //               // ugly way to redirect to change URL :/
   //               var currentURL = window.location.pathname.split('/');
@@ -137,6 +129,7 @@ function onBtnResumeClicked(){
 function onBtnFinishClicked(){
   saveAudio(true);
 }
+
 function saveAudio(isFinish){
   var btnNext = $('#btn-next');
   var recordingID = btnNext.attr('data-recording-id');
@@ -153,7 +146,7 @@ function saveAudio(isFinish){
                   recordingID: recordingID
               }
           };
-          socket.emit('incomingdata', files, (status) => {
+          socket.emit('incomingdata', files, function(status){
             if (status) {
               if (isFinish) {
                 finishRecording();
@@ -170,7 +163,6 @@ function finishRecording(){
   var recordingID = btnFinish.attr('data-recording-id');
   window.location.href = "/user/session/" + recordingID + "/finish"
 }
-
 
 function nextRecording(){
   var currentURL = window.location.pathname.split('/');

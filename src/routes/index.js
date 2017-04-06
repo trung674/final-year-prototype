@@ -10,7 +10,7 @@ module.exports = function(passport){
 	});
 
   router.get('/signin', (req, res) => {
-    res.render('user/signin', { message: req.flash('signinMessage')});
+    res.render('user/signin', { errorMessage: req.flash('signinErrorMessage'), message: req.flash('signinMessage')});
   });
 
  router.post('/signin',
@@ -26,7 +26,7 @@ module.exports = function(passport){
   });
 
   router.get('/signup', (req, res) => {
-    res.render('user/signup', { message: req.flash('signupMessage')});
+    res.render('user/signup', { message: req.flash('signupMessage'), passwordMessage: req.flash('passwordError'), usernameMessage: req.flash('usernameError')});
   });
 
   router.post('/signup', passport.authenticate('signup', {
