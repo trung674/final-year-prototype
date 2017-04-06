@@ -45,7 +45,7 @@ module.exports = (passport) => {
         res.redirect('/create_session');
       } else {
         let newRecording = new Recording();
-        newRecording.title = req.body.title;      
+        newRecording.title = req.body.title;
         newRecording.description = req.body.description.replace(/\n?\r?\r\n/g, '<br />' );
         newRecording.type = req.body.type;
         if (req.body.type == "words" || req.body.type == "sentences") {
@@ -75,8 +75,7 @@ function isLoggedInAsAdmin(req, res, next) {
 	if (req.isAuthenticated() && req.user.admin)
 		return next();
 
-	// if they aren't redirect them to the home page
-	res.status(404).send("<h1> 404 </h1> <h3>Unauthorized access</h3>");
+	res.status(403).render('403');
 }
 
 function formatContent(content) {

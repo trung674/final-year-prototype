@@ -70,19 +70,7 @@ app.use(require('./routes/admin')(passport));
 app.use(require('./routes/reminder')(passport));
 // app.use(require('./routes/error'));
 app.use((req, res, next) => {
-    res.status(404);
-
-    res.format({
-        html() {
-            res.send('404');
-        },
-        json() {
-            res.json({ error: 'Not found' });
-        },
-        default() {
-            res.type('txt').send('Not found');
-        },
-    });
+    res.status(404).render('404');
 });
 
 // Misc

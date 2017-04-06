@@ -25,7 +25,7 @@ block main_content
                   td
                     a(href=`/user/session/${recording._id}/0?a=start`)= recording.title
                   td= recording.type
-                  td= moment(recording.createdAt).format("DD-MM-YYYY")
+                  td= moment(recording.createdAt).format("DD/MM/YY")
         else 
           p.text-center There is no new recording session          
       div.col-md-4.user-db-col
@@ -41,7 +41,7 @@ block main_content
                   td
                     a(href=`/user/session/${recording._recording._id}/0?a=continue`)= recording._recording.title
                   td= recording._recording.type                    
-                  td= moment(recording.lastVisited).format("DD-MM-YYYY")
+                  td= moment(recording.lastVisited).format("DD/MM/YY")
         else 
           p.text-center You have not started any recording session yet          
       div.col-md-4.user-db-col
@@ -57,7 +57,6 @@ block main_content
                   td
                     a(href=`/user/session/${recording._recording._id}/0`)= recording._recording.title
                   td= recording._recording.type                             
-                  td= moment(recording.lastVisited).format("DD-MM-YYYY")
+                  td= moment(recording.lastVisited).format("DD/MM/YY")
         else
           p.text-center You have not finished any recording session yet
-
