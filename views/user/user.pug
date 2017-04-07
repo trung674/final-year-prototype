@@ -2,7 +2,10 @@ extends ../template/user_layout
 
 block main_content
   div.container
-    h1= "Welcome, " + user.information.fullname
+    if user.information.fullname
+      h1= "Welcome, " + user.information.fullname 
+    else 
+      h1= "Welcome, " + user.username
     hr
     if (messageError.length != 0) 
       p.bg.bg-danger

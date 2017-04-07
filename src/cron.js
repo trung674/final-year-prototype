@@ -21,7 +21,7 @@ transporter.verify(function(error, success) {
    }
 });
 
-const job = new CronJob('00 10 10 * * *', () => {
+const job = new CronJob('00 00 14 * * *', () => {
     console.log('Start job');
 
     let start = moment().startOf('day');
@@ -33,14 +33,18 @@ const job = new CronJob('00 10 10 * * *', () => {
               from: `"Web Recorder Team - University of Sheffield" <${process.env.GMAIL_USERNAME}>`, // sender address
               to: reminder._user.email, // list of receivers
               subject: '(noreply) Recording Reminder', // Subject line
-              text: `Hello ${reminder._user.information.fullname},
-                     This is a friendly reminder that you have set up on ${reminder.createdAt}. <br />
-                     Recording session: ${reminder._recording.title}
-                     Message: ${reminder.message}`, // plain text body
-              html: `Hello ${reminder._user.information.fullname}, <br />
+              text: `Hello ${reminder._user.information.fullname || reminder._user.username},
                      This is a friendly reminder that you have set up on ${moment(reminder.createdAt).format('MMMM Do YYYY')}. <br />
+                     <strong>Your last recording session</strong>: <a href='https://web-recorder-uos.herokuapp.com/user/session/${reminder._recording._id}/0?a=continue'>${reminder._recording.title}</a>
+                     <strong>Message</strong>: ${reminder.message || 'You left no message.'} <br />
+                     Kind regards, <br />
+                     Web Recorder Team - The University of Sheffield`,
+              html: `Hello ${reminder._user.information.fullname || reminder._user.username}, <br />
+                     This is a friendly reminder that you have set up on ${moment(reminder.createdAt).format('MMMM Do YYYY')}. <br /><br />
                      <strong>Your last recording session</strong>: <a href='https://web-recorder-uos.herokuapp.com/user/session/${reminder._recording._id}/0?a=continue'>${reminder._recording.title}</a> <br />
-                     </strong>Message</strong>: ${reminder.message}` // html body
+                     <strong>Message</strong>: ${reminder.message || 'You left no message.'} <br /><br />
+                     Kind regards, <br />
+                     Web Recorder Team - The University of Sheffield` // html body
             };
 
             // send mail with defined transport object

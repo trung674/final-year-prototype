@@ -31,12 +31,18 @@ function handleSuccess(mediaStream) {
 
 function handleError(error) {
   $('#errorMsg').removeClass('hidden');
+  btnRecord.addClass('hidden');
+  btnBack.addClass('hidden');
+  btnNext.addClass('hidden');
   if (error.name === 'PermissionDeniedError') {
     $('#errorMsg').text('Permissions have not been granted to use your ' +
       'microphone, you need to allow the page access to your device in ' +
       'order for the recording system to work.');
+
   } else if (error.name === 'DevicesNotFoundError') {
-    $('#errorMsg').text('No recording device found');
+    $('#errorMsg').text('No microphone found ! If you are using a PC, you need an external microphone.');
+  } else {
+    $('#errorMsg').text('Something bad happened !');
   }
   //$('#errorMsg').text('getUserMedia error: ' + error.name, error);
   console.error('getUserMedia error: ' + error.name, error);
@@ -61,7 +67,6 @@ function onBtnRecordClicked(){
   recordAudio = new RecordRTC(window.stream, {recorderType: StereoAudioRecorder, sampleRate: 44100, bufferSize: 4096});
   recordAudio.startRecording();
 
-  // visualize(window.stream);
   // setTimeout(function () {
   //   recordAudio.stopRecording(function() {
   //       // get audio data-URL
@@ -162,58 +167,3 @@ function nextRecording(){
   var currentIndex = currentURL.pop();
   window.location.href = parseInt(currentIndex) + 1;
 }
-
-
-// function visualize(stream) {
-//   var source = audioCtx.createMediaStreamSource(stream);
-
-//   var analyser = audioCtx.createAnalyser();
-//   analyser.fftSize = 2048;
-//   var bufferLength = analyser.frequencyBinCount;
-//   var dataArray = new Uint8Array(bufferLength);
-
-//   source.connect(analyser);
-//   //analyser.connect(audioCtx.destination);
-
-//   var WIDTH = canvas.width
-//   var HEIGHT = canvas.height;
-
-//   draw()
-
-//   function draw() {
-
-//     requestAnimationFrame(draw);
-
-//     analyser.getByteTimeDomainData(dataArray);
-
-//     canvasCtx.fillStyle = 'rgb(200, 200, 200)';
-//     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
-
-//     canvasCtx.lineWidth = 2;
-//     canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
-
-//     canvasCtx.beginPath();
-
-//     var sliceWidth = WIDTH * 1.0 / bufferLength;
-//     var x = 0;
-
-
-//     for(var i = 0; i < bufferLength; i++) {
-
-//       var v = dataArray[i] / 128.0;
-//       var y = v * HEIGHT/2;
-
-//       if(i === 0) {
-//         canvasCtx.moveTo(x, y);
-//       } else {
-//         canvasCtx.lineTo(x, y);
-//       }
-
-//       x += sliceWidth;
-//     }
-
-//     canvasCtx.lineTo(canvas.width, canvas.height/2);
-//     canvasCtx.stroke();
-
-//   }
-// }

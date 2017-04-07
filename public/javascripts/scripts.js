@@ -44,10 +44,16 @@ $(document).ready(function() {
         url: $(this).attr('action'),
         type: 'POST',
         success: function(status){
-          $('p#status').removeClass('hidden').addClass('text-success').text(status);
+          // $('p#status').removeClass('hidden').addClass('text-success').text(status);
+          $('#remindModal').modal('hide');
+          $('#notificationMsg').removeClass('hidden');
+          $('#notificationMsg').text(status);
         },
         error: function(err) {
-          $('p#status').removeClass('hidden').addClass('text-danger').text(err);
+          // $('p#status').removeClass('hidden').addClass('text-danger').text(err);
+          $('#remindModal').modal('hide');
+          $('#errorMsg').removeClass('hidden');
+          $('#errorMsg').text(status);
         }
       });
     });
