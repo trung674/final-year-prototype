@@ -30,30 +30,23 @@ function handleSuccess(mediaStream) {
 }
 
 function handleError(error) {
-  if (error.name === 'ConstraintNotSatisfiedError') {
-    errorMsg('The resolution ' + constraints.video.width.exact + 'x' +
-        constraints.video.width.exact + ' px is not supported by your device.');
-  } else if (error.name === 'PermissionDeniedError') {
-    errorMsg('Permissions have not been granted to use your camera and ' +
-      'microphone, you need to allow the page access to your devices in ' +
-      'order for the demo to work.');
+  $('#errorMsg').removeClass('hidden');
+  if (error.name === 'PermissionDeniedError') {
+    $('#errorMsg').text('Permissions have not been granted to use your ' +
+      'microphone, you need to allow the page access to your device in ' +
+      'order for the recording system to work.');
   } else if (error.name === 'DevicesNotFoundError') {
-    errorMsg('No recording device found');
+    $('#errorMsg').text('No recording device found');
   }
-  errorMsg('getUserMedia error: ' + error.name, error);
-}
-
-function errorMsg(msg, error) {
-  if (typeof error !== 'undefined') {
-    console.error(error);
-  }
+  //$('#errorMsg').text('getUserMedia error: ' + error.name, error);
+  console.error('getUserMedia error: ' + error.name, error);
 }
 
 navigator.mediaDevices.getUserMedia(constraints).
     then(handleSuccess).catch(handleError);
 
-var socket = io.connect('https://web-recorder-uos.herokuapp.com');
-// var socket = io.connect('http://localhost:3000');
+// var socket = io.connect('https://web-recorder-uos.herokuapp.com');
+var socket = io();
 socket.on('user', function(data){
   console.log(data);
   console.log("I heared you!");
