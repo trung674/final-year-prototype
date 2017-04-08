@@ -1,4 +1,127 @@
 extends ../template/user_layout
 
 block main_content
-  
+  div.container
+    div.page-header
+      h1 Instruction Manuals
+    div.row
+      nav.col-md-3(id="scrollSpy")
+        ul.nav.nav-pills.nav-stacked(data-spy="affix", data-offset-top="15")
+          li
+            a(href='#introduction') Introduction
+          li
+            a(href='#interface') User Interface
+          li  
+            a(href='#recording') How to start recording
+          li  
+            a(href='#reminder') Set up a reminder
+          li  
+            a(href='#messages') Common error messages
+      div.col-md-9
+        div.panel.panel-info(id="introduction")
+          div.panel-heading
+            h2 Introduction
+          div.panel-body  
+            p The instruction manuals will help you :
+              ul 
+                li Understand the user interface of the recording system.
+                li Learn how to start recording.
+                li Set up a reminder.
+                li Diagnose some commons error messages.
+            p There are 4 different types of recording session:
+              ul 
+               li <strong>Words</strong>: contains a reasonable number of words of the same topic.
+               li <strong>Sentences</strong>: contains a reasonable number of medium-length sentences.
+               li <strong>Paragraph</strong>: contains a short paragraph.
+               li <strong>Speech</strong>: The users are given a topic and they can tell a relevant story in their own styles.
+               
+        div.panel.panel-info(id="interface")
+          div.panel-heading
+            h2 User Interface
+          div.panel-body
+            h3 I. Words/Sentences-type Interface:
+            img.img-responsive(src='/images/manuals/user-interace.png', alt='user-interface.png')
+            ul(style="list-style-type:none") 
+              li 1. Information about the current recording session.
+              li 2. Recording session content e.g list of words, list of sentences.
+              li 3. The current word/sentence that the user needs to record.
+              li 4. The control panel e.g. start/pause recording, move to the next/previous word/sentence in the list.
+            h3 II.Paragraph/Speech-type Interface:
+            img.img-responsive(src='/images/manuals/user-interface-2.png', alt='user-interface-2.png')
+            ul(style="list-style-type:none") 
+              li 1. Information about the current recording session.
+              li 2. The current short paragraph/speech topic that user needs to record.
+              li 4. The control panel e.g. start/pause recording.
+        
+        div.panel.panel-info(id="recording")
+          div.panel-heading
+            h2 How to start recording
+          div.panel-body
+            p If it is your first time using the recording system, the webportal will ask for your permission to use your microphone. It is important to allow the system to access your microphone in order to recording your voice.
+              img.img-responsive(src='/images/manuals/ask-permission.png', alt='ask-permission.png')
+            hr
+            img.img-responsive(src='/images/manuals/control-panel.png', alt='control-panel.png')
+            ul(style="list-style-type:none") 
+              li 1. The current recording system status.
+              li 2. The back button: move to the previous word/sentence.
+              li 3. The recording button: start/pause recording.
+              li 4. The next button: move to the next word/sentence.
+               
+            p - To start recording, click on the recording button. When the microphone icon becomes 
+              img(src='/images/manuals/microphone-on.png', height='50px', width='50px', alt='microphone-on.png')
+              | and the recording system status changes to 
+              |<strong style="color: green;">Recording</strong>
+              |, it means the recording has begun.
+              
+            p - To pause recording, click on the recording button again. When the microphone icon becomes 
+              img(src='/images/manuals/microphone-off.png', height='50px', width='50px', alt='microphone-off.png')
+              | and the recording system status changes to 
+              |<strong style="color: red;">Pause</strong>
+              |, it means the recording has been paused. Clicking on the microphone icon again to resume the recording.   
+              
+            p - To finish a recording session, click on 
+              img(src='/images/manuals/finish-button.png', height='50px', width='100px', alt='finish-button.png')
+              |  when it is available.
+          
+            p - <strong>Tips</strong>: When the users record a words/sentences-type session, they will be automatically moved to the next word/sentence within a short duration so that the users do not have to click the next button everytime they finish the current word/sentence. <br />
+              ul(style="list-style-type:dot") 
+                li For word-type session: 5 seconds after the users click on the recording button.
+                li For sentence-type session: 10 seconds after the users click on the recording button.
+          
+        div.panel.panel-info(id="reminder")
+          div.panel-heading
+            h2 Set up a reminder
+          div.panel-body
+            p When the user is tired and he/she wants to continue recording at a later date, he/she can set up a reminder so that the system will automatically send a reminder email on a date chosen by his/her.  
+            p To set up reminder, click on 
+              img(src='/images/manuals/reminder-button.png', height='40px', width='130px', alt='reminder-button.png')
+              |  to open the reminder panel <br /><br />
+              img(src='/images/manuals/reminder-panel.png', height='200px', width='450px', alt='reminder-panel.png')
+              ul(style="list-style-type:none")
+                li 1. Message form (optional): The user can leave a message which will be added to the reminder email.
+                li 2. Date selector (required): The date in which the reminder email will be sent.
+                
+        div.panel.panel-info(id="messages")
+          div.panel-heading
+            h2 Common error messages
+          div.panel-body
+            ol 
+              li Javascript is disabled on the user's browser:
+                img.img-responsive(src='/images/manuals/js-disabled.png', alt='js-disabled.png')
+                a(href='http://activatejavascript.org/en/instructions/chrome#instructions', target='_blank') How to enable Javascript in Chrome <br />
+                a(href='http://activatejavascript.org/en/instructions/firefox#instructions', target='_blank') How to enable JavaScript in Firefox
+              br
+              li No microphone is found on the user's machine:
+                img.img-responsive(src='/images/manuals/no-microphone.png', alt='no-microphone.png')
+                | Laptop users should not have this issue because most laptops already have built-in microhpones. PC users will need to set up external microphones in order to use the recording system.
+              br 
+              li No permissions is granted to use the microphone:
+                img.img-responsive(src='/images/manuals/no-permissions.png', alt='no-permissions.png')
+                | In order to protect your privacy, Chrome and Firefox need your permission to access to your microphone. The recording system will not work without your approval. <br />
+                | <strong>Solution</strong>: 
+                ul 
+                  li Chrome: Click on the camera icon on the left URL bar of the browser, choose 'Continue allowing <em>webportal-url</em> to access your microphone' then click 'Done'.
+                  li Firefox: <a href='https://support.mozilla.org/t5/Documents-Archive/Firefox-Hello-can-t-access-my-camera-or-microphone/ta-p/38790#firefox:win10:fx53' target='_blank'>How to allow accessing microphone</a> 
+                
+             
+          

@@ -2,11 +2,11 @@ extends ../template/user_layout
 
 block main_content
   div.container
-    if user.information.fullname
-      h1= "Welcome, " + user.information.fullname 
-    else 
-      h1= "Welcome, " + user.username
-    hr
+    div.page-header
+      if user.information.fullname
+        h1= "Welcome, " + user.information.fullname 
+      else 
+        h1= "Welcome, " + user.username
     if (messageError.length != 0) 
       p.bg.bg-danger
         strong= messageError

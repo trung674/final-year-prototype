@@ -46,12 +46,12 @@ module.exports = (passport) => {
       } else {
         let newRecording = new Recording();
         newRecording.title = req.body.title;
-        newRecording.description = req.body.description.replace(/\n?\r?\r\n/g, '<br />' );
+        newRecording.description = req.body.description;
         newRecording.type = req.body.type;
         if (req.body.type == "words" || req.body.type == "sentences") {
           newRecording.content = formatContent(req.body.content);
         } else {
-          newRecording.content = req.body.content;
+          newRecording.content = req.body.content.replace(/\n?\r?\r\n/g, '<br />');
         }
 
         // save the recording
