@@ -49,32 +49,6 @@ module.exports = (passport) => {
       });
   });
 
-  // router.get('/user/session/:recording', isLoggedIn, (req, res, next) => {
-  //   Recording.findOne({_id: req.params.recording})
-  //     .then((recording) => {
-  //       const userRecords = findExistingSession(req.user.records, req.params.recording);
-  //       let recordingStatus
-
-  //       if (userRecords.length == 0) {
-  //         recordingStatus = 'start';
-  //       } else if (userRecords[0].isFinished == false) {
-  //         recordingStatus = 'ongoing';
-  //       } else if (userRecords[0].isFinished == true) {
-  //         recordingStatus = 'finished';
-  //       }
-
-  //       res.render('session/session', {
-  //         recording : recording,
-  //         recordingStatus : recordingStatus,
-  //         moment : moment,
-  //       });
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //       next();
-  //     });
-  // });
-
   router.get('/user/session/:recording/finish', isLoggedIn, (req, res, next) => {
     User.findOne({_id : req.user._id})
       .then((user) => {
@@ -91,7 +65,7 @@ module.exports = (passport) => {
             {'$set': {'records.$.isFinished': true}},
             (err, result) => {
               if (err) {
-                console.error(err);              
+                console.error(err);
                 res.redirect('/user');
               } else {
                 req.flash('messageSuccess', 'Good job! You have successfully finished a recording session. Let\'s take a break and start another session when you are ready again.');

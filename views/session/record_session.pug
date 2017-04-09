@@ -27,13 +27,13 @@ block main_content
                 li
                   strong Last Modified Date
                   p= moment(recording.updatedAt).format("YYYY-MM-DD")
-        div.col-md-9
+        div.col-md-9#recording-panel(data-recording-id=`${recording._id}`, data-username=`${username}`, data-recording-type=`${recording.type}`, data-end-of-session=((reqIndex != recording.content.length - 1) ? 'false' : 'true'))
           if(recording.type == "words" || recording.type == "sentences")
             include session_word
           else
             include session_paragraph
       if (reqIndex == recording.content.length - 1)
-        a.btn.btn-lg.btn-lg-reminder.btn-success.pull-right(id='btn-finish', data-recording-id=`${recording._id}`, onclick='onBtnFinishClicked()') Finish   
+        a.btn.btn-lg.btn-lg-reminder.btn-success.pull-right(id='btn-finish', onclick='onBtnFinishClicked()') Finish   
       button.btn.btn-lg.btn-info.pull-right(type='button', data-toggle='modal', data-target='#remindModal' ) Remind Me Later
       div.modal.fade(id='remindModal', tabindex='-1', role='dialog', aria-labelledby='remindModalLabel')
         div.modal-dialog(role='document')
@@ -64,5 +64,4 @@ block main_content
   //-   var username = !{JSON.stringify(username)};
   //-   var recordingID = !{JSON.stringify(recording._id)};
   script(src='https://cdn.webrtc-experiment.com/RecordRTC.js')  
-  script(src="https://cdn.webrtc-experiment.com/DetectRTC.js")
   script(src='/javascripts/recorder.js')

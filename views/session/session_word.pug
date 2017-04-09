@@ -15,7 +15,9 @@ div.panel.panel-info
           div.col-md-12
             div.panel.panel-default
               div.panel-body
-                h4#recording-status Click on the Microphone icon to start recoring                 
+                h4#recording-status Click on the Microphone icon to start recoring      
+          div.col-md-12
+            p.text-center.hidden#recording-countdown                 
           div.col-md-12#btn-control-1
             div.col-md-2.col-md-offset-2
               if reqIndex != 0
@@ -26,6 +28,6 @@ div.panel.panel-info
                 i.fa.fa-microphone.fa-5x
             div.col-md-2.col-md-offset-1
               if (reqIndex != recording.content.length - 1)
-                a#btn-next(data-recording-id=`${recording._id}`, data-username=`${username}`, onclick='onBtnNextClicked()') 
+                a#btn-next(onclick='onBtnNextClicked()') 
                   i.fa.fa-forward.fa-4x                
         

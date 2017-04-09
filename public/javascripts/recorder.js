@@ -6,6 +6,7 @@ var btnNext = $('#btn-next');
 var btnFinish = $('#btn-finish');
 var currentWord = $('#word').text();
 var recordingStatus = $('#recording-status');
+var recordingPanel = $('#recording-panel')
 
 var isSecureOrigin = location.protocol === 'https:' ||
 location.host === 'localhost:3000';
@@ -63,34 +64,20 @@ var chunks = [];
 var recordAudio;
 
 function onBtnRecordClicked(){
+  var timeout = 5000;
+  var recordingType = recordingPanel.attr('data-recording-type');
+  var isEndOfSession = recordingPanel.attr('data-end-of-session');
   // startRecording
   recordAudio = new RecordRTC(window.stream, {recorderType: StereoAudioRecorder, sampleRate: 44100, bufferSize: 4096});
   recordAudio.startRecording();
 
-  // setTimeout(function () {
-  //   recordAudio.stopRecording(function() {
-  //       // get audio data-URL
-  //       recordAudio.getDataURL(function(audioDataURL) {
-  //           var files = {
-  //               audio: {
-  //                   type: recordAudio.getBlob().type || 'audio/wav',
-  //                   dataURL: audioDataURL,
-  //                   word: currentWord,
-  //                   username: username,
-  //                   recordingID: recordingID
-  //               }
-  //           };
-  //           socket.emit('incomingdata', files, function(status) {
-  //             if (status) {
-  //               // ugly way to redirect to change URL :/
-  //               var currentURL = window.location.pathname.split('/');
-  //               var currentIndex = currentURL.pop();
-  //               window.location.href = parseInt(currentIndex) + 1;
-  //             }
-  //           });
-  //       });
-  //   });
-  // }, 5000);
+  if (isEndOfSession === 'false' && ((recordingType === 'sentences') || (recordingType === 'words'))) {
+    if (recordingType === 'sentences') timeout = 10000;
+    setTimeout(function() {
+      saveAudio(false);
+    }, timeout);
+    countdownTimer(timeout);
+  }
 
   recordingStatus.text('Recording');
   recordingStatus.css('color', 'green');
@@ -129,9 +116,8 @@ function onBtnFinishClicked(){
 }
 
 function saveAudio(isFinish){
-  var btnNext = $('#btn-next');
-  var recordingID = btnNext.attr('data-recording-id');
-  var username = btnNext.attr('data-username');
+  var recordingID = recordingPanel.attr('data-recording-id');
+  var username = recordingPanel.attr('data-username');
   recordAudio.stopRecording(function() {
       // get audio data-URL
       recordAudio.getDataURL(function(audioDataURL) {
@@ -158,7 +144,7 @@ function saveAudio(isFinish){
 }
 
 function finishRecording(){
-  var recordingID = btnFinish.attr('data-recording-id');
+  var recordingID = recordingPanel.attr('data-recording-id');
   window.location.href = "/user/session/" + recordingID + "/finish"
 }
 
@@ -166,4 +152,17 @@ function nextRecording(){
   var currentURL = window.location.pathname.split('/');
   var currentIndex = currentURL.pop();
   window.location.href = parseInt(currentIndex) + 1;
+}
+
+function countdownTimer(time) {
+  var recordingCountdown = $('#recording-countdown');
+  recordingCountdown.removeClass('hidden');
+  var i = time / 1000;
+  var interval = setInterval(function() {
+    i -= 1;
+    recordingCountdown.text('You will be move to the next item in ' + i + ' second(s).');
+    if (i == 0) {
+      clearInterval(interval);
+    }
+  }, 1000);
 }
