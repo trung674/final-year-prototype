@@ -71,32 +71,6 @@ module.exports = function (passport) {
     });
   });
 
-  // router.get('/user/session/:recording', isLoggedIn, (req, res, next) => {
-  //   Recording.findOne({_id: req.params.recording})
-  //     .then((recording) => {
-  //       const userRecords = findExistingSession(req.user.records, req.params.recording);
-  //       let recordingStatus
-
-  //       if (userRecords.length == 0) {
-  //         recordingStatus = 'start';
-  //       } else if (userRecords[0].isFinished == false) {
-  //         recordingStatus = 'ongoing';
-  //       } else if (userRecords[0].isFinished == true) {
-  //         recordingStatus = 'finished';
-  //       }
-
-  //       res.render('session/session', {
-  //         recording : recording,
-  //         recordingStatus : recordingStatus,
-  //         moment : moment,
-  //       });
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //       next();
-  //     });
-  // });
-
   router.get('/user/session/:recording/finish', isLoggedIn, function (req, res, next) {
     _user2.default.findOne({ _id: req.user._id }).then(function (user) {
       var isExisted = false;
