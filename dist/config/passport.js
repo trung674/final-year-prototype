@@ -6,11 +6,15 @@ var _user = require('../models/user');
 
 var _user2 = _interopRequireDefault(_user);
 
+var _https = require('https');
+
+var _https2 = _interopRequireDefault(_https);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // expose this function to our app using module.exports
 
-// load all the things we need
+// load up the user model
 module.exports = function (passport) {
 
     // =========================================================================
@@ -61,23 +65,29 @@ module.exports = function (passport) {
                             // create the user
                             if (validateUsername(req.body.username)) {
                                 if (validatePassword(password, req.body.username)) {
-                                    var newUser = new _user2.default();
-                                    // set the user's local credentials
-                                    newUser.email = email;
-                                    newUser.username = req.body.username;
-                                    newUser.password = newUser.generateHash(password);
-                                    if (req.body.fullname) newUser.information.fullname = req.body.fullname;
-                                    if (req.body.gender) newUser.information.gender = req.body.gender;
-                                    if (req.body.date_of_birth) newUser.information.date_of_birth = req.body.date_of_birth;
-                                    if (req.body.place_of_birth) newUser.information.place_of_birth = req.body.place_of_birth;
-                                    if (req.body.first_language) newUser.information.first_language = req.body.first_language;
-                                    if (req.body.medical_condition) newUser.information.medical_condition = req.body.medical_condition.replace(/\n?\r?\r\n/g, '<br />');
-                                    newUser.admin = false;
-                                    newUser.lastLogIn = Date.now();
-                                    // save the user
-                                    newUser.save(function (err) {
-                                        if (err) throw err;
-                                        return done(null, newUser, req.flash('signinMessage', 'You have successfully registered for an account.'));
+                                    verifyRecaptcha(req.body["g-recaptcha-response"], function (success) {
+                                        if (success) {
+                                            var newUser = new _user2.default();
+                                            // set the user's local credentials
+                                            newUser.email = email;
+                                            newUser.username = req.body.username;
+                                            newUser.password = newUser.generateHash(password);
+                                            if (req.body.fullname) newUser.information.fullname = req.body.fullname;
+                                            if (req.body.gender) newUser.information.gender = req.body.gender;
+                                            if (req.body.date_of_birth) newUser.information.date_of_birth = req.body.date_of_birth;
+                                            if (req.body.place_of_birth) newUser.information.place_of_birth = req.body.place_of_birth;
+                                            if (req.body.first_language) newUser.information.first_language = req.body.first_language;
+                                            if (req.body.medical_condition) newUser.information.medical_condition = req.body.medical_condition.replace(/\n?\r?\r\n/g, '<br />');
+                                            newUser.admin = false;
+                                            newUser.lastLogIn = Date.now();
+                                            // save the user
+                                            newUser.save(function (err) {
+                                                if (err) throw err;
+                                                return done(null, newUser, req.flash('signinMessage', 'You have successfully registered for an account.'));
+                                            });
+                                        } else {
+                                            return done(null, false, req.flash('signupMessage', 'You failed the Captcha test. Are you a robot? If not, please try again.'));
+                                        }
                                     });
                                 } else {
                                     return done(null, false, req.flash('passwordError', 'The password should: <ul><li>contain between 6 - 16 characters</li><li>contain at least 1 alphabet character and 1 number</li><li>should not be the same as user name</li></ul>'));
@@ -167,8 +177,7 @@ module.exports = function (passport) {
             });
         });
     }));
-};
-// load up the user model
+}; // load all the things we need
 
 
 function validatePassword(password, username) {
@@ -185,4 +194,21 @@ function validateUsername(username) {
     var regex = /^[A-Za-z\d]{6,16}$/;
     if (regex.test(username)) isValidated = true;
     return isValidated;
+}
+
+function verifyRecaptcha(key, callback) {
+    _https2.default.get("https://www.google.com/recaptcha/api/siteverify?secret=" + process.env.RECAPTCHA_SECRET_KEY + "&response=" + key, function (res) {
+        var data = "";
+        res.on('data', function (chunk) {
+            data += chunk.toString();
+        });
+        res.on('end', function () {
+            try {
+                var parsedData = JSON.parse(data);
+                callback(parsedData.success);
+            } catch (e) {
+                callback(false);
+            }
+        });
+    });
 }

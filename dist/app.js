@@ -101,6 +101,7 @@ app.use(require('./routes/index')(_passport2.default));
 app.use(require('./routes/user')(_passport2.default));
 app.use(require('./routes/admin')(_passport2.default));
 app.use(require('./routes/reminder')(_passport2.default));
+app.use(require('./routes/manuals')(_passport2.default));
 // app.use(require('./routes/error'));
 app.use(function (req, res, next) {
     res.status(404).render('404');
