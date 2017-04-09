@@ -72,8 +72,9 @@ app.use((0, _expressSession2.default)({
     secret: 'secretkey',
     resave: true,
     saveUninitialized: false,
+    cookie: { maxAge: 864000000 },
     store: new MongoStore({ mongooseConnection: _mongoose2.default.connection }, function (err) {
-        console.log(err || 'connect-mongodb setup ok');
+        console.log(err);
     })
 })); // session secret
 app.use(_passport2.default.initialize());

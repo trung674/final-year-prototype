@@ -13,7 +13,10 @@ block main_content
     if (messageSuccess.length != 0) 
       p.bg.bg-success
         strong= messageSuccess
-    div.well Please find below the list of newest sessions provided by the administrators and the list of ongoing sessions which you have not finished yet.
+    div.well 
+      ul
+        li Please find below the list of newest sessions provided by the administrators and the list of ongoing sessions which you have not finished yet.
+        li If you are new to the webportal, the <a href='/manuals'>instruction manuals</a> will help you learn how to use the recording system.
     div.row
       div.col-md-4.user-db-col
         h3.text-center New Sessions

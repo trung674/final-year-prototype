@@ -77,6 +77,10 @@ function onBtnRecordClicked(){
       saveAudio(false);
     }, timeout);
     countdownTimer(timeout);
+  } else {
+    var recordingCountdown = $('#recording-countdown');
+    recordingCountdown.removeClass('hidden');
+    recordingCountdown.text('This is the end of this recording session. Please click "Finish" button once you finish recording');
   }
 
   recordingStatus.text('Recording');
