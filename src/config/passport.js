@@ -2,6 +2,7 @@
 import {Strategy} from 'passport-local';
 // load up the user model
 import User from '../models/user';
+import https from 'https';
 // expose this function to our app using module.exports
 
 module.exports = (passport) => {
@@ -37,61 +38,68 @@ module.exports = (passport) => {
         // asynchronous
         // User.findOne wont fire unless data is sent back
         process.nextTick(() => {
-        User.findOne({'username': req.body.username}, (err, user) => {
-          if (err)
-              return done(err);
-          // check to see if theres already a user with that username
-          if (user) {
-              return done(null, false, req.flash('signupMessage', 'This name is already taken.'));
-          } else {
-            // then check email
-            User.findOne({ 'email' :  email }, (err, user) => {
-                // if there are any errors, return the error
-                if (err)
-                    return done(err);
-                // check to see if theres already a user with that email
-                if (user) {
-                    return done(null, false, req.flash('signupMessage', 'This email is already taken.'));
-                } else {
-                    // if there is no user with that email
-                    // create the user
-                    if (validateUsername(req.body.username)) {
-                        if (validatePassword(password, req.body.username)) {
-                            let newUser = new User();
-                            // set the user's local credentials
-                            newUser.email    = email;
-                            newUser.username = req.body.username;
-                            newUser.password = newUser.generateHash(password);
-                            if(req.body.fullname)
-                                newUser.information.fullname = req.body.fullname;
-                            if(req.body.gender)
-                                newUser.information.gender = req.body.gender;
-                            if(req.body.date_of_birth)
-                                newUser.information.date_of_birth = req.body.date_of_birth;
-                            if(req.body.place_of_birth)
-                                newUser.information.place_of_birth = req.body.place_of_birth;
-                            if(req.body.first_language)
-                                newUser.information.first_language = req.body.first_language;
-                            if(req.body.medical_condition)
-                                newUser.information.medical_condition = req.body.medical_condition.replace(/\n?\r?\r\n/g, '<br />' );
-                            newUser.admin = false;
-                            newUser.lastLogIn = Date.now();
-                            // save the user
-                            newUser.save((err) => {
-                                if (err)
-                                    throw err;
-                                return done(null, newUser, req.flash('signinMessage', 'You have successfully registered for an account.'));
-                            });
-                        } else {
-                            return done(null, false, req.flash('passwordError', 'The password should: <ul><li>contain between 6 - 16 characters</li><li>contain at least 1 alphabet character and 1 number</li><li>should not be the same as user name</li></ul>'));
-                        }
-                    } else {
-                        return done(null, false, req.flash('usernameError', 'The user name should be more than 6 and less than 16 characters long.'));
-                    }
-                }
-            });
-          }
-        });
+          User.findOne({'username': req.body.username}, (err, user) => {
+            if (err)
+                return done(err);
+            // check to see if theres already a user with that username
+            if (user) {
+                return done(null, false, req.flash('signupMessage', 'This name is already taken.'));
+            } else {
+              // then check email
+              User.findOne({ 'email' :  email }, (err, user) => {
+                  // if there are any errors, return the error
+                  if (err)
+                      return done(err);
+                  // check to see if theres already a user with that email
+                  if (user) {
+                      return done(null, false, req.flash('signupMessage', 'This email is already taken.'));
+                  } else {
+                      // if there is no user with that email
+                      // create the user
+                      if (validateUsername(req.body.username)) {
+                          if (validatePassword(password, req.body.username)) {
+                              verifyRecaptcha(req.body["g-recaptcha-response"], function(success) {
+                                if (success) {
+                                  let newUser = new User();
+                                  // set the user's local credentials
+                                  newUser.email    = email;
+                                  newUser.username = req.body.username;
+                                  newUser.password = newUser.generateHash(password);
+                                  if(req.body.fullname)
+                                      newUser.information.fullname = req.body.fullname;
+                                  if(req.body.gender)
+                                      newUser.information.gender = req.body.gender;
+                                  if(req.body.date_of_birth)
+                                      newUser.information.date_of_birth = req.body.date_of_birth;
+                                  if(req.body.place_of_birth)
+                                      newUser.information.place_of_birth = req.body.place_of_birth;
+                                  if(req.body.first_language)
+                                      newUser.information.first_language = req.body.first_language;
+                                  if(req.body.medical_condition)
+                                      newUser.information.medical_condition = req.body.medical_condition.replace(/\n?\r?\r\n/g, '<br />' );
+                                  newUser.admin = false;
+                                  newUser.lastLogIn = Date.now();
+                                  // save the user
+                                  newUser.save((err) => {
+                                      if (err)
+                                          throw err;
+                                      return done(null, newUser, req.flash('signinMessage', 'You have successfully registered for an account.'));
+                                  });
+                                } else {
+                                  return done(null, false, req.flash('signupMessage', 'You failed the Captcha test. Are you a robot? If not, please try again.'));
+                                }
+                              });
+
+                          } else {
+                              return done(null, false, req.flash('passwordError', 'The password should: <ul><li>contain between 6 - 16 characters</li><li>contain at least 1 alphabet character and 1 number</li><li>should not be the same as user name</li></ul>'));
+                          }
+                      } else {
+                          return done(null, false, req.flash('usernameError', 'The user name should be more than 6 and less than 16 characters long.'));
+                      }
+                  }
+              });
+            }
+          });
         });
 
     }));
@@ -195,4 +203,21 @@ function validateUsername(username) {
     let regex = /^[A-Za-z\d]{6,16}$/;
     if(regex.test(username)) isValidated = true;
     return isValidated;
+}
+
+function verifyRecaptcha(key, callback) {
+  https.get("https://www.google.com/recaptcha/api/siteverify?secret=" + process.env.RECAPTCHA_SECRET_KEY + "&response=" + key, function(res) {
+    var data = "";
+    res.on('data', function (chunk) {
+      data += chunk.toString();
+    });
+    res.on('end', function() {
+      try {
+        var parsedData = JSON.parse(data);
+        callback(parsedData.success);
+      } catch (e) {
+        callback(false);
+      }
+    });
+  });
 }
