@@ -8,6 +8,7 @@ import bodyParser from 'body-parser';
 import session from 'express-session';
 import path from 'path';
 import dotenv from 'dotenv';
+import methodOverride from 'method-override';
 // import configDB from './config/database';
 
 dotenv.config();
@@ -30,7 +31,7 @@ db.once('open', () => {
 
 // Setup session + passportjs
 require('./config/passport')(passport);
-
+app.use(methodOverride('_method'));
 app.use(morgan('dev')); // log every request to the console
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

@@ -138,6 +138,85 @@ module.exports = (passport) => {
       });
   });
 
+  router.get('/user/profile', isLoggedIn, (req, res, next) => {
+    res.render('user/profile', {
+      user: req.user,
+      moment: moment,
+      successMessage: req.flash('successMessage'),
+      usernameError: req.flash('usernameError'),
+      passwordError: req.flash('passwordError')
+    });
+  });
+
+  router.put('/user/profile/update_account', isLoggedIn, (req, res, next) => {
+    if (req.body.username.length === 0 || !validateUsername(req.body.username)) {
+      req.flash('usernameError', 'Username should not be empty and should have at least 6 characters');
+      res.redirect('/user/profile');
+    } else {
+      if (req.body.password.length !== 0) {
+        if (validatePassword(req.body.password, req.body.username) && req.body.password === req.body.re_password) {
+          User.findOneAndUpdate({_id : req.user._id},
+            {'$set': {
+              username: req.body.username,
+              password: User.generateHash(req.body.password)
+            }},
+            (err, result) => {
+              if (err) {
+                console.error(err);
+                next();
+              } else {
+                req.flash('successMessage', 'Successfully updated your username and password.')
+                res.redirect('/user/profile');
+              }
+          });
+        } else if (!validatePassword(req.body.password, req.body.username)) {
+          req.flash('passwordError', 'The password should: <ul><li>contain between 6 - 16 characters</li><li>contain at least 1 alphabet character and 1 number</li><li>should not be the same as user name</li></ul>');
+          res.redirect('/user/profile');
+        } else {
+          req.flash('passwordError', 'Password inputs are not the same.');
+          res.redirect('/user/profile');
+        }
+      } else {
+        User.findOneAndUpdate({_id : req.user._id},
+          {'$set': {
+            username: req.body.username
+          }},
+          (err, result) => {
+            if (err) {
+              console.error(err);
+              next();
+            } else {
+              req.flash('successMessage', 'Successfully updated your username.')
+              res.redirect('/user/profile');
+            }
+        });
+      }
+    }
+  });
+
+  router.put('/user/profile/update_profile', isLoggedIn, (req, res, next) => {
+    User.findOneAndUpdate({_id : req.user._id},
+      {'$set': {
+        information: {
+          fullname: req.body.fullname,
+          gender: req.body.gender,
+          date_of_birth: req.body.date_of_birth,
+          place_of_birth: req.body.place_of_birth,
+          first_language: req.body.first_language,
+          medical_condition: req.body.medical_condition.replace(/\n?\r?\r\n/g, '<br />' )
+        }
+      }},
+      (err, result) => {
+        if (err) {
+          console.error(err);
+          next();
+        } else {
+          req.flash('successMessage', 'Successfully updated your profile information.')
+          res.redirect('/user/profile');
+        }
+    });
+  });
+
   return router;
 }
 
@@ -153,4 +232,20 @@ function isLoggedIn(req, res, next) {
 		return next();
 	// if they aren't redirect them to the home page
 	res.redirect('/signin');
+}
+
+function validatePassword(password, username) {
+    // Minimum 6 characters, maximum 16 characters with at least 1 Alphabet and 1 Number
+    let isValidated = false;
+    let regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,16}$/;
+    if((password.toLowerCase() !== username.toLowerCase()) && (regex.test(password))) isValidated = true;
+    return isValidated;
+}
+
+function validateUsername(username) {
+    // Minimum 6 characters, maximum 16
+    let isValidated = false;
+    let regex = /^[A-Za-z\d]{6,16}$/;
+    if(regex.test(username)) isValidated = true;
+    return isValidated;
 }

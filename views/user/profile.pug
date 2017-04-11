@@ -1,0 +1,56 @@
+extends ../template/user_layout
+
+block main_content
+  div.container
+    div.page-header
+      h1 User Profile
+    div.row
+      if (successMessage.length != 0)
+        p.bg.bg-success= successMessage
+      div.col-md-5
+        form(action='profile/update_account?_method=PUT', method='POST')
+          h2 Account Information
+          .form-group
+            label Email
+            p= user.email
+          .form-group
+            label Username
+            input(type='text', name='username', class='form-control ', placeholder='Username', value=`${user.username}`)
+          if (usernameError.length != 0)
+            p.bg.bg-danger= usernameError
+          .form-group
+            label New password
+            input(type='password', name='password',id='password', class='form-control ', placeholder='Password')
+          .form-group
+            label Confirm new password
+            input(type='password', name='re_password',id='re_password', class='form-control ', placeholder='Type new password again')
+          if (passwordError.length != 0)
+            div.bg.bg-danger !{passwordError}
+          br
+          button(class='btn btn-lg btn-primary', type='submit') Update
+
+      div.col-md-offset-1.col-md-6 
+        form(action='profile/update_profile?_method=PUT', method='POST')
+          h2 Profile Information
+          .form-group
+            label Full Name
+            input(type='text', name='fullname', class='form-control ', placeholder='What is your name ?', value=(user.information.fullname) ? user.information.fullname : '' )
+          .form-group
+            label Gender
+            input(type='text', name='gender', class='form-control ', placeholder='What is your gender ?', value=(user.information.gender) ? user.information.gender : '')
+          .form-group
+            label Date of Birth
+            input(type='date', name='date_of_birth', class='form-control ', placeholder='What is your date of birth ?', value=(user.information.date_of_birth) ? moment(user.information.date_of_birth).format("YYYY-MM-DD") : '')
+          .form-group
+            label Place of Birth
+            input(type='text', name='place_of_birth', class='form-control ', placeholder='Where were you born ?', value=(user.information.place_of_birth) ? user.information.place_of_birth : '')
+          .form-group
+            label First Language
+            input(type='text', name='first_language', class='form-control ', placeholder='What is your first language ?', value=(user.information.first_language) ? user.information.first_language : '')
+          .form-group
+            label Medical Condition
+            textarea.form-control(rows='6', name='medical_condition', placeholder='What is your current medical condition ?')= (user.information.medical_condition) ? user.information.medical_condition : '' 
+          button(class='btn btn-lg btn-primary', type='submit') Update
+        
+      
+      

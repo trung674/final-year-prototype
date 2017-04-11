@@ -1,26 +1,4 @@
 $(document).ready(function() {
-    // $('#re-password, #password').keyup(function () {
-    //     if ($('#re-password').val() == $('#password').val()) {
-    //
-    //         $('#form-password').removeClass('has-error').addClass('has-success');
-    //         $('#form-re-password').removeClass('has-error').addClass('has-success');
-    //     } else {
-    //         $('#form-password').removeClass('has-success').addClass('has-error');
-    //         $('#form-re-password').removeClass('has-success').addClass('has-error');
-    //     };
-    // });
-
-    // $('#word-title').text('Testing');
-    // $('#items a:first-child').addClass('active');
-    // var currentWord = $('#items a:first-child').text();
-    // $('#word-title').text(currentWord);
-    // $('#items a').click(function() {
-    //   $('#items a.active').removeClass('active');
-    //   $(this).addClass('active');
-    //   currentWord = $(this).text();
-    //   $('#word-title').text(currentWord);
-    // });
-
     // function changeSessionContent() {
     //   var sessionContent = $('#session-content');
     //   var sessionTypeValue = $('#session-type').val();
@@ -60,13 +38,3 @@ $(document).ready(function() {
 
 
 });
-
-
-
-// $('#start-recoring').click(function() {
-//   $.ajax({
-//     url: $(location) + '/recording',
-//
-//
-//   })
-// });
