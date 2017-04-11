@@ -40,6 +40,10 @@ var _dotenv = require('dotenv');
 
 var _dotenv2 = _interopRequireDefault(_dotenv);
 
+var _methodOverride = require('method-override');
+
+var _methodOverride2 = _interopRequireDefault(_methodOverride);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // import configDB from './config/database';
@@ -64,7 +68,7 @@ db.once('open', function () {
 
 // Setup session + passportjs
 require('./config/passport')(_passport2.default);
-
+app.use((0, _methodOverride2.default)('_method'));
 app.use((0, _morgan2.default)('dev')); // log every request to the console
 app.use(_bodyParser2.default.json());
 app.use(_bodyParser2.default.urlencoded({ extended: true }));
