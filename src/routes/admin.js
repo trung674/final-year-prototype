@@ -59,10 +59,97 @@ module.exports = (passport) => {
             if (err)
                 throw err;
             req.flash('message', 'Successfully create a new session');
-            res.redirect('/session');
+            res.redirect('/admin');
         });
       }
     });
+  });
+
+  router.get('/admin/edit_session', isLoggedInAsAdmin, (req, res) => {
+    if (req.query.query) {
+      let option = req.query.option;
+      let query = req.query.query;
+      if(option === 'title') {
+        Recording.find({title: {$regex: `${query}`, $options: 'i'}}, (err, recordings) => {
+          res.render('admin/edit_session', {
+            recordings: recordings,
+            moment: moment,
+            message: req.flash('message')
+          });
+        });
+      } else if (option === 'description') {
+        Recording.find({description: {$regex: `${query}`, $options: 'i'}}, (err, recordings) => {
+          res.render('admin/edit_session', {
+            recordings: recordings,
+            moment: moment,
+            message: req.flash('message')
+          });
+        });
+      } else if (option === 'type') {
+        Recording.find({type: {$regex: `${query}`, $options: 'i'}}, (err, recordings) => {
+          res.render('admin/edit_session', {
+            recordings: recordings,
+            moment: moment,
+            message: req.flash('message')
+          });
+        });
+      } else if (option === 'date') {
+        let start = moment(query).startOf('day');
+        let end = moment(query).endOf('day');
+        Recording.find({createdAt: {$gte: start, $lt: end}}, (err, recordings) => {
+          res.render('admin/edit_session', {
+            recordings: recordings,
+            moment: moment,
+            message: req.flash('message')
+          });
+        });
+      } else {
+        res.render('admin/edit_session');
+      }
+    } else {
+      res.render('admin/edit_session', {message: req.flash('message')});
+    }
+  });
+
+  router.get('/admin/edit_session/:id', isLoggedInAsAdmin, (req, res) => {
+    Recording.findOne({_id: req.params.id})
+      .then((recording) => {
+        res.render('admin/edit_session', {
+          recording: recording,
+          moment: moment,
+          message: req.flash('message')
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        next()
+      });
+  });
+
+  router.put('/admin/edit_session/:id', isLoggedInAsAdmin, (req, res) => {
+    Recording.findOne({_id : req.params.id})
+      .then((recording) => {
+        recording.title = req.body.title;
+        recording.description = req.body.description;
+        if (recording.type == "words" || rrecording.type == "sentences") {
+          recording.content = formatContent(req.body.content);
+        } else {
+          recording.content = req.body.content.replace(/\n?\r?\r\n/g, '<br />');
+        }
+        recording.save((err) => {
+            if (err) {
+              console.error(err);
+              next();
+            } else {
+              req.flash('message', 'Successfully edit the session information');
+              res.redirect(`/admin/edit_session/${req.params.id}`);
+            }
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        next();
+      });
   });
 
 

@@ -1,25 +1,24 @@
-extends ../template/layout
+extends ../template/admin_layout
 
-block content
-  div.container
-    div.row
-      div.col-md-6.col-md-offset-3
-        h1.text-center Create Session
-        if message
-          h4.bg-danger= message
-        form(action='/admin/create_session', method='POST')
-          .form-group
-            input(type='text', name='title', class='form-control', placeholder='Title',required)
-          .form-group
-            textarea.form-control(rows='4', name='description', placeholder='Session Description....', required)
-          .form-group
-            select.form-control(name='type', id='session-type', onchange='changeSessionContent()', required)
-              option(value='', disabled, selected, hidden) Sesstion type ?
-              option(value='words') Words
-              option(value='sentences') Sentences
-              option(value='paragraph') Short paragraph
-              option(value='speech') Free speech
+block main_content
+  div.row
+    div.col-md-7  
+      if (message.length != 0)
+        p.bg.bg-success= message
+      h1 New Session
+      form(action='/admin/create_session', method='POST')
+        .form-group
+          input(type='text', name='title', class='form-control', placeholder='Title',required)
+        .form-group
+          textarea.form-control(rows='4', name='description', placeholder='Session Description....', required)
+        .form-group
+          select.form-control(name='type', id='session-type', onchange='changeSessionContent()', required)
+            option(value='', disabled, selected, hidden) Sesstion type ?
+            option(value='words') Words
+            option(value='sentences') Sentences
+            option(value='paragraph') Short paragraph
+            option(value='speech') Free speech
 
-          .form-group
-            textarea.form-control(rows='8', name='content', placeholder='Session Content....', id='session-content', required)
-          button(class='btn btn-lg btn-primary btn-block', type='submit') Submit
+        .form-group
+          textarea.form-control(rows='8', name='content', placeholder='Session Content....', id='session-content', required)
+        button(class='btn btn-lg btn-primary btn', type='submit') Submit

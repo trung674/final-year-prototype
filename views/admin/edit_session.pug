@@ -1,0 +1,65 @@
+extends ../template/admin_layout
+
+block main_content
+  div.row
+    div.col-md-7  
+      if (message.length != 0)
+        p.bg.bg-success= message
+      h1 Search
+      form(action='/admin/edit_session', method='GET')
+        .form-group      
+          label Query 
+          input(id='queryInput', type='text', name='query', class='form-control' ,required)
+        .form-group
+          label Search by
+          select.form-control(id='optionSelect', name='option')
+            option(value='title') Title
+            option(value='description') Description
+            option(value='type') Type
+            option(value='date') Date
+        button(class='btn btn-lg btn-primary btn', type='submit') Submit
+    
+  if (recordings)
+    hr
+    div.row
+      div.col-md-12
+        if (recordings != 0)
+          h1 Search Result - #{recordings.length} matched recording sessions
+          table.table.table-bordered
+            tr
+              th Title
+              th Description
+              th Type
+              th Created At
+              each recording in recordings
+                tr
+                  td
+                    a(href=`/admin/edit_session/${recording._id}`)= recording.title
+                  td= recording.description
+                  td= recording.type
+                  td= moment(recording.createdAt).format("DD/MM/YY")
+        else
+          h1 Search Result - 0 matched recording session
+              
+  if (recording)
+    hr
+    div.row
+      div.col-md-7
+        h1 Edit Session
+        form(action=`/admin/edit_session/${recording._id}?_method=PUT`, method='POST')
+          .form-group
+            label Title
+            input(type='text', name='title', class='form-control ', placeholder='Title', value=`${recording.title}` )
+          .form-group
+            label Description
+            input(type='text', name='description', class='form-control ', placeholder='Description', value=`${recording.description}`)
+          .form-group
+            label Contents
+            - 
+              var formatContent = '';
+              for (var item of recording.content) {
+                formatContent = formatContent + item + '\r\n';
+              }  
+            textarea.form-control(rows='6', name='content')= formatContent
+          button(class='btn btn-lg btn-primary', type='submit') Update
+    
