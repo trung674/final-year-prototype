@@ -70,9 +70,92 @@ module.exports = function (passport) {
         newRecording.save(function (err) {
           if (err) throw err;
           req.flash('message', 'Successfully create a new session');
-          res.redirect('/session');
+          res.redirect('/admin');
         });
       }
+    });
+  });
+
+  router.get('/admin/edit_session', isLoggedInAsAdmin, function (req, res) {
+    if (req.query.query) {
+      var option = req.query.option;
+      var query = req.query.query;
+      if (option === 'title') {
+        _recording2.default.find({ title: { $regex: '' + query, $options: 'i' } }, function (err, recordings) {
+          res.render('admin/edit_session', {
+            recordings: recordings,
+            moment: _moment2.default,
+            message: req.flash('message')
+          });
+        });
+      } else if (option === 'description') {
+        _recording2.default.find({ description: { $regex: '' + query, $options: 'i' } }, function (err, recordings) {
+          res.render('admin/edit_session', {
+            recordings: recordings,
+            moment: _moment2.default,
+            message: req.flash('message')
+          });
+        });
+      } else if (option === 'type') {
+        _recording2.default.find({ type: { $regex: '' + query, $options: 'i' } }, function (err, recordings) {
+          res.render('admin/edit_session', {
+            recordings: recordings,
+            moment: _moment2.default,
+            message: req.flash('message')
+          });
+        });
+      } else if (option === 'date') {
+        var start = (0, _moment2.default)(query).startOf('day');
+        var end = (0, _moment2.default)(query).endOf('day');
+        _recording2.default.find({ createdAt: { $gte: start, $lt: end } }, function (err, recordings) {
+          res.render('admin/edit_session', {
+            recordings: recordings,
+            moment: _moment2.default,
+            message: req.flash('message')
+          });
+        });
+      } else {
+        res.render('admin/edit_session');
+      }
+    } else {
+      res.render('admin/edit_session', { message: req.flash('message') });
+    }
+  });
+
+  router.get('/admin/edit_session/:id', isLoggedInAsAdmin, function (req, res) {
+    _recording2.default.findOne({ _id: req.params.id }).then(function (recording) {
+      res.render('admin/edit_session', {
+        recording: recording,
+        moment: _moment2.default,
+        message: req.flash('message')
+      });
+    }).catch(function (err) {
+      console.error(err);
+      next();
+    });
+  });
+
+  router.put('/admin/edit_session/:id', isLoggedInAsAdmin, function (req, res) {
+    _recording2.default.findOne({ _id: req.params.id }).then(function (recording) {
+      recording.title = req.body.title;
+      recording.description = req.body.description;
+      if (recording.type == "words" || rrecording.type == "sentences") {
+        recording.content = formatContent(req.body.content);
+      } else {
+        recording.content = req.body.content.replace(/\n?\r?\r\n/g, '<br />');
+      }
+      recording.save(function (err) {
+        if (err) {
+          console.error(err);
+          next();
+        } else {
+          req.flash('message', 'Successfully edit the session information');
+          res.redirect('/admin/edit_session/' + req.params.id);
+        }
+      });
+    }).catch(function (err) {
+      console.error(err);
+      next();
     });
   });
 

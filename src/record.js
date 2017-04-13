@@ -19,8 +19,7 @@ function writeToDisk(audio) {
     let fileBuffer;
     let dataURL = audio.dataURL.split(',').pop();
 
-    // fileBuffer = Buffer.from(dataURL, 'base64');
-    fs.outputFileSync(filePath, fileBuffer);
+    fileBuffer = Buffer.from(dataURL, 'base64');
     s3.putObject({Bucket: bucketName, Key: filePathAWS , Body: fileBuffer, ContentEncoding: 'base64', ContentType: 'audio/wav'}, function(err, data) {
       if (err) {
         console.error(err);
@@ -28,6 +27,7 @@ function writeToDisk(audio) {
         console.log('uploading to S3 successfully !');
       }
     });
+    // fs.outputFileSync(filePath, fileBuffer);
     // console.log('filePath', filePath);
 }
 
