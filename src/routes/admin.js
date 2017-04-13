@@ -1,16 +1,26 @@
 import express from 'express';
-import Recording from '../models/recording'
+import Recording from '../models/recording';
+import Activity from '../models/activity';
 import moment from 'moment';
 const router = express.Router();
 
 module.exports = (passport) => {
-  router.get('/admin', isLoggedInAsAdmin, (req, res) => {
-  	res.render('admin/admin', {
-  		admin : req.user // get the user out of session and pass to template
-  	});
+  router.get('/admin', isLoggedInAsAdmin, (req, res, next) => {
+    Activity.find().limit(10).sort('-createdAt').populate({path: '_user _recording'})
+      .then((activities) => {
+        res.render('admin/admin', {
+          activities: activities,
+      		admin : req.user,
+          moment: moment
+      	});
+      })
+  	  .catch((err) => {
+        console.error(err);
+        next();
+      });
   });
 
-  router.get('/admin/create_admin',isLoggedInAsAdmin, (req, res) => {
+  router.get('/admin/create_admin',isLoggedInAsAdmin, (req, res, next) => {
   	res.render('admin/admin', {
   		admin : req.user // get the user out of session and pass to template
   	});
@@ -22,7 +32,7 @@ module.exports = (passport) => {
     failureFlash : true
   }));
 
-  router.get('/admin/session', isLoggedInAsAdmin, (req, res) => {
+  router.get('/admin/session', isLoggedInAsAdmin, (req, res, next) => {
     Recording.find({}, (err, recordings) => {
         if (err)
           console.log(err);
@@ -30,7 +40,7 @@ module.exports = (passport) => {
     });
   });
 
-  router.get('/admin/create_session', isLoggedInAsAdmin, (req, res) => {
+  router.get('/admin/create_session', isLoggedInAsAdmin, (req, res, next) => {
   	res.render('admin/create_session', {message: req.flash('message')});
   });
 
@@ -65,7 +75,7 @@ module.exports = (passport) => {
     });
   });
 
-  router.get('/admin/edit_session', isLoggedInAsAdmin, (req, res) => {
+  router.get('/admin/edit_session', isLoggedInAsAdmin, (req, res, next) => {
     if (req.query.query) {
       let option = req.query.option;
       let query = req.query.query;
@@ -111,7 +121,7 @@ module.exports = (passport) => {
     }
   });
 
-  router.get('/admin/edit_session/:id', isLoggedInAsAdmin, (req, res) => {
+  router.get('/admin/edit_session/:id', isLoggedInAsAdmin, (req, res, next) => {
     Recording.findOne({_id: req.params.id})
       .then((recording) => {
         res.render('admin/edit_session', {
@@ -126,7 +136,7 @@ module.exports = (passport) => {
       });
   });
 
-  router.put('/admin/edit_session/:id', isLoggedInAsAdmin, (req, res) => {
+  router.put('/admin/edit_session/:id', isLoggedInAsAdmin, (req, res, next) => {
     Recording.findOne({_id : req.params.id})
       .then((recording) => {
         recording.title = req.body.title;
@@ -150,6 +160,11 @@ module.exports = (passport) => {
         console.error(err);
         next();
       });
+  });
+
+  router.put('/admin/user_management/recent_activities', isLoggedInAsAdmin, (req, res, next) => {
+
+
   });
 
 

@@ -2,6 +2,7 @@
 import express from 'express';
 import Recording from '../models/recording';
 import User from '../models/user';
+import Activity from '../models/activity';
 import moment from 'moment';
 import mongoose from 'mongoose';
 const router = express.Router();
@@ -68,8 +69,18 @@ module.exports = (passport) => {
                 console.error(err);
                 res.redirect('/user');
               } else {
-                req.flash('messageSuccess', 'Good job! You have successfully finished a recording session. Let\'s take a break and start another session when you are ready again.');
-                res.redirect('/user');
+                let newActivity = new Activity();
+                newActivity._user = user._id;
+                newActivity._recording = req.params.recording;
+                newActivity.save((err) => {
+                    if (err) {
+                      console.error(err);
+                      next();
+                    } else {
+                      req.flash('messageSuccess', 'Good job! You have successfully finished a recording session. Let\'s take a break and start another session when you are ready again.');
+                      res.redirect('/user');
+                    }
+                });
               }
           });
         } else {
