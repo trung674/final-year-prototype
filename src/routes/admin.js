@@ -1,4 +1,5 @@
 import express from 'express';
+import User from '../models/user';
 import Recording from '../models/recording';
 import Activity from '../models/activity';
 import moment from 'moment';
@@ -36,12 +37,19 @@ module.exports = (passport) => {
     Recording.find({}, (err, recordings) => {
         if (err)
           console.log(err);
-        res.render('admin/session', {recordings: recordings, moment: moment, message: req.flash('message')});
+        res.render('admin/session', {
+          title: 'Session management',
+          recordings: recordings,
+          moment: moment, message: req.flash('message')
+        });
     });
   });
 
   router.get('/admin/create_session', isLoggedInAsAdmin, (req, res, next) => {
-  	res.render('admin/create_session', {message: req.flash('message')});
+  	res.render('admin/create_session', {
+      title: 'Create new session',
+      message: req.flash('message')
+    });
   });
 
   router.post('/admin/create_session', isLoggedInAsAdmin, (req, res, next) => {
@@ -82,6 +90,7 @@ module.exports = (passport) => {
       if(option === 'title') {
         Recording.find({title: {$regex: `${query}`, $options: 'i'}}, (err, recordings) => {
           res.render('admin/edit_session', {
+            title: 'Edit session',
             recordings: recordings,
             moment: moment,
             message: req.flash('message')
@@ -90,6 +99,7 @@ module.exports = (passport) => {
       } else if (option === 'description') {
         Recording.find({description: {$regex: `${query}`, $options: 'i'}}, (err, recordings) => {
           res.render('admin/edit_session', {
+            title: 'Edit session',
             recordings: recordings,
             moment: moment,
             message: req.flash('message')
@@ -98,6 +108,7 @@ module.exports = (passport) => {
       } else if (option === 'type') {
         Recording.find({type: {$regex: `${query}`, $options: 'i'}}, (err, recordings) => {
           res.render('admin/edit_session', {
+            title: 'Edit session',
             recordings: recordings,
             moment: moment,
             message: req.flash('message')
@@ -108,16 +119,17 @@ module.exports = (passport) => {
         let end = moment(query).endOf('day');
         Recording.find({createdAt: {$gte: start, $lt: end}}, (err, recordings) => {
           res.render('admin/edit_session', {
+            title: 'Edit session',
             recordings: recordings,
             moment: moment,
             message: req.flash('message')
           });
         });
       } else {
-        res.render('admin/edit_session');
+        res.render('admin/edit_session', {title: 'Edit session'});
       }
     } else {
-      res.render('admin/edit_session', {message: req.flash('message')});
+      res.render('admin/edit_session', {title: 'Edit session', message: req.flash('message')});
     }
   });
 
@@ -125,6 +137,7 @@ module.exports = (passport) => {
     Recording.findOne({_id: req.params.id})
       .then((recording) => {
         res.render('admin/edit_session', {
+          title: 'Edit session',
           recording: recording,
           moment: moment,
           message: req.flash('message')
@@ -162,8 +175,98 @@ module.exports = (passport) => {
       });
   });
 
-  router.put('/admin/user_management/recent_activities', isLoggedInAsAdmin, (req, res, next) => {
+  router.get('/admin/user_management', isLoggedInAsAdmin, (req, res, next) => {
+    let title = 'User Management';
+    if (req.query.query) {
+      let option = req.query.option;
+      let query = req.query.query;
+      if(option === 'username') {
+        User.find({username: {$regex: `${query}`, $options: 'i'}}, (err, users) => {
+          res.render('admin/user_management', {
+            title: title,
+            users: users,
+            moment: moment,
+            message: req.flash('message')
+          });
+        });
+      } else if (option === 'fullname') {
+        User.find({'information.fullname': {$regex: `${query}`, $options: 'i'}}, (err, users) => {
+          res.render('admin/user_management', {
+            title: title,
+            users: users,
+            moment: moment,
+            message: req.flash('message')
+          });
+        });
+      } else if (option === 'email') {
+        User.find({email: {$regex: `${query}`, $options: 'i'}}, (err, users) => {
+          res.render('admin/user_management', {
+            title: title,
+            users: users,
+            moment: moment,
+            message: req.flash('message')
+          });
+        });
+      } else if (option === 'language') {
+        User.find({'information.first_language': {$regex: `${query}`, $options: 'i'}}, (err, users) => {
+          res.render('admin/user_management', {
+            title: title,
+            users: users,
+            moment: moment,
+            message: req.flash('message')
+          });
+        });
+      } else if (option === 'place_of_birth') {
+        User.find({'information.place_of_birth': {$regex: `${query}`, $options: 'i'}}, (err, users) => {
+          res.render('admin/user_management', {
+            title: title,
+            users: users,
+            moment: moment,
+            message: req.flash('message')
+          });
+        });
+      } else if (option === 'gender') {
+        User.find({'information.gender': query}, (err, users) => {
+          res.render('admin/user_management', {
+            title: title,
+            users: users,
+            moment: moment,
+            message: req.flash('message')
+          });
+        });
+      } else if (option === 'date_of_birth') {
+        let start = moment(query).startOf('day');
+        let end = moment(query).endOf('day');
+        User.find({'information.date_of_birth': {$gte: start, $lt: end}}, (err, users) => {
+          res.render('admin/user_management', {
+            title: title,
+            users: users,
+            moment: moment,
+            message: req.flash('message')
+          });
+        });
+      } else {
+        res.render('admin/user_management', {title: title});
+      }
+    } else {
+      res.render('admin/user_management', {title: title, message: req.flash('message')});
+    }
+  });
 
+  router.get('/admin/user_management/:id', isLoggedInAsAdmin, (req, res, next) => {
+    User.findOne({_id: req.params.id})
+      .then((user) => {
+        res.render('admin/user_management', {
+          title: 'User management',
+          user: user,
+          moment: moment,
+          message: req.flash('message')
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        next();
+      });
 
   });
 

@@ -5,8 +5,7 @@ block main_content
     div.col-md-7  
       if (message.length != 0)
         p.bg.bg-success= message
-      h1 New Session
-      form(action='/admin/create_session', method='POST')
+      form(action='/admin/user_management', method='POST')
         .form-group
           input(type='text', name='title', class='form-control', placeholder='Title',required)
         .form-group

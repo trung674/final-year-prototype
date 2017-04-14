@@ -36,12 +36,20 @@ $(document).ready(function() {
     });
   });
 
-  $('#optionSelect').on('change', function() {
+  $('#sessionSelect').on('change', function() {
     if ($(this).val() === 'date') {
       $('#queryInput').attr('type', 'date');
     } else if ($(this).val() === 'type') {
       $('#queryInput').attr('type', 'text');
       $('#queryInput').attr('placeholder', 'words/sentences/paragraph/speech');
+    } else {
+      $('#queryInput').attr('type', 'text');
+    }
+  });
+
+  $('#userSelect').on('change', function() {
+    if ($(this).val() === 'date_of_birth') {
+      $('#queryInput').attr('type', 'date');
     } else {
       $('#queryInput').attr('type', 'text');
     }

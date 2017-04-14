@@ -1,0 +1,96 @@
+extends ../template/admin_layout
+
+block main_content
+  div.row
+    div.col-md-3
+      h1 Search User
+      form(action='/admin/user_management', method='GET')
+        .form-group      
+          label Query 
+          input(id='queryInput', type='text', name='query', class='form-control' ,required)
+        .form-group
+          label Search by
+          select.form-control(id='userSelect', name='option')
+            option(value='username') Username
+            option(value='fullname') Full name
+            option(value='email') Email
+            option(value='language') First Language
+            option(value='place_of_birth') Place of birth
+            option(value='date_of_birth') Date of birth
+            option(value='gender') Gender
+        button(class='btn btn-lg btn-primary btn', type='submit') Submit
+    if users    
+      div.col-md-8.col-md-offset-1
+        h1 Search results
+        if users.length > 0      
+          table.table
+            tr
+              th User
+              th Full name
+              th Email
+              th Last logged in
+            each user in users
+              tr
+                td 
+                  a(href=`/admin/user_management/${user._id}`)= user.username
+                td= user.information.fullname
+                td= user.email
+                td= moment(user.lastLogIn).format("MMMM Do YYYY, h:mm:ss a")
+        else
+          p Found 0 matched user.      
+                
+    if user
+      div.col-md-8.col-md-offset-1
+        h1= user.username
+        h2 Information
+        table.table
+          tr
+            th User ID
+            td= user._id
+          tr
+            th Full Name
+            td= user.information.fullname
+          tr
+            th Email
+            td= user.email
+          tr
+            th Gender
+            td= user.information.gender
+          tr
+            th Date of birth
+            td= moment(user.information.date_of_birth).format("DD/MM/YYYY")
+          tr
+            th First Language
+            td= user.information.first_language
+          tr
+            th Place of birth
+            td= user.information.place_of_birth
+          tr
+            th Medical Condition
+            td= user.information.medical_condition
+          tr
+            th Created At
+            td= moment(user.lastLogIn).format("MMMM Do YYYY, h:mm:ss a")
+        
+        h2 Finnished recording sessions
+        if (user.records.length > 0)
+          - var finishedSession = user.records.filter(function(record) {return record.isFinished === true})
+          if finishedSession.length > 0 
+            table.table
+              tr
+                th ID
+                th Finished At
+              each session in finishedSession
+                tr
+                  td= session._recording
+                  td= moment(session.lastVisited).format("MMMM Do YYYY, h:mm:ss a")
+          else 
+            p This user has not finished any session.      
+        else
+          p This user has not started any session.
+              
+        
+        
+                  
+      
+              

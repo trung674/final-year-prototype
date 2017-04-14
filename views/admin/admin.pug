@@ -2,18 +2,19 @@ extends ../template/admin_layout
 
 block main_content
   div.row
-    h1 Recent activities
-    if (activities.length > 0)    
-      table.table
-        tr
-          th User
-          th Session
-          th Finished at
-        each activity in activities
+    div.col-md-8
+      h1 Recent activities
+      if (activities.length > 0)    
+        table.table
           tr
-            td= activity._user.username
-            td= activity._recording.title
-            td= moment(activity.createdAt).format("MMMM Do YYYY, h:mm:ss a")
+            th User
+            th Session
+            th Finished at
+          each activity in activities
+            tr
+              td= activity._user.username
+              td= activity._recording.title
+              td= moment(activity.createdAt).format("MMMM Do YYYY, h:mm:ss a")
         
       
 

@@ -7,7 +7,7 @@ block content
       strong It seems Javascript is disabled on your broswer. The webportal requires JavaScript enabled in order to work properly. 
   div.container
     div.page-header
-      h1 Administrator Dashboard 
+      h1 Administrator Dashboard - #{title}
       ul.nav.nav-pills
         li.dropdown(role='presentation')
           a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false') Session management <span class='caret'></span>
@@ -15,14 +15,9 @@ block content
             li 
               a(href='/admin/create_session') Create session
             li 
-              a(href='/admin/edit_session') Edit session
-        li.dropdown(role='presentation')
-          a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false') Session management <span class='caret'></span>
-          ul.dropdown-menu(style='width: 100%;')
-            li 
-              a(href='/admin/create_session') Create session
-            li 
-              a(href='/admin/edit_session') Edit session
+             a(href='/admin/edit_session') Edit session
+        li(role='presentation')
+          a(href='/admin/user_management') User management    
     block main_content
               
   include footer
