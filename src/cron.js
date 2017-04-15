@@ -4,7 +4,7 @@ import Reminder from './models/reminder';
 const CronJob = require('cron').CronJob;
 
 // create reusable transporter object using the default SMTP transport
-let transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: process.env.GMAIL_USERNAME,

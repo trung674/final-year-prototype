@@ -3,7 +3,16 @@ import User from '../models/user';
 import Recording from '../models/recording';
 import Activity from '../models/activity';
 import moment from 'moment';
+import nodemailer from 'nodemailer';
 const router = express.Router();
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.GMAIL_USERNAME,
+        pass: process.env.GMAIL_PASSWORD
+    }
+});
 
 module.exports = (passport) => {
   router.get('/admin', isLoggedInAsAdmin, (req, res, next) => {
@@ -234,6 +243,15 @@ module.exports = (passport) => {
             message: req.flash('message')
           });
         });
+      } else if (option === 'medical') {
+        User.find({'information.medical_condition': {$regex: `${query}`, $options: 'i'}}, (err, users) => {
+          res.render('admin/user_management', {
+            title: title,
+            users: users,
+            moment: moment,
+            message: req.flash('message')
+          });
+        });
       } else if (option === 'date_of_birth') {
         let start = moment(query).startOf('day');
         let end = moment(query).endOf('day');
@@ -267,7 +285,28 @@ module.exports = (passport) => {
         console.error(err);
         next();
       });
+  });
 
+  router.post('/admin/user_management/:id/send_email', isLoggedInAsAdmin, (req, res, next) => {
+    let subject = req.body.subject;
+    let message = req.body.message.replace(/\n?\r?\r\n/g, '<br />');
+    let mailOptions = {
+      from: `"Web Recorder Team - University of Sheffield" <${process.env.GMAIL_USERNAME}>`,
+      to: req.body.email,
+      subject: subject,
+      text: `${message}`,
+      html: `${message}`
+    };
+
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          return console.log(error);
+          res.send('Something went wrong. Please try again !');
+        } else {
+          res.send('Successfully send email to this user');
+        }
+    });
   });
 
 
@@ -286,6 +325,7 @@ function isLoggedInAsAdmin(req, res, next) {
 function formatContent(content) {
   let contentArray = content.split('\r\n');
   for (let i = 0; i < contentArray.length; i++) {
+    if (contentArray[i].length === 0) continue;
     let newValue = contentArray[i].trim();
     contentArray[i] = newValue;
   }

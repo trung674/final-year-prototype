@@ -14,7 +14,6 @@ $(document).ready(function() {
     // }
 
   $('#reminderForm').on('submit', function(e) {
-    console.log('Prepare to submit');
     var data = $(this).serializeArray();
     e.preventDefault();
     $.ajax({
@@ -35,6 +34,25 @@ $(document).ready(function() {
       }
     });
   });
+
+  $('#emailForm').on('submit', function(e) {
+    var data = $(this).serializeArray();
+    e.preventDefault();
+    $.ajax({
+      data: data,
+      url: $(this).attr('action'),
+      type: 'POST',
+      success: function(status){
+        $('#successEmailStatus').removeClass('hidden');
+        $('#successEmailStatus').text(status);
+      },
+      error: function(err) {
+        $('#errorEmailStatus').removeClass('hidden');
+        $('#errorEmailStatus').text(err);
+      }
+    });
+  });
+
 
   $('#sessionSelect').on('change', function() {
     if ($(this).val() === 'date') {

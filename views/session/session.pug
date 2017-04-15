@@ -35,19 +35,6 @@ block main_content
         a.btn.btn-lg.btn-default(id='start-recoring', href=`${recording._id}/0?a=continue`) Continue
       else if recordingStatus == 'finished'
         a.btn.btn-lg.btn-default Finished
-        //- table.table
-        //-   tr
-        //-     th.col-md-4 Description
-        //-     th.col-md-1 Type
-        //-     th.col-md-1 Added Date
-        //-     th.col-md-2 Last Modified Date
-        //-     th Content
-        //-   tr
-        //-     th= recording.description
-        //-     th= recording.type.toUpperCase()
-        //-     th= moment(recording.createdAt).format("YYYY-MM-DD")
-        //-     th= moment(recording.updatedAt).format("YYYY-MM-DD")
-            th= recording.content
     else
       p No recording found
 

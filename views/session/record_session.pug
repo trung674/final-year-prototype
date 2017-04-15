@@ -53,15 +53,10 @@ block main_content
                 div.clearfix
                   button.btn.btn-lg.btn-lg-reminder.btn-primary.pull-right(type='submit' id='reminderBtn') Create
                   button.btn.btn-lg.btn-default.pull-right(type='button' data-dismiss='modal') Cancel
-                p.hidden#status
        
 
     else
       p No recording found
 
-  //- The dot is important, do not remove it
-  //- script(type='text/javascript').
-  //-   var username = !{JSON.stringify(username)};
-  //-   var recordingID = !{JSON.stringify(recording._id)};
   script(src='https://cdn.webrtc-experiment.com/RecordRTC.js')  
   script(src='/javascripts/recorder.js')
