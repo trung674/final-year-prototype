@@ -15,14 +15,13 @@ var _awsSdk2 = _interopRequireDefault(_awsSdk);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // AWS.config.loadFromPath('./aws-config.json');
-_awsSdk2.default.config = new _awsSdk2.default.Config({
+var config = new _awsSdk2.default.Config({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     region: "eu-west-2"
 });
-var s3 = new _awsSdk2.default.S3();
+var s3 = new _awsSdk2.default.S3(config);
 var bucketName = 'recording.uploads';
-
 function writeToDisk(audio) {
     var dateTime = (0, _moment2.default)().format('YYYYMMDDHHmm');
     var fileExtension = 'wav';
@@ -33,13 +32,13 @@ function writeToDisk(audio) {
     var dataURL = audio.dataURL.split(',').pop();
 
     fileBuffer = Buffer.from(dataURL, 'base64');
-    // s3.putObject({Bucket: bucketName, Key: filePathAWS , Body: fileBuffer, ContentEncoding: 'base64', ContentType: 'audio/wav'}, function(err, data) {
-    //   if (err) {
-    //     console.error(err);
-    //   } else {
-    //     console.log('uploading to S3 successfully !');
-    //   }
-    // });
+    s3.putObject({ Bucket: bucketName, Key: filePathAWS, Body: fileBuffer, ContentEncoding: 'base64', ContentType: 'audio/wav' }, function (err, data) {
+        if (err) {
+            console.error(err);
+        } else {
+            console.log('uploading to S3 successfully !');
+        }
+    });
     // fs.outputFileSync(filePath, fileBuffer);
     // console.log('filePath', filePath);
 }

@@ -27,7 +27,7 @@ block main_content
                 li
                   strong Last Modified Date
                   p= moment(recording.updatedAt).format("YYYY-MM-DD")
-        div.col-md-9#recording-panel(data-recording-id=`${recording._id}`,data-recording-title=`${recording.title}`, data-username=`${username}`, data-recording-type=`${recording.type}`, data-end-of-session=((reqIndex != recording.content.length - 1) ? 'false' : 'true'))
+        div.col-md-9#recording-panel(data-recording-id=`${recording._id}`, data-username=`${username}`, data-recording-type=`${recording.type}`, data-end-of-session=((reqIndex != recording.content.length - 1) ? 'false' : 'true'))
           if(recording.type == "words" || recording.type == "sentences")
             include session_word
           else

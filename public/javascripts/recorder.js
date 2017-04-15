@@ -120,8 +120,11 @@ function onBtnFinishClicked(){
 }
 
 function saveAudio(isFinish){
-  var recording = recordingPanel.attr('data-recording-name');
+  var recordingID = recordingPanel.attr('data-recording-id');
   var username = recordingPanel.attr('data-username');
+  if (currentWord.length > 10) {
+    currentWord = currentWord.replace(/\s/g, '').slice(0, 10);
+  }
   recordAudio.stopRecording(function() {
       // get audio data-URL
       recordAudio.getDataURL(function(audioDataURL) {
@@ -131,7 +134,7 @@ function saveAudio(isFinish){
                   dataURL: audioDataURL,
                   word: currentWord,
                   username: username,
-                  recording: recording
+                  recordingID: recordingID
               }
           };
           socket.emit('incomingdata', files, function(status){
