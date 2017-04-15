@@ -12,6 +12,10 @@ var _user = require('../models/user');
 
 var _user2 = _interopRequireDefault(_user);
 
+var _activity = require('../models/activity');
+
+var _activity2 = _interopRequireDefault(_activity);
+
 var _moment = require('moment');
 
 var _moment2 = _interopRequireDefault(_moment);
@@ -22,8 +26,8 @@ var _mongoose2 = _interopRequireDefault(_mongoose);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var router = _express2.default.Router(); // var express = require('express');
-
+// var express = require('express');
+var router = _express2.default.Router();
 
 module.exports = function (passport) {
   router.get('/user', isLoggedIn, function (req, res, next) {
@@ -87,8 +91,18 @@ module.exports = function (passport) {
             console.error(err);
             res.redirect('/user');
           } else {
-            req.flash('messageSuccess', 'Good job! You have successfully finished a recording session. Let\'s take a break and start another session when you are ready again.');
-            res.redirect('/user');
+            var newActivity = new _activity2.default();
+            newActivity._user = user._id;
+            newActivity._recording = req.params.recording;
+            newActivity.save(function (err) {
+              if (err) {
+                console.error(err);
+                next();
+              } else {
+                req.flash('messageSuccess', 'Good job! You have successfully finished a recording session. Let\'s take a break and start another session when you are ready again.');
+                res.redirect('/user');
+              }
+            });
           }
         });
       } else {
