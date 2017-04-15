@@ -120,7 +120,7 @@ function onBtnFinishClicked(){
 }
 
 function saveAudio(isFinish){
-  var recordingID = recordingPanel.attr('data-recording-id');
+  var recording = recordingPanel.attr('data-recording-name');
   var username = recordingPanel.attr('data-username');
   recordAudio.stopRecording(function() {
       // get audio data-URL
@@ -131,7 +131,7 @@ function saveAudio(isFinish){
                   dataURL: audioDataURL,
                   word: currentWord,
                   username: username,
-                  recordingID: recordingID
+                  recording: recording
               }
           };
           socket.emit('incomingdata', files, function(status){
