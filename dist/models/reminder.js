@@ -10,8 +10,7 @@ var _mongoose2 = _interopRequireDefault(_mongoose);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// define the schema for our session model
-// change to reminder
+// define the schema for Reminder
 var reminderSchema = _mongoose2.default.Schema({
     message: String,
     date: Date,

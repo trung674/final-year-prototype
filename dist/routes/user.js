@@ -174,44 +174,29 @@ module.exports = function (passport) {
   });
 
   router.put('/user/profile/update_account', isLoggedIn, function (req, res, next) {
-    if (req.body.username.length === 0 || !validateUsername(req.body.username)) {
-      req.flash('usernameError', 'Username should not be empty and should have at least 6 characters');
-      res.redirect('/user/profile');
-    } else {
-      if (req.body.password.length !== 0) {
-        if (validatePassword(req.body.password, req.body.username) && req.body.password === req.body.re_password) {
-          _user2.default.findOneAndUpdate({ _id: req.user._id }, { '$set': {
-              username: req.body.username,
-              password: _user2.default.generateHash(req.body.password)
-            } }, function (err, result) {
-            if (err) {
-              console.error(err);
-              next();
-            } else {
-              req.flash('successMessage', 'Successfully updated your username and password.');
-              res.redirect('/user/profile');
-            }
-          });
-        } else if (!validatePassword(req.body.password, req.body.username)) {
-          req.flash('passwordError', 'The password should: <ul><li>contain between 6 - 16 characters</li><li>contain at least 1 alphabet character and 1 number</li><li>should not be the same as user name</li></ul>');
-          res.redirect('/user/profile');
-        } else {
-          req.flash('passwordError', 'Password inputs are not the same.');
-          res.redirect('/user/profile');
-        }
-      } else {
+    if (req.body.password.length !== 0) {
+      if (validatePassword(req.body.password, req.user.username) && req.body.password === req.body.re_password) {
         _user2.default.findOneAndUpdate({ _id: req.user._id }, { '$set': {
-            username: req.body.username
+            password: _user2.default.generateHash(req.body.password)
           } }, function (err, result) {
           if (err) {
             console.error(err);
             next();
           } else {
-            req.flash('successMessage', 'Successfully updated your username.');
+            req.flash('successMessage', 'Successfully updated your and password.');
             res.redirect('/user/profile');
           }
         });
+      } else if (!validatePassword(req.body.password, req.user.username)) {
+        req.flash('passwordError', 'The password should: <ul><li>contain between 6 - 16 characters</li><li>contain at least 1 alphabet character and 1 number</li><li>should not be the same as user name</li></ul>');
+        res.redirect('/user/profile');
+      } else {
+        req.flash('passwordError', 'Password inputs are not the same.');
+        res.redirect('/user/profile');
       }
+    } else {
+      req.flash('passwordError', 'The password should: <ul><li>contain between 6 - 16 characters</li><li>contain at least 1 alphabet character and 1 number</li><li>should not be the same as user name</li></ul>');
+      res.redirect('/user/profile');
     }
   });
 
