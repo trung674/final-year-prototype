@@ -15,9 +15,7 @@ block main_content
             p= user.email
           .form-group
             label Username
-            input(type='text', name='username', class='form-control ', placeholder='Username', value=`${user.username}`)
-          if (usernameError.length != 0)
-            p.bg.bg-danger= usernameError
+            p= user.username
           .form-group
             label New password
             input(type='password', name='password',id='password', class='form-control ', placeholder='Password')

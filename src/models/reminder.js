@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 
-// define the schema for our session model
-// change to reminder
+// define the schema for Reminder
 const reminderSchema = mongoose.Schema({
     message: String,
     date: Date,
