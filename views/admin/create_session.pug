@@ -7,17 +7,20 @@ block main_content
         p.bg.bg-success= message
       form(action='/admin/user_management', method='POST')
         .form-group
+          label Title
           input(type='text', name='title', class='form-control', placeholder='Title',required)
         .form-group
+          label Session description
           textarea.form-control(rows='4', name='description', placeholder='Session Description....', required)
         .form-group
+          label Session type
           select.form-control(name='type', id='session-type', onchange='changeSessionContent()', required)
             option(value='', disabled, selected, hidden) Sesstion type ?
             option(value='words') Words
             option(value='sentences') Sentences
             option(value='paragraph') Short paragraph
             option(value='speech') Free speech
-
         .form-group
+          label Session content
           textarea.form-control(rows='8', name='content', placeholder='Session Content....', id='session-content', required)
         button(class='btn btn-lg btn-primary btn', type='submit') Submit
