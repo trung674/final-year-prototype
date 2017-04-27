@@ -1,9 +1,5 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
 var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
@@ -20,4 +16,5 @@ var recordingSchema = _mongoose2.default.Schema({
 }, { timestamps: true });
 
 // create the model for users and expose it to our ap
-exports.default = _mongoose2.default.model('Recording', recordingSchema);
+// export default mongoose.model('Recording', recordingSchema);
+module.exports = _mongoose2.default.model('Recording', recordingSchema);

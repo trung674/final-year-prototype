@@ -57,11 +57,19 @@ var MongoStore = require('connect-mongo')(_expressSession2.default);
 
 // Setup database connection
 _mongoose2.default.Promise = global.Promise; // use ES6 promise
-_mongoose2.default.connect(process.env.DATABASE_URI); // connect to remote database
+if (process.env.NODE_ENV == 'testing') {
+    _mongoose2.default.connect(process.env.TESTING_DATABASE_URI); // connect to remote test database
+} else {
+    _mongoose2.default.connect(process.env.DATABASE_URI); // connect to remote database
+}
 var db = _mongoose2.default.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
-    console.log('Successfully connect to database');
+    if (process.env.NODE_ENV == 'testing') {
+        console.log('Successfully connect to test database');
+    } else {
+        console.log('Successfully connect to database');
+    }
 });
 // import configDB from './config/database'; // local database configuration
 // mongoose.connect(configDB.url) // connect to local databas
@@ -101,7 +109,6 @@ app.set('view engine', 'pug');
 app.set('views', _path2.default.join(__dirname, '../views'));
 
 // Setup route handler
-app.set('port', process.env.PORT || 3000);
 app.use(require('./routes/index')(_passport2.default));
 app.use(require('./routes/user')(_passport2.default));
 app.use(require('./routes/admin')(_passport2.default));
@@ -121,6 +128,9 @@ io.on('connection', function (socket) {
     socket.emit('user', 'Did you hear me ?');
 });
 
+app.set('port', process.env.PORT || 3000);
 server.listen(app.get('port'), function () {
     console.log('Example app listening on port ' + app.get('port'));
 });
+
+module.exports = server;

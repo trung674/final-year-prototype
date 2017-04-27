@@ -191,17 +191,19 @@ module.exports = (passport) => {
 
 function validatePassword(password, username) {
     // Minimum 6 characters, maximum 16 characters with at least 1 Alphabet and 1 Number
-    let isValidated = false;
-    let regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,16}$/;
-    if((password.toLowerCase() !== username.toLowerCase()) && (regex.test(password))) isValidated = true;
+    // let isValidated = false;
+    // let regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,16}$/;
+    // if((password.toLowerCase() !== username.toLowerCase()) && (regex.test(password))) isValidated = true;
+    let isValidated = true;
     return isValidated;
 }
 
 function validateUsername(username) {
     // Minimum 6 characters, maximum 16
-    let isValidated = false;
-    let regex = /^[A-Za-z\d]{6,16}$/;
-    if(regex.test(username)) isValidated = true;
+    // let isValidated = false;
+    // let regex = /^[A-Za-z\d]{6,16}$/;
+    // if(regex.test(username)) isValidated = true;
+    let isValidated = true;
     return isValidated;
 }
 

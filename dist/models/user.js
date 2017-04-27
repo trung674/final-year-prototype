@@ -1,9 +1,5 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
 var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
@@ -56,6 +52,6 @@ userSchema.methods.isAdmin = function (admin) {
 };
 
 // create the model for users and expose it to our app
-// module.exports = mongoose.model('User', userSchema);
+module.exports = _mongoose2.default.model('User', userSchema);
 
-exports.default = _mongoose2.default.model('User', userSchema);
+// export default mongoose.model('User', userSchema);

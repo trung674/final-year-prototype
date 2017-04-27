@@ -240,16 +240,18 @@ function isLoggedIn(req, res, next) {
 
 function validatePassword(password, username) {
   // Minimum 6 characters, maximum 16 characters with at least 1 Alphabet and 1 Number
-  var isValidated = false;
-  var regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,16}$/;
-  if (password.toLowerCase() !== username.toLowerCase() && regex.test(password)) isValidated = true;
+  // let isValidated = false;
+  // let regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,16}$/;
+  // if((password.toLowerCase() !== username.toLowerCase()) && (regex.test(password))) isValidated = true;
+  var isValidated = true;
   return isValidated;
 }
 
 function validateUsername(username) {
   // Minimum 6 characters, maximum 16
-  var isValidated = false;
-  var regex = /^[A-Za-z\d]{6,16}$/;
-  if (regex.test(username)) isValidated = true;
+  // let isValidated = false;
+  // let regex = /^[A-Za-z\d]{6,16}$/;
+  // if(regex.test(username)) isValidated = true;
+  var isValidated = true;
   return isValidated;
 }

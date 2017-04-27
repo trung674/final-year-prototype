@@ -9,4 +9,5 @@ const activitySchema = mongoose.Schema({
 );
 
 // create the model for users and expose it to our ap
-export default mongoose.model('Activity', activitySchema );
+// export default mongoose.model('Activity', activitySchema );
+module.exports = mongoose.model('Activity', activitySchema );

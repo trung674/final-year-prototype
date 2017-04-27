@@ -1,4 +1,4 @@
-import fs from 'fs-extra';
+ import fs from 'fs-extra';
 import moment from 'moment';
 import AWS from 'aws-sdk';
 // AWS.config.loadFromPath('./aws-config.json');

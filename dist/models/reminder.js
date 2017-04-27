@@ -1,9 +1,5 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
 var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
@@ -19,4 +15,5 @@ var reminderSchema = _mongoose2.default.Schema({
 }, { timestamps: true });
 
 // create the model for users and expose it to our ap
-exports.default = _mongoose2.default.model('Reminder', reminderSchema);
+// export default mongoose.model('Reminder', reminderSchema);
+module.exports = _mongoose2.default.model('Reminder', reminderSchema);

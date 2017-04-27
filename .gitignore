@@ -5,3 +5,4 @@ uploads/*
 .env
 .vscode/
 aws-config.json
+test/

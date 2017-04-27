@@ -20,11 +20,19 @@ const MongoStore = require('connect-mongo')(session);
 
 // Setup database connection
 mongoose.Promise = global.Promise; // use ES6 promise
-mongoose.connect(process.env.DATABASE_URI); // connect to remote database
+if (process.env.NODE_ENV == 'testing') {
+  mongoose.connect(process.env.TESTING_DATABASE_URI); // connect to remote test database
+} else {
+  mongoose.connect(process.env.DATABASE_URI); // connect to remote database
+}
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
+  if (process.env.NODE_ENV == 'testing') {
+    console.log('Successfully connect to test database');
+  } else {
     console.log('Successfully connect to database');
+  }
 });
 // import configDB from './config/database'; // local database configuration
 // mongoose.connect(configDB.url) // connect to local databas
@@ -65,7 +73,6 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, '../views'));
 
 // Setup route handler
-app.set('port', process.env.PORT || 3000);
 app.use(require('./routes/index')(passport));
 app.use(require('./routes/user')(passport));
 app.use(require('./routes/admin')(passport));
@@ -85,6 +92,9 @@ io.on('connection', (socket) => {
     socket.emit('user', 'Did you hear me ?');
 });
 
+app.set('port', process.env.PORT || 3000);
 server.listen(app.get('port'), () => {
     console.log(`Example app listening on port ${app.get('port')}`);
 });
+
+module.exports = server;

@@ -11,4 +11,5 @@ const reminderSchema = mongoose.Schema({
 );
 
 // create the model for users and expose it to our ap
-export default mongoose.model('Reminder', reminderSchema);
+// export default mongoose.model('Reminder', reminderSchema);
+module.exports = mongoose.model('Reminder', reminderSchema);
