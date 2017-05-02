@@ -9,7 +9,7 @@
 Enable"** enabled).
 
 ## Installation
-1. Create **.env** file with the following lines:
+1. Create **.env** file with the following lines and your own info:
 
     ```
     DATABASE_URI= Production database URI
