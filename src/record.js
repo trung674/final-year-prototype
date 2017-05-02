@@ -1,4 +1,4 @@
- import fs from 'fs-extra';
+import fs from 'fs-extra';
 import moment from 'moment';
 import AWS from 'aws-sdk';
 // AWS.config.loadFromPath('./aws-config.json');
@@ -9,7 +9,7 @@ const config = new AWS.Config({
 });
 const s3 = new AWS.S3(config);
 const bucketName = 'recording.uploads';
-function writeToDisk(audio) {
+function uploadToS3(audio) {
     let dateTime = moment().format('YYYYMMDDHHmm');
     const fileExtension = 'wav';
     const fileName = `${audio.word}_${audio.username}_${audio.recordingID}_${dateTime}.${fileExtension}`;
@@ -34,10 +34,8 @@ function writeToDisk(audio) {
 module.exports = (io) => {
     io.on('connection', (socket) => {
         socket.on('incomingdata', (data, fn) => {
-            // console.log(data.audio.dataURL);
             fn(true);
-            writeToDisk(data.audio);
-            // console.log(data);
+            uploadToS3(data.audio);
         });
     });
 };

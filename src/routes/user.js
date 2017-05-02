@@ -1,4 +1,3 @@
-// var express = require('express');
 import express from 'express';
 import Recording from '../models/recording';
 import User from '../models/user';
@@ -8,6 +7,7 @@ import mongoose from 'mongoose';
 const router = express.Router();
 
 module.exports = (passport) => {
+  // GET /user
   router.get('/user', isLoggedIn, (req, res, next) => {
     let newRecordings, ongoingRecordings, finishedRecordings
     Recording.find().limit(10) //should limit to newest 10 sessions
@@ -50,6 +50,7 @@ module.exports = (passport) => {
       });
   });
 
+  // GET /user/session/:recording/finish
   router.get('/user/session/:recording/finish', isLoggedIn, (req, res, next) => {
     User.findOne({_id : req.user._id})
       .then((user) => {
@@ -94,6 +95,7 @@ module.exports = (passport) => {
       });
   });
 
+  // GET /user/session/:recording/:index
   router.get('/user/session/:recording/:index', isLoggedIn, (req, res, next) => {
     Recording.findOne({_id: req.params.recording})
       .then((recording) => {
@@ -149,6 +151,7 @@ module.exports = (passport) => {
       });
   });
 
+  // GET /user/profile
   router.get('/user/profile', isLoggedIn, (req, res, next) => {
     res.render('user/profile', {
       user: req.user,
@@ -159,6 +162,7 @@ module.exports = (passport) => {
     });
   });
 
+  // PUT /user/profile/update_account
   router.put('/user/profile/update_account', isLoggedIn, (req, res, next) => {
     if (req.body.password.length !== 0) {
       if (validatePassword(req.body.password, req.user.username) && req.body.password === req.body.re_password) {
@@ -188,6 +192,7 @@ module.exports = (passport) => {
     }
   });
 
+  // PUT /user/profile/update_profile
   router.put('/user/profile/update_profile', isLoggedIn, (req, res, next) => {
     User.findOneAndUpdate({_id : req.user._id},
       {'$set': {
@@ -230,18 +235,18 @@ function isLoggedIn(req, res, next) {
 
 function validatePassword(password, username) {
     // Minimum 6 characters, maximum 16 characters with at least 1 Alphabet and 1 Number
-    // let isValidated = false;
-    // let regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,16}$/;
-    // if((password.toLowerCase() !== username.toLowerCase()) && (regex.test(password))) isValidated = true;
-    let isValidated = true;
+    let isValidated = false;
+    let regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,16}$/;
+    if((password.toLowerCase() !== username.toLowerCase()) && (regex.test(password))) isValidated = true;
+    // let isValidated = true;
     return isValidated;
 }
 
 function validateUsername(username) {
     // Minimum 6 characters, maximum 16
-    // let isValidated = false;
-    // let regex = /^[A-Za-z\d]{6,16}$/;
-    // if(regex.test(username)) isValidated = true;
-    let isValidated = true;
+    let isValidated = false;
+    let regex = /^[A-Za-z\d]{6,16}$/;
+    if(regex.test(username)) isValidated = true;
+    // let isValidated = true;
     return isValidated;
 }

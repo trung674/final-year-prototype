@@ -40,7 +40,9 @@ db.once('open', () => {
 // Setup session + passportjs
 require('./config/passport')(passport);
 app.use(methodOverride('_method'));
-app.use(morgan('dev')); // log every request to the console
+if (process.env.NODE_ENV !== 'testing') {
+  app.use(morgan('dev')); // log every request to the console
+}
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({

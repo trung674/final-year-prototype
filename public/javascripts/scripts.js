@@ -1,18 +1,4 @@
 $(document).ready(function() {
-    // function changeSessionContent() {
-    //   var sessionContent = $('#session-content');
-    //   var sessionTypeValue = $('#session-type').val();
-    //   if (sessionTypeValue === 'words') {
-    //     sessionContent.attr('placeholder', 'For example: Apple; Banana; Orange....');
-    //   } else if (sessionTypeValue == 'sentences') {
-    //     sessionContent.attr('placeholder', 'For example: Turn off the TV; Turn on the TV; Turn up the volume....');
-    //   } else if (sessionTypeValue == 'paragraphs') {
-    //     sessionContent.attr('placeholder', 'Dunno what to say');
-    //   } else if (sessionTypeValue == 'speech') {
-    //     sessionContent.attr('placeholder', 'For example: Let\'s speak about the Cinderella\'s Story.');
-    //   }
-    // }
-
   $('#reminderForm').on('submit', function(e) {
     var data = $(this).serializeArray();
     e.preventDefault();

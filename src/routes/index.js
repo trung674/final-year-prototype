@@ -1,18 +1,22 @@
-// var express = require('express');
-// var router = express.Router();
-
 import express from 'express';
 const router = express.Router();
 
 module.exports = function(passport){
+  // GET /
   router.get('/', isLoggedIn, (req, res) => {
-		res.redirect('user/');
+    if (!req.user.admin) {
+		    res.redirect('user/');
+    } else {
+        res.redirect('admin/');
+    }
 	});
 
+  // GET /signin
   router.get('/signin', (req, res) => {
     res.render('user/signin', { errorMessage: req.flash('signinErrorMessage'), message: req.flash('signinMessage')});
   });
 
+  // POST /signin
  router.post('/signin',
     passport.authenticate('login', {
       failureRedirect: '/signin',
@@ -25,19 +29,24 @@ module.exports = function(passport){
         return res.redirect('/admin');
   });
 
+  // GET /signup
   router.get('/signup', (req, res) => {
-    res.render('user/signup', { message: req.flash('signupMessage'), passwordMessage: req.flash('passwordError'), usernameMessage: req.flash('usernameError')});
+    res.render('user/signup', {
+      message: req.flash('signupMessage'),
+      passwordMessage: req.flash('passwordError'),
+      usernameMessage: req.flash('usernameError'),
+      env: process.env.NODE_ENV
+     });
   });
 
+  // POST /signup
   router.post('/signup', passport.authenticate('signup', {
     successRedirect : '/signin',
     failureRedirect: '/signup',
     failureFlash : true
   }));
 
-	// =====================================
-	// LOGOUT ==============================
-	// =====================================
+  // GET /signout
 	router.get('/signout', (req, res) => {
 		req.logout();
 		res.redirect('/');

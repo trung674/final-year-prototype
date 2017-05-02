@@ -21,7 +21,7 @@ block main_content
       div.col-md-4.user-db-col
         h3.text-center New Sessions
         if (newRecordings.length != 0)
-          table.table.table-bordered
+          table.table.table-bordered#new-sessions
             tr
               th Title
               th Type
@@ -37,7 +37,7 @@ block main_content
       div.col-md-4.user-db-col
         h3.text-center Ongoing Sessions
         if (ongoingRecordings.length != 0)
-          table.table.table-bordered
+          table.table.table-bordered#ongoing-sessions
             tr
               th Title
               th Type
@@ -53,7 +53,7 @@ block main_content
       div.col-md-4.user-db-col
         h3.text-center Finished Sessions
         if (finishedRecordings.length != 0)
-          table.table.table-bordered
+          table.table.table-bordered#finished-sessions
             tr
               th Title
               th Type

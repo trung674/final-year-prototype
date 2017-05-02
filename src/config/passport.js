@@ -1,9 +1,7 @@
-// load all the things we need
 import {Strategy} from 'passport-local';
 // load up the user model
 import User from '../models/user';
 import https from 'https';
-// expose this function to our app using module.exports
 
 module.exports = (passport) => {
 
@@ -125,7 +123,7 @@ module.exports = (passport) => {
             }
             // if the user is found but the password is wrong
             if (!user.validPassword(password, user.password))
-                return done(null, false, req.flash('signinErrorMessage', 'Wrong password. Please try again')); // create the loginMessage and save it to session as flashdata
+                return done(null, false, req.flash('signinErrorMessage', 'Wrong password. Please try again'));
 
             // all is well, return successful user
             // update lastLogIn value (for both user and admin)
@@ -191,19 +189,19 @@ module.exports = (passport) => {
 
 function validatePassword(password, username) {
     // Minimum 6 characters, maximum 16 characters with at least 1 Alphabet and 1 Number
-    // let isValidated = false;
-    // let regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,16}$/;
-    // if((password.toLowerCase() !== username.toLowerCase()) && (regex.test(password))) isValidated = true;
-    let isValidated = true;
+    let isValidated = false;
+    let regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,16}$/;
+    if((password.toLowerCase() !== username.toLowerCase()) && (regex.test(password))) isValidated = true;
+    // let isValidated = true;
     return isValidated;
 }
 
 function validateUsername(username) {
     // Minimum 6 characters, maximum 16
-    // let isValidated = false;
-    // let regex = /^[A-Za-z\d]{6,16}$/;
-    // if(regex.test(username)) isValidated = true;
-    let isValidated = true;
+    let isValidated = false;
+    let regex = /^[A-Za-z\d]{6,16}$/;
+    if(regex.test(username)) isValidated = true;
+    // let isValidated = true;
     return isValidated;
 }
 

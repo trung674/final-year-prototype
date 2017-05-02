@@ -1,0 +1,2 @@
+- Please refer to Appendix A of the report to know how to install and run the webportal on the local machine.
+- This folder already had the .env configuration file and it will continue to work until the end of July 2017. 

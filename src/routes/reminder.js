@@ -5,6 +5,7 @@ import moment from 'moment';
 const router = express.Router();
 
 module.exports = (passport) => {
+  // GET /user/reminder
   router.get('/user/reminder', isLoggedIn, (req, res, next) => {
     let now = moment().format();
     Reminder.find({date: {$lte: new Date(now)}})
@@ -17,6 +18,7 @@ module.exports = (passport) => {
       });
   });
 
+  // GET /user/create_reminder
   router.post('/user/create_reminder', isLoggedIn, (req, res, next) => {
     let newReminder = new Reminder();
     if (req.body.message) newReminder.message = req.body.message;

@@ -1,7 +1,8 @@
 import express from 'express';
 const router = express.Router();
 
-module.exports = function(passport){
+module.exports = function(passport) {
+  // GET /manuals
   router.get('/manuals', isLoggedIn, (req, res, next) => {
     res.render('manuals/manuals');
   });

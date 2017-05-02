@@ -59,8 +59,8 @@ const job = new CronJob('00 00 14 * * *', () => {
         console.log(err);
       });
 },
-false, /* Start the job right now */
+false,
 );
 
 job.start();
-console.log('job status', job.running); // job status
+console.log('Job status: ', job.running); // job status

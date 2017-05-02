@@ -25,7 +25,7 @@ block main_content
           if (passwordError.length != 0)
             div.bg.bg-danger !{passwordError}
           br
-          button(class='btn btn-lg btn-primary', type='submit') Update
+          button#btn-update-account(class='btn btn-lg btn-primary', type='submit') Update
 
       div.col-md-offset-1.col-md-6 
         form(action='profile/update_profile?_method=PUT', method='POST')
@@ -48,7 +48,7 @@ block main_content
           .form-group
             label Medical Condition
             textarea.form-control(rows='6', name='medical_condition', placeholder='What is your current medical condition ?')= (user.information.medical_condition) ? user.information.medical_condition : '' 
-          button(class='btn btn-lg btn-primary', type='submit') Update
+          button#btn-update-profile(class='btn btn-lg btn-primary', type='submit') Update
         
       
       

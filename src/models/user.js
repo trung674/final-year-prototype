@@ -45,6 +45,5 @@ userSchema.methods.isAdmin = (admin) => {
 };
 
 // create the model for users and expose it to our app
-module.exports = mongoose.model('User', userSchema);
-
-// export default mongoose.model('User', userSchema);
+// export default mongoose.model('User', userSchema); // this did work with Mocha for God-know reason
+module.exports = mongoose.model('User', userSchema); // that is why this line exists

@@ -7,10 +7,9 @@
     "start": "nodemon --exec babel-node src/app.js --ignore public/",
     "build": "babel src -d dist",
     "serve": "node dist/app.js",
-    "test": "export NODE_ENV=testing && mocha test/user.js --require babel-register -t 9000",
-    "test1": "export NODE_ENV=testing && mocha test/user.js -t 9000"
+    "test": "export NODE_ENV=testing && mocha test/test.js --ui bdd --require babel-register -t 12000",
   },
-  "author": "",
+  "author": "Nguyen Thanh Trung",
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.25.0",

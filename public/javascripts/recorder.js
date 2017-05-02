@@ -8,6 +8,7 @@ var currentWord = $('#word').text();
 var recordingStatus = $('#recording-status');
 var recordingPanel = $('#recording-panel')
 
+// getUserMedia requires either HTTPS protocol or localhost
 var isSecureOrigin = location.protocol === 'https:' ||
 location.host === 'localhost:3000';
 if (!isSecureOrigin) {
@@ -16,7 +17,7 @@ if (!isSecureOrigin) {
   location.protocol = 'HTTPS';
 }
 
-// Media constraint
+// Media constraints
 var constraints = window.constraints = {
   audio: true,
   video: false
@@ -30,6 +31,7 @@ function handleSuccess(mediaStream) {
   window.stream = mediaStream;
 }
 
+// getUserMedia error handling
 function handleError(error) {
   $('#errorMsg').removeClass('hidden');
   btnRecord.addClass('hidden');
@@ -43,16 +45,23 @@ function handleError(error) {
   } else if (error.name === 'DevicesNotFoundError') {
     $('#errorMsg').text('No microphone found ! If you are using a PC, you need an external microphone.');
   } else {
-    $('#errorMsg').text('Something bad happened !');
+    $('#errorMsg').text('Something bad happened! Please refresh the page and try again.');
   }
-  //$('#errorMsg').text('getUserMedia error: ' + error.name, error);
   console.error('getUserMedia error: ' + error.name, error);
 }
 
-navigator.mediaDevices.getUserMedia(constraints).
-    then(handleSuccess).catch(handleError);
+// unsupported browsers error handling
+if (navigator.mediaDevices === undefined) {
+  btnRecord.addClass('hidden');
+  btnBack.addClass('hidden');
+  btnNext.addClass('hidden');
+  $('#errorMsg').removeClass('hidden').html('It looks like your web browser is not compatible with some features in the recording system. At the moment, we only support <a href="https://www.google.com/chrome/">Google Chrome</a> and <a href="https://www.mozilla.org/en-GB/firefox/new/">Mozilla Firefox</a>. We will try our best to support more in the future, Sorry for any inconvenience.');
+} else {
+  navigator.mediaDevices.getUserMedia(constraints).
+      then(handleSuccess).catch(handleError);
+}
 
-// var socket = io.connect('https://web-recorder-uos.herokuapp.com');
+// setup the client-side SocketIO protocol
 var socket = io();
 socket.on('user', function(data){
   console.log(data);
