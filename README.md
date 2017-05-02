@@ -30,3 +30,9 @@ Enable"** enabled).
 4. `npm install`
 5. Start server: `npm start`
 6. Go to `localhost:3000`
+
+## Author
+Nguyen Thanh Trung
+
+## License
+WTFPL - Do What the Fuck You Want To Public License
