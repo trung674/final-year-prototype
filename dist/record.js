@@ -22,7 +22,7 @@ var config = new _awsSdk2.default.Config({
 });
 var s3 = new _awsSdk2.default.S3(config);
 var bucketName = 'recording.uploads';
-function writeToDisk(audio) {
+function uploadToS3(audio) {
     var dateTime = (0, _moment2.default)().format('YYYYMMDDHHmm');
     var fileExtension = 'wav';
     var fileName = audio.word + '_' + audio.username + '_' + audio.recordingID + '_' + dateTime + '.' + fileExtension;
@@ -47,10 +47,8 @@ function writeToDisk(audio) {
 module.exports = function (io) {
     io.on('connection', function (socket) {
         socket.on('incomingdata', function (data, fn) {
-            // console.log(data.audio.dataURL);
             fn(true);
-            writeToDisk(data.audio);
-            // console.log(data);
+            uploadToS3(data.audio);
         });
     });
 };

@@ -62,4 +62,4 @@ var job = new CronJob('00 00 14 * * *', function () {
 }, false);
 
 job.start();
-console.log('job status', job.running); // job status
+console.log('Job status: ', job.running); // job status

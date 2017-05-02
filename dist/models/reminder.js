@@ -14,6 +14,6 @@ var reminderSchema = _mongoose2.default.Schema({
     _recording: { type: _mongoose2.default.Schema.Types.ObjectId, ref: 'Recording' }
 }, { timestamps: true });
 
-// create the model for users and expose it to our ap
-// export default mongoose.model('Reminder', reminderSchema);
-module.exports = _mongoose2.default.model('Reminder', reminderSchema);
+// create the model for users and expose it to our app
+// export default mongoose.model('Reminder', reminderSchema); // this did work with Mocha for God-know reason
+module.exports = _mongoose2.default.model('Reminder', reminderSchema); // that is why this line exists

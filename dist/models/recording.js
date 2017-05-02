@@ -16,5 +16,5 @@ var recordingSchema = _mongoose2.default.Schema({
 }, { timestamps: true });
 
 // create the model for users and expose it to our ap
-// export default mongoose.model('Recording', recordingSchema);
-module.exports = _mongoose2.default.model('Recording', recordingSchema);
+// export default mongoose.model('Recording', recordingSchema); // this did work with Mocha for God-know reason
+module.exports = _mongoose2.default.model('Recording', recordingSchema); // that is why this line exists

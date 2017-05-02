@@ -77,7 +77,9 @@ db.once('open', function () {
 // Setup session + passportjs
 require('./config/passport')(_passport2.default);
 app.use((0, _methodOverride2.default)('_method'));
-app.use((0, _morgan2.default)('dev')); // log every request to the console
+if (process.env.NODE_ENV !== 'testing') {
+    app.use((0, _morgan2.default)('dev')); // log every request to the console
+}
 app.use(_bodyParser2.default.json());
 app.use(_bodyParser2.default.urlencoded({ extended: true }));
 app.use((0, _expressSession2.default)({

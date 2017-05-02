@@ -21,6 +21,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var router = _express2.default.Router();
 
 module.exports = function (passport) {
+  // GET /user/reminder
   router.get('/user/reminder', isLoggedIn, function (req, res, next) {
     var now = (0, _moment2.default)().format();
     _reminder2.default.find({ date: { $lte: new Date(now) } }).then(function (reminder) {
@@ -31,6 +32,7 @@ module.exports = function (passport) {
     });
   });
 
+  // GET /user/create_reminder
   router.post('/user/create_reminder', isLoggedIn, function (req, res, next) {
     var newReminder = new _reminder2.default();
     if (req.body.message) newReminder.message = req.body.message;

@@ -37,6 +37,7 @@ var transporter = _nodemailer2.default.createTransport({
 });
 
 module.exports = function (passport) {
+  // GET /admin
   router.get('/admin', isLoggedInAsAdmin, function (req, res, next) {
     _activity2.default.find().limit(10).sort('-createdAt').populate({ path: '_user _recording' }).then(function (activities) {
       res.render('admin/admin', {
@@ -50,18 +51,7 @@ module.exports = function (passport) {
     });
   });
 
-  router.get('/admin/create_admin', isLoggedInAsAdmin, function (req, res, next) {
-    res.render('admin/admin', {
-      admin: req.user // get the user out of session and pass to template
-    });
-  });
-
-  router.post('/admin/create_admin', isLoggedInAsAdmin, passport.authenticate('admin_signup', {
-    successRedirect: '/admin',
-    failureRedirect: '/create_admin',
-    failureFlash: true
-  }));
-
+  // POST /admin/session
   router.get('/admin/session', isLoggedInAsAdmin, function (req, res, next) {
     _recording2.default.find({}, function (err, recordings) {
       if (err) console.log(err);
@@ -73,6 +63,7 @@ module.exports = function (passport) {
     });
   });
 
+  // GET /admin/create_session
   router.get('/admin/create_session', isLoggedInAsAdmin, function (req, res, next) {
     res.render('admin/create_session', {
       title: 'Create new session',
@@ -80,6 +71,7 @@ module.exports = function (passport) {
     });
   });
 
+  // POST /admin/create_session
   router.post('/admin/create_session', isLoggedInAsAdmin, function (req, res, next) {
     _recording2.default.findOne({ 'title': req.body.title }, function (err, recording) {
       if (err) {
@@ -110,6 +102,7 @@ module.exports = function (passport) {
     });
   });
 
+  // GET /admin/edit_session
   router.get('/admin/edit_session', isLoggedInAsAdmin, function (req, res, next) {
     if (req.query.query) {
       var option = req.query.option;
@@ -160,6 +153,7 @@ module.exports = function (passport) {
     }
   });
 
+  // GET /admin/edit_session/:id
   router.get('/admin/edit_session/:id', isLoggedInAsAdmin, function (req, res, next) {
     _recording2.default.findOne({ _id: req.params.id }).then(function (recording) {
       res.render('admin/edit_session', {
@@ -174,6 +168,7 @@ module.exports = function (passport) {
     });
   });
 
+  // PUT /admin/edit_session/:id
   router.put('/admin/edit_session/:id', isLoggedInAsAdmin, function (req, res, next) {
     _recording2.default.findOne({ _id: req.params.id }).then(function (recording) {
       recording.title = req.body.title;
@@ -198,6 +193,7 @@ module.exports = function (passport) {
     });
   });
 
+  // GET /admin/user_management
   router.get('/admin/user_management', isLoggedInAsAdmin, function (req, res, next) {
     var title = 'User Management';
     if (req.query.query) {
@@ -285,6 +281,7 @@ module.exports = function (passport) {
     }
   });
 
+  // GET /admin/user_management/:id
   router.get('/admin/user_management/:id', isLoggedInAsAdmin, function (req, res, next) {
     _user2.default.findOne({ _id: req.params.id }).then(function (user) {
       res.render('admin/user_management', {
@@ -299,6 +296,7 @@ module.exports = function (passport) {
     });
   });
 
+  // POST /admin/user_management/:id/send_email
   router.post('/admin/user_management/:id/send_email', isLoggedInAsAdmin, function (req, res, next) {
     var subject = req.body.subject;
     var message = req.body.message.replace(/\n?\r?\r\n/g, '<br />');
@@ -325,7 +323,6 @@ module.exports = function (passport) {
 };
 
 function isLoggedInAsAdmin(req, res, next) {
-
   // if user is authenticated in the session, carry on
   if (req.isAuthenticated() && req.user.admin) return next();
 

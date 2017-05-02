@@ -13,5 +13,5 @@ var activitySchema = _mongoose2.default.Schema({
 }, { timestamps: true });
 
 // create the model for users and expose it to our ap
-// export default mongoose.model('Activity', activitySchema );
-module.exports = _mongoose2.default.model('Activity', activitySchema);
+// export default mongoose.model('Activity', activitySchema ); // this did work with Mocha for God-know reason
+module.exports = _mongoose2.default.model('Activity', activitySchema); // that is why this line exists

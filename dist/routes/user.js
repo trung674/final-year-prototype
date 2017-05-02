@@ -26,10 +26,10 @@ var _mongoose2 = _interopRequireDefault(_mongoose);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// var express = require('express');
 var router = _express2.default.Router();
 
 module.exports = function (passport) {
+  // GET /user
   router.get('/user', isLoggedIn, function (req, res, next) {
     var newRecordings = void 0,
         ongoingRecordings = void 0,
@@ -75,6 +75,7 @@ module.exports = function (passport) {
     });
   });
 
+  // GET /user/session/:recording/finish
   router.get('/user/session/:recording/finish', isLoggedIn, function (req, res, next) {
     _user2.default.findOne({ _id: req.user._id }).then(function (user) {
       var isExisted = false;
@@ -115,6 +116,7 @@ module.exports = function (passport) {
     });
   });
 
+  // GET /user/session/:recording/:index
   router.get('/user/session/:recording/:index', isLoggedIn, function (req, res, next) {
     _recording2.default.findOne({ _id: req.params.recording }).then(function (recording) {
       _user2.default.findOne({ _id: req.user._id }).then(function (user) {
@@ -163,6 +165,7 @@ module.exports = function (passport) {
     });
   });
 
+  // GET /user/profile
   router.get('/user/profile', isLoggedIn, function (req, res, next) {
     res.render('user/profile', {
       user: req.user,
@@ -173,6 +176,7 @@ module.exports = function (passport) {
     });
   });
 
+  // PUT /user/profile/update_account
   router.put('/user/profile/update_account', isLoggedIn, function (req, res, next) {
     if (req.body.password.length !== 0) {
       if (validatePassword(req.body.password, req.user.username) && req.body.password === req.body.re_password) {
@@ -200,6 +204,7 @@ module.exports = function (passport) {
     }
   });
 
+  // PUT /user/profile/update_profile
   router.put('/user/profile/update_profile', isLoggedIn, function (req, res, next) {
     _user2.default.findOneAndUpdate({ _id: req.user._id }, { '$set': {
         information: {
@@ -240,18 +245,18 @@ function isLoggedIn(req, res, next) {
 
 function validatePassword(password, username) {
   // Minimum 6 characters, maximum 16 characters with at least 1 Alphabet and 1 Number
-  // let isValidated = false;
-  // let regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,16}$/;
-  // if((password.toLowerCase() !== username.toLowerCase()) && (regex.test(password))) isValidated = true;
-  var isValidated = true;
+  var isValidated = false;
+  var regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,16}$/;
+  if (password.toLowerCase() !== username.toLowerCase() && regex.test(password)) isValidated = true;
+  // let isValidated = true;
   return isValidated;
 }
 
 function validateUsername(username) {
   // Minimum 6 characters, maximum 16
-  // let isValidated = false;
-  // let regex = /^[A-Za-z\d]{6,16}$/;
-  // if(regex.test(username)) isValidated = true;
-  var isValidated = true;
+  var isValidated = false;
+  var regex = /^[A-Za-z\d]{6,16}$/;
+  if (regex.test(username)) isValidated = true;
+  // let isValidated = true;
   return isValidated;
 }

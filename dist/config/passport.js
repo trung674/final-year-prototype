@@ -12,8 +12,6 @@ var _https2 = _interopRequireDefault(_https);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// expose this function to our app using module.exports
-
 // load up the user model
 module.exports = function (passport) {
 
@@ -121,7 +119,7 @@ module.exports = function (passport) {
                 return done(null, false, req.flash('signinErrorMessage', 'No user found. Please try again')); // req.flash is the way to set flashdata using connect-flash
             }
             // if the user is found but the password is wrong
-            if (!user.validPassword(password, user.password)) return done(null, false, req.flash('signinErrorMessage', 'Wrong password. Please try again')); // create the loginMessage and save it to session as flashdata
+            if (!user.validPassword(password, user.password)) return done(null, false, req.flash('signinErrorMessage', 'Wrong password. Please try again'));
 
             // all is well, return successful user
             // update lastLogIn value (for both user and admin)
@@ -177,24 +175,23 @@ module.exports = function (passport) {
             });
         });
     }));
-}; // load all the things we need
-
+};
 
 function validatePassword(password, username) {
     // Minimum 6 characters, maximum 16 characters with at least 1 Alphabet and 1 Number
-    // let isValidated = false;
-    // let regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,16}$/;
-    // if((password.toLowerCase() !== username.toLowerCase()) && (regex.test(password))) isValidated = true;
-    var isValidated = true;
+    var isValidated = false;
+    var regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,16}$/;
+    if (password.toLowerCase() !== username.toLowerCase() && regex.test(password)) isValidated = true;
+    // let isValidated = true;
     return isValidated;
 }
 
 function validateUsername(username) {
     // Minimum 6 characters, maximum 16
-    // let isValidated = false;
-    // let regex = /^[A-Za-z\d]{6,16}$/;
-    // if(regex.test(username)) isValidated = true;
-    var isValidated = true;
+    var isValidated = false;
+    var regex = /^[A-Za-z\d]{6,16}$/;
+    if (regex.test(username)) isValidated = true;
+    // let isValidated = true;
     return isValidated;
 }
 

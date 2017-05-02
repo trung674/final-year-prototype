@@ -9,6 +9,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var router = _express2.default.Router();
 
 module.exports = function (passport) {
+	// GET /manuals
 	router.get('/manuals', isLoggedIn, function (req, res, next) {
 		res.render('manuals/manuals');
 	});
